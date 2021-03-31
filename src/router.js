@@ -10,28 +10,36 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
     mode: "history",
-    routes: [
-        {
-            path: "/",
-            name: "admin",
+    routes: [{
+            path: "/dashboard",
             component: importComponent('DashboardLayout'),
             children: [
-
                 //Dashboard
                 {
-                    path: "/",
-                    name: "Root",
+                    path: "/dashboard",
+                    name: "Dashboard",
+                    meta: {title: 'Dashboard'},
                     component: importComponent('Dashboard'),
                 },
-
-                // To do list
+                //Products
                 {
-                    path: "/gd",
-                    name: "Guided",
-                    component: importComponent('TodoList/List'),
+                    path: "/products",
+                    name: "Products",
+                    meta: {title: 'Products'},
+                    component: importComponent('DataMaster/Products'),
                 },
             ]
         },
-    ]
+        {
+            path: '/index',
+            meta: {title: 'Atma Korean BBQ'},
+            component: importComponent('Index'),
+        }
+    ],
 });
+//Mengset judul
+router.beforeEach((to, from, next) => {
+    document.title = to.meta.title
+    next()
+})
 export default router;

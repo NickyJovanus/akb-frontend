@@ -8,10 +8,19 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@mdi/js": "^5.8.55",
+    "axios": "^0.21.0",
     "core-js": "^3.6.5",
+    "jquery": "^3.5.1",
+    "lodash": "^4.17.21",
+    "mapbox-gl": "^2.2.0",
     "material-design-icons-iconfont": "^6.1.0",
     "vue": "^2.6.11",
+    "vue-lodash": "^2.1.2",
+    "vue-mapbox": "^0.4.1",
+    "vue-progressbar": "^0.7.5",
     "vue-router": "^3.4.9",
+    "vue2-loading-bar": "0.0.1",
     "vuetify": "^2.3.16"
   },
   "devDependencies": {
@@ -35,7 +44,10 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": "off"
+    },
+    "globals": { "_": true }
   },
   "browserslist": [
     "> 1%",
