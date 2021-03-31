@@ -223,7 +223,7 @@
                     <div class="row">
                         <div class="col-md-6 timeline-label">
                             <h4>location</h4>
-                            <div style="overflow: hidden; width: 100%; height: 350px; position: absolute;">
+                            <div style="overflow: hidden; width: 100%; height: 350px; position: relative;">
                               <MglMap id="map"
                                 :accessToken="this.accessToken"
                                 :mapStyle.sync="this.mapStyle"
@@ -502,16 +502,22 @@ export default{
   @import '../assets/css/login.css';
   @import '../assets/css/scrollbar.css';
 
-  
-.mapboxgl-popup-content {
-    background: #00000000 !important;
-}
 
 .mgl-map-wrapper {
     box-shadow: 0 0 20px 4px black;
     position: absolute;
     border: solid;
 }
+
+.mapboxgl-popup-content {
+    position: relative;
+    background: #1e1e1ead !important;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+    padding: 2px 5px;
+    pointer-events: auto;
+}
+
 .mapboxgl-canvas, .mapboxgl-marker .mapboxgl-marker-anchor-center {
   position: absolute i !important;
 }

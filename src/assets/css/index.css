@@ -189,6 +189,10 @@ h2:hover:after {
 	border: none;
 }
 
+.navbar {
+	padding: 0 1rem;
+}
+
 .navbar-inverse .navbar-toggle:focus,
 .navbar-inverse .navbar-toggle:hover {
 	background-color: #a93c3c;
@@ -1042,6 +1046,11 @@ footer a:visited footer a:focus {
 
 /*/ end contact /*/
 
+#myAccount {
+    font-size: 1.5rem;
+    margin-bottom: -3px;
+}
+
 
 /*/ media queries /*/
 
@@ -1067,15 +1076,17 @@ footer a:visited footer a:focus {
         height: 60px;
         left: 2px;
     }
+	.navbar {
+		padding: 0rem;
+	}
+	#myAccount {
+		font-size: 1rem;
+		margin-bottom: -3px;
+	}
 }
 
 p {
     color: white;
-}
-
-#myAccount {
-    font-size: 1.5rem;
-    margin-bottom: -3px;
 }
 
 #container {
@@ -1108,7 +1119,9 @@ p {
     padding-left: 15px;
 }
 
-
+button:focus {
+    outline: none;
+}
 
 body {
     overflow: hidden !important;
@@ -1161,8 +1174,4 @@ body::-webkit-scrollbar {
 
 .h1, .h2, .h3, h1, h2, h3 {
     font-family: ReemKufi;
-}
-
-.navbar {
-	padding: 0 1rem;
 }
