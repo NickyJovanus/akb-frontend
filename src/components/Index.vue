@@ -512,7 +512,7 @@ export default{
                 this.progressBar = false;
                 this.clear();
                 this.$router.push({
-                    name: 'Products',
+                    path: '/products',
                 })
             }).catch(error => {
                 if (error.response.data.message.email_karyawan)
@@ -526,10 +526,11 @@ export default{
                 localStorage.removeItem('token');
                 this.load = false;
                     this.progressBar = false;
-            })
+            });
         },
         clear() {
-            this.$refs.form.reset() //Clear form login
+            this.email = '',
+            this.password = ''
         }
     },
     created() {
