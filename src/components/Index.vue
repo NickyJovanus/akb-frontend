@@ -59,21 +59,23 @@
             <div class="container-fluid portfolio-ct">
                 <h2>FEATURED MENU</h2>
                 <div class="row">
+
                     <!-- start first portfolio item -->
-                    <div class="col-sm-6 col-md-4 grid-portfolio">
+                    <div class="col-sm-6 col-md-4 grid-portfolio" v-for="menu in menus" :key="menu">
                         <div class="portfolio-item-ct">
                             <div class="thumbnail">
-                                <img src="https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=20" alt="Portfolio - IBV MEXICO" class="img-responsive">
+                                <img :src="menu.gambar_menu" class="img-responsive">
                             </div>
                             <div class="caption portfolio-details">
-                                <h3>TENDERLOIN</h3>
-                                <p>Tenderloin description.
+                                <h3>{{menu.nama_menu}}</h3>
+                                <p>{{menu.deskripsi_menu}}
                                 </p>
                             </div>
                         </div>
                     </div>
                     <!-- end first portfolio item -->
-                    <!-- start second portfolio item -->
+<!--
+                     start second portfolio item 
                     <div class="col-sm-6 col-md-4 grid-portfolio">
                         <div class="portfolio-item-ct">
                             <div class="thumbnail">
@@ -86,8 +88,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- end second portfolio item -->
-                    <!-- start third portfolio item -->
+                     end second portfolio item 
+
+                     start third portfolio item 
                     <div class="col-sm-6 col-md-4 grid-portfolio">
                         <div class="portfolio-item-ct">
                             <div class="thumbnail">
@@ -100,7 +103,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- end third portfolio item -->
+                     end third portfolio item
+-->
                 </div>
                 <!-- end row portfolio -->
             </div>
@@ -453,12 +457,6 @@ export default{
             accessToken: 'pk.eyJ1Ijoibmlja3lqb3ZhbnVzIiwiYSI6ImNrZnFqc2Z6cTBqamUyeXBiaGNidzljOHEifQ.EmKNctj3vwr2nPn0beNhAQ',
             mapStyle: 'mapbox://styles/mapbox/streets-v11',
             coordinates: [110.416169, -7.779292],
-            images: {
-              image1: "https://images.unsplash.com/photo-1563253814-b3055eafce93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
-              image2: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
-              image3: "https://images.unsplash.com/photo-1554797589-7241bb691973?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1952&q=80",
-              image4: "https://images.unsplash.com/photo-1463573230746-1049c264?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
-            },
             error_message: '',
             color: '',
             valid: false,
@@ -469,6 +467,7 @@ export default{
             load: false,
             progressBar: false,
             loading: true,
+            menus: [],
         }
     },
     mounted() {
@@ -480,14 +479,14 @@ export default{
     },
     methods: {
         loadData() {
-            var url = this.$api + '/menu';
+            var url = this.$api + '/menu/top';
 
             this.$http.get(url, {
                 headers: {
                     //
                 }
             }).then(response => {
-                this.menu = response.data.data;
+                this.menus = response.data.data;
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
