@@ -1175,3 +1175,17 @@ body::-webkit-scrollbar {
 .h1, .h2, .h3, h1, h2, h3 {
     font-family: ReemKufi;
 }
+
+.hidden-transition {
+	opacity: 0;
+	transition: 0.5s;
+	display: none;
+}
+
+.js .accordion:nth-child(n+1) { display: none }
+
+pre {
+	font-family: ReemKufi;
+	color: white;
+    font-weight: bold;
+}

@@ -3,8 +3,8 @@
   By: Neo
   Link: https://dribbble.com/shots/4485321-Login-Page-Homepage
 */
-
-let usernameInput = document.querySelector('.username');
+window.onload=function(){
+let usernameInput = document.querySelector('.email');
 let passwordInput = document.querySelector('.password');
 let showPasswordButton = document.querySelector('.password-button');
 let face = document.querySelector('.face');
@@ -59,3 +59,4 @@ showPasswordButton.addEventListener('click', event => {
     });
   }
 });
+}

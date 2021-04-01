@@ -34,6 +34,10 @@ const router = new VueRouter({
             path: '/index',
             meta: {title: 'Atma Korean BBQ'},
             component: importComponent('Index'),
+        },
+        {
+            path: '*',
+            redirect: '/index',
         }
     ],
 });

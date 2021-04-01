@@ -3,9 +3,6 @@
 <template>
     <main>
     <div id="container">
-        <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>
-            {{error_message}}
-        </v-snackbar>
         <!-- navigation -->
         <!-- start Fixed navbar -->
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -15,15 +12,15 @@
                     <a class="navbar-brand" href="">
                         <img class="navbar-brand" src="https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+white+text.png">
                     </a>
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#ResponsiveNav">
+                    <button type="button" class="navbar-toggle" data-target="#ResponsiveNav" @click="collapsed = !collapsed">
                         <p id="myAccount"><span class="fa fa-user" aria-hidden="true"></span> My Account</p>
                     </button>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-right" id="ResponsiveNav">
+                <div :class="{'navbar-collapse hidden-transition': collapsed}" class="navbar-collapse navbar-right" id="ResponsiveNav">
                     <ul class="nav navbar-nav">
-                        <li><a href="#login" class="page-scroll">SIGN IN</a></li>
-                        <li><a href="#contact" class="page-scroll">CONTACT</a></li>
+                        <li><a href="#login" class="page-scroll" @click="collapsed = true">SIGN IN</a></li>
+                        <li><a href="#contact" class="page-scroll" @click="collapsed = true">CONTACT</a></li>
                     </ul>
                 </div>
                 <!-- end collapse -->
@@ -222,16 +219,16 @@
                 <div class="experience-ct">
                     <div class="row">
                         <div class="col-md-6 timeline-label">
-                            <h4>location</h4>
-                            <div style="overflow: hidden; width: 100%; height: 350px; position: relative;">
+                            <h4>Location</h4>
+                            <div style="overflow: hidden; width: 100%; height: 350px; position: relative; background: antiquewhite;">
                               <MglMap id="map"
                                 :accessToken="this.accessToken"
                                 :mapStyle.sync="this.mapStyle"
                                 :center="this.coordinates"
-                                :zoom="12"
+                                :zoom="14"
                               >
                                 <MglMarker :coordinates="coordinates" color="orange">
-                                  <MglPopup :style="{'background': '#000'}" dark>
+                                  <MglPopup :style="{'background': '#00000000'}">
                                     <VCard>
                                       <div class="ma-2">Atma Korean BBQ</div>
                                     </VCard>
@@ -242,26 +239,26 @@
                         </div>
                         <div class="col-md-6 timeline col-exp">
                             <div class="timeline-year">
-                                <time datetime="2016">2016</time>
+                                <time datetime="2021">2021</time>
                                 <div class="timeline-experience">
                                     <span class="timeline-circle"></span>
-                                    <div class="timeline-experience-img"><img src="http://marinamarques.pt/img/bnp_paribas.png" alt="BNP Paribas"></div>
+                                    <div class="timeline-experience-img"><img src="http://www.pngall.com/wp-content/uploads/4/World-Wide-Web-PNG-Picture.png"></div>
                                     <div class="timeline-experience-info clear-after">
-                                        <h5>BNP Paribas</h5>
-                                        <div class="timeline-role">Team Manager & Front End Developer</div>
-                                        <p>January 2016 - Present</p>
+                                        <h5>Website Published</h5>
+                                        <div class="timeline-role">The official website of Atma Korean BBQ is published</div>
+                                        <p>March 2021</p>
                                     </div>
                                     <!-- experience-info -->
                                 </div>
                                 <!-- experience -->
-                                <time datetime="2015">2015</time>
+                                <time datetime="2020">2020</time>
                                 <div class="timeline-experience">
                                     <span class="timeline-circle"></span>
-                                    <div class="timeline-experience-img"><img src="http://marinamarques.pt/img/bnp_paribas.png" alt="BNP Paribas"></div>
+                                    <div class="timeline-experience-img"><img src="http://logos-vector.com/images/logo/lar/9/9/5/99575/UAJY_c0f3f_250x250.png" style="border-radius: 20px; border: 2px solid #ff6161;"></div>
                                     <div class="timeline-experience-info clear-after">
-                                        <h5>BNP Paribas</h5>
-                                        <div class="timeline-role">Jr. Front End Developer & Content Administrator</div>
-                                        <p>May 2015 - December 2015</p>
+                                        <h5>Collaboration with UAJY</h5>
+                                        <div class="timeline-role">Atma Korean BBQ collaborated with Universitas Atma Jaya Yogyakarta</div>
+                                        <p>May 2020</p>
                                     </div>
                                     <!-- experience-info -->
                                 </div>
@@ -269,29 +266,18 @@
                             </div>
                             <!-- year -->
                             <div class="timeline-year timeline-year1">
-                                <time datetime="2014">2014</time>
+                                <time datetime="2018">2018</time>
                                 <div class="timeline-experience">
                                     <span class="timeline-circle"></span>
-                                    <div class="timeline-experience-img"><img src="http://marinamarques.pt/img/paginas_amarelas.png" alt="Páginas Amarelas"></div>
+                                    <div class="timeline-experience-img"><img src="https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+white+text.png"></div>
                                     <div class="timeline-experience-info clear-after">
-                                        <h5>Páginas Amarelas</h5>
-                                        <div class="timeline-role">Internal Communication Technician</div>
-                                        <p>March 2014 - May 2015</p>
+                                        <h5>Established</h5>
+                                        <div class="timeline-role">Establishment of Atma Korean BBQ</div>
+                                        <p>March 2018</p>
                                     </div>
                                     <!-- experience-info -->
                                 </div>
                                 <!-- experience -->
-                                <time datetime="2013">2013</time>
-                                <div class="timeline-experience">
-                                    <span class="timeline-circle"></span>
-                                    <div class="timeline-experience-img"><img src="http://marinamarques.pt/img/paginas_amarelas.png" alt="Páginas Amarelas"></div>
-                                    <div class="timeline-experience-info clear-after">
-                                        <h5>Páginas Amarelas</h5>
-                                        <div class="timeline-role">Jr. Web Developer & Content Producer</div>
-                                        <p>February 2013 - March 2014</p>
-                                    </div>
-                                    <!-- experience-info -->
-                                </div>
                                 <!-- experience -->
                             </div>
                             <!-- year -->
@@ -381,7 +367,7 @@
                         <input class="password" type="password"  v-model="password" autocomplete="off" placeholder="Password"/>
                         <button class="password-button">Reveal</button>
                       </label>
-                      <button class="login-button">Login</button>
+                      <button class="login-button" @click="login">Login</button>
                     </div>
                 </div>
             </div>
@@ -438,6 +424,9 @@
         </footer>
         <!-- end footer -->
     </div>
+        <v-snackbar v-model="snackbar" :color="color" timeout="3000" top>
+            <pre>{{error_message}}</pre>
+        </v-snackbar>
     </main>
 </template>
 
@@ -454,7 +443,7 @@ export default{
     data() {
         return {
             accessToken: 'pk.eyJ1Ijoibmlja3lqb3ZhbnVzIiwiYSI6ImNrZnFqc2Z6cTBqamUyeXBiaGNidzljOHEifQ.EmKNctj3vwr2nPn0beNhAQ',
-            mapStyle: 'mapbox://styles/mapbox/dark-v9',
+            mapStyle: 'mapbox://styles/mapbox/streets-v11',
             coordinates: [110.416169, -7.779292],
             images: {
               image1: "https://images.unsplash.com/photo-1563253814-b3055eafce93?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
@@ -468,20 +457,52 @@ export default{
             password: '',
             email: '',
             snackbar: false,
+            collapsed: true,
+            load: false,
         }
     },
     mounted() {
-        // let mapboxScript = document.createElement('script')
-        // mapboxScript.setAttribute('src', 'https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js')
-        // document.head.appendChild(mapboxScript);
-
         import('../assets/js/carouselfade.js');
         import('../assets/js/loginform.js');
         import('../assets/js/navbarfade.js');
         import('mapbox-gl/dist/mapbox-gl.css');
     },
     methods: {
-      //
+        login() {
+            this.snackbar=false;
+            this.error_message = '';
+            this.load = true;
+            this.$http.post(this.$api + '/login', {
+                email_karyawan: this.email,
+                password: this.password,
+            }).then(response => {
+                localStorage.setItem('id', response.data.karyawan.id_karyawan); //menyimpan id user yang sedang login
+                localStorage.setItem('role', response.data.karyawan.peran_karyawan); //menyimpan id user yang sedang login
+                localStorage.setItem('token', response.data.access_token); //menyimpan auth token
+                this.error_message=response.data.message; 
+                this.color="green"
+                this.snackbar=true;
+                this.load = false;
+                this.clear();
+                this.$router.push({
+                    name: 'Products',
+                })
+            }).catch(error => {
+                if (error.response.data.message.email_karyawan)
+                    this.error_message= this.error_message + error.response.data.message.email_karyawan;
+                if (error.response.data.message.password)
+                    this.error_message= this.error_message + '\n' + error.response.data.message.password;
+                if(!error.response.data.message.password && !error.response.data.message.email_karyawan)
+                    this.error_message= this.error_message + error.response.data.message;
+                this.color="red"
+                this.snackbar=true;
+                localStorage.removeItem('token');
+                this.load = false;
+            })
+        },
+        clear() {
+            this.$refs.form.reset() //Clear form login
+        }
     },
     created() {
       if (localStorage.getItem('reloaded')) {
