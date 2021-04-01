@@ -2,6 +2,12 @@
   
 <template>
     <main>
+    <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
+	<!-- START PRELOADER -->
+	<div id="preloader" v-if="loading == true">
+		<div id="status">&nbsp;</div>
+	</div>
+	<!-- END PRELOADER -->
     <div id="container">
         <!-- navigation -->
         <!-- start Fixed navbar -->
@@ -28,6 +34,7 @@
             <!-- end container fluid -->
         </nav>
         <!-- end navigation -->
+        <div id="notNav" @click="collapsed = true">
         <header class="intro">
             <div class="intro-body">
                 <div class="container">
@@ -423,6 +430,7 @@
             <!-- end container footer section -->
         </footer>
         <!-- end footer -->
+        </div>
     </div>
         <v-snackbar v-model="snackbar" :color="color" timeout="3000" top>
             <pre>{{error_message}}</pre>
@@ -459,19 +467,37 @@ export default{
             snackbar: false,
             collapsed: true,
             load: false,
+            progressBar: false,
+            loading: true,
         }
     },
     mounted() {
+        this.loadData();
         import('../assets/js/carouselfade.js');
         import('../assets/js/loginform.js');
         import('../assets/js/navbarfade.js');
         import('mapbox-gl/dist/mapbox-gl.css');
     },
     methods: {
+        loadData() {
+            var url = this.$api + '/menu';
+
+            this.$http.get(url, {
+                headers: {
+                    //
+                }
+            }).then(response => {
+                this.menu = response.data.data;
+                this.loading = false;
+            }).catch(()=> {
+                this.loading = false;
+            });
+        },
         login() {
             this.snackbar=false;
             this.error_message = '';
             this.load = true;
+            this.progressBar = true;
             this.$http.post(this.$api + '/login', {
                 email_karyawan: this.email,
                 password: this.password,
@@ -483,6 +509,7 @@ export default{
                 this.color="green"
                 this.snackbar=true;
                 this.load = false;
+                this.progressBar = false;
                 this.clear();
                 this.$router.push({
                     name: 'Products',
@@ -498,6 +525,7 @@ export default{
                 this.snackbar=true;
                 localStorage.removeItem('token');
                 this.load = false;
+                    this.progressBar = false;
             })
         },
         clear() {

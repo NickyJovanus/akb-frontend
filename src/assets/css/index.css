@@ -150,7 +150,7 @@ h2:hover:after {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #008080;
+	background-color: #de4242;
 	z-index: 99;
 	height: 100%;
 }
@@ -161,7 +161,8 @@ h2:hover:after {
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	background-image: url(http://marinamarques.pt/img/preloader.gif);
+	background-image: url(https://ai-hmi.com/wp-content/plugins/preloader-sws/assets/img/bg-true/red-monster.gif);
+	border-radius: 100%;
 	background-repeat: no-repeat;
 	background-position: center;
 	margin: -100px 0 0 -100px;
