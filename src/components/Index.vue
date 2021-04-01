@@ -74,37 +74,6 @@
                         </div>
                     </div>
                     <!-- end first portfolio item -->
-<!--
-                     start second portfolio item 
-                    <div class="col-sm-6 col-md-4 grid-portfolio">
-                        <div class="portfolio-item-ct">
-                            <div class="thumbnail">
-                                <img src="https://images.unsplash.com/photo-1569263900347-06b1e8c825ab?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=20" alt="Portfolio - ARE YOU FEELING LOW?" class="img-responsive">
-                            </div>
-                            <div class="caption portfolio-details">
-                                <h3>SQUID</h3>
-                                <p>Squid description.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                     end second portfolio item 
-
-                     start third portfolio item 
-                    <div class="col-sm-6 col-md-4 grid-portfolio">
-                        <div class="portfolio-item-ct">
-                            <div class="thumbnail">
-                                <img src="https://images.unsplash.com/photo-1604253412047-e4c697600f0b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=20" alt="Portfolio - PERSONAL WEBSITE" class="img-responsive">
-                            </div>
-                            <div class="caption portfolio-details">
-                                <h3>ORANGE JUICE</h3>
-                                <p>Orange juice description.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                     end third portfolio item
--->
                 </div>
                 <!-- end row portfolio -->
             </div>
@@ -207,12 +176,12 @@
                     <div class="row">
                         <div class="col-lg-6 stats">
                             <span class="fa fa-user" aria-hidden="true"></span>
-                            <div class="counter" data-count="999">20</div>
-                            <h5>Happy clients</h5>
+                            <div class="counter" data-count="999">{{customers}}</div>
+                            <h5>Happy customers</h5>
                         </div>
                         <div class="col-lg-6 stats">
                             <span class="fa fa-coffee" aria-hidden="true"></span>
-                            <div class="counter" data-count="999">102</div>
+                            <div class="counter" data-count="999">{{dishes}}</div>
                             <h5>Dishes served</h5>
                         </div>
                     </div>
@@ -468,6 +437,8 @@ export default{
             progressBar: false,
             loading: true,
             menus: [],
+            customers: null,
+            dishes: null,
         }
     },
     mounted() {
@@ -487,6 +458,32 @@ export default{
                 }
             }).then(response => {
                 this.menus = response.data.data;
+                this.loading = false;
+            }).catch(()=> {
+                this.loading = false;
+            });
+
+            var url2 = this.$api + '/customercount'
+
+            this.$http.get(url2, {
+                headers: {
+                    //
+                }
+            }).then(response => {
+                this.customers = response.data.data;
+                this.loading = false;
+            }).catch(()=> {
+                this.loading = false;
+            });
+
+            var url3 = this.$api + '/servedDishes'
+
+            this.$http.get(url3, {
+                headers: {
+                    //
+                }
+            }).then(response => {
+                this.dishes = response.data.data.jml;
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
