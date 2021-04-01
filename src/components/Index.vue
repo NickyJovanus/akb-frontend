@@ -2,39 +2,8 @@
   
 <template>
     <main>
-    <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
-	<!-- START PRELOADER -->
-	<div id="preloader" v-if="loading == true">
-		<div id="status">&nbsp;</div>
-	</div>
-	<!-- END PRELOADER -->
+    <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate style="z-index: 9999;"></v-progress-linear>
     <div id="container">
-        <!-- navigation -->
-        <!-- start Fixed navbar -->
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for mobile display -->
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="">
-                        <img class="navbar-brand" src="https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+white+text.png">
-                    </a>
-                    <button type="button" class="navbar-toggle" data-target="#ResponsiveNav" @click="collapsed = !collapsed">
-                        <p id="myAccount"><span class="fa fa-user" aria-hidden="true"></span> My Account</p>
-                    </button>
-                </div>
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div :class="{'navbar-collapse hidden-transition': collapsed}" class="navbar-collapse navbar-right" id="ResponsiveNav">
-                    <ul class="nav navbar-nav">
-                        <li><a href="#login" class="page-scroll" @click="collapsed = true">SIGN IN</a></li>
-                        <li><a href="#contact" class="page-scroll" @click="collapsed = true">CONTACT</a></li>
-                    </ul>
-                </div>
-                <!-- end collapse -->
-            </div>
-            <!-- end container fluid -->
-        </nav>
-        <!-- end navigation -->
-        <div id="notNav" @click="collapsed = true">
         <header class="intro">
             <div class="intro-body">
                 <div class="container">
@@ -68,7 +37,8 @@
                             </div>
                             <div class="caption portfolio-details">
                                 <h3>{{menu.nama_menu}}</h3>
-                                <p>{{menu.deskripsi_menu}}
+                                <p>{{menu.deskripsi_menu}}<br>
+                                Rp. {{menu.harga_menu.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}.00
                                 </p>
                             </div>
                         </div>
@@ -99,7 +69,7 @@
                                 <div class="row">
                                     <div class="col-md-6 col-md-offset-3">
                                         <div class="carousel-caption">
-                                            <p>We are pleased to present our guests to an experience they will never forget.</p>
+                                            <p>We are pleased to present our guests an experience they will never forget.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -132,6 +102,9 @@
                                     <div class="col-md-6 col-md-offset-3">
                                         <div class="carousel-caption">
                                             <p>Atma Korean BBQ presents the top quality of Korean barbecue to bring you the finest flavors in Korean cuisine.</p>
+                                            <div class="button-group">
+                                                <div class="text" @click="menuRedirect">Browse Menu</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -181,7 +154,7 @@
                         </div>
                         <div class="col-lg-6 stats">
                             <span class="fa fa-coffee" aria-hidden="true"></span>
-                            <div class="counter" data-count="999">{{dishes}}</div>
+                            <div class="counter" data-count="999" v-for="dishes in dishes" :key="dishes">{{dishes.jml}}</div>
                             <h5>Dishes served</h5>
                         </div>
                     </div>
@@ -226,7 +199,7 @@
                                     <div class="timeline-experience-info clear-after">
                                         <h5>Website Published</h5>
                                         <div class="timeline-role">The official website of Atma Korean BBQ is published</div>
-                                        <p>March 2021</p>
+                                        <p>April 2021</p>
                                     </div>
                                     <!-- experience-info -->
                                 </div>
@@ -403,10 +376,9 @@
             <!-- end container footer section -->
         </footer>
         <!-- end footer -->
-        </div>
     </div>
-        <v-snackbar v-model="snackbar" :color="color" timeout="3000" top>
-            <pre>{{error_message}}</pre>
+        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom>
+            <p>{{error_message}}</p>
         </v-snackbar>
     </main>
 </template>
@@ -438,7 +410,10 @@ export default{
             loading: true,
             menus: [],
             customers: null,
-            dishes: null,
+            dishes: [],
+            items: [
+                { title: "Menu", to: "/menu" },
+            ],
         }
     },
     mounted() {
@@ -458,7 +433,6 @@ export default{
                 }
             }).then(response => {
                 this.menus = response.data.data;
-                this.loading = false;
             }).catch(()=> {
                 this.loading = false;
             });
@@ -471,7 +445,6 @@ export default{
                 }
             }).then(response => {
                 this.customers = response.data.data;
-                this.loading = false;
             }).catch(()=> {
                 this.loading = false;
             });
@@ -483,7 +456,7 @@ export default{
                     //
                 }
             }).then(response => {
-                this.dishes = response.data.data.jml;
+                this.dishes = response.data.data;
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -527,27 +500,29 @@ export default{
         clear() {
             this.email = '',
             this.password = ''
-        }
+        },
+        menuRedirect() {
+            this.$router.push({
+                path: '/menu',
+            })
+        },
     },
     created() {
-      if (localStorage.getItem('reloaded')) {
-          // The page was just reloaded. Clear the value from local storage
-          // so that it will reload the next time this page is visited.
-          localStorage.removeItem('reloaded');
-      } else {
-          // Set a flag so that we know not to reload the page twice.
-          localStorage.setItem('reloaded', '1');
-          location.reload();
-      }
+    //   if (localStorage.getItem('reloaded')) {
+    //       // The page was just reloaded. Clear the value from local storage
+    //       // so that it will reload the next time this page is visited.
+    //       localStorage.removeItem('reloaded');
+    //   } else {
+    //       // Set a flag so that we know not to reload the page twice.
+    //       localStorage.setItem('reloaded', '1');
+    //       location.reload();
+    //   }
     }
 }
 </script>
 
 <style scoped>
   @import '../assets/css/index.css';
-  @import '../assets/css/login.css';
-  @import '../assets/css/scrollbar.css';
-
 
 .mgl-map-wrapper {
     box-shadow: 0 0 20px 4px black;

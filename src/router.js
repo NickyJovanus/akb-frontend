@@ -31,9 +31,20 @@ const router = new VueRouter({
             ]
         },
         {
-            path: '/index',
-            meta: {title: 'Atma Korean BBQ'},
-            component: importComponent('Index'),
+            path: "/index",
+            component: importComponent('Navbar'),
+            children: [
+                {
+                    path: '/index',
+                    meta: {title: 'Atma Korean BBQ'},
+                    component: importComponent('Index'),
+                },
+                {
+                    path: '/menu',
+                    meta: {title: 'Menu - Atma Korean BBQ'},
+                    component: importComponent('Menu'),
+                },
+            ]
         },
         {
             path: '*',
