@@ -30,4 +30,11 @@ html, body {
   overflow-y: hidden !important;
 }
 
+.v-application {
+	font-family: ReemKufi !important;
+}
+.v-application .title, .v-application .headline {
+  font-family: ReemKufi !important;
+}
+
 </style>

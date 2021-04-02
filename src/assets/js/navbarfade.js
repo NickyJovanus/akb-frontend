@@ -1,14 +1,20 @@
 var fireOnHashChangesToo = false
 var pageURLCheckTimer = setInterval (
     function () {
-        if (this.lastPathStr !== location.pathname) {
+        if (this.lastPathStr !== location.pathname
+            || this.lastQueryStr !== location.search
+            || (fireOnHashChangesToo && this.lastHashStr !== location.hash)) {
             this.lastPathStr = location.pathname;
+            this.lastQueryStr = location.search;
+            this.lastHashStr = location.hash;
             scroll();
         }
 }, 100);
 
 function scroll() {
     var content;
+    document.querySelector(".navbar-fixed-top").style.background = "linear-gradient(rgb(255 82 0 / 8%), transparent, transparent)";
+    document.querySelector(".navbar-fixed-top").style.boxShadow = "none";
     if(document.getElementById('container'))
         content = document.getElementById('container');
 

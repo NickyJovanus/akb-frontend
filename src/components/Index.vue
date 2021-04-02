@@ -15,6 +15,9 @@
                                 <br>
                                 Atma Korean BBQ
                             </p>
+                            <div class="button-group">
+                                <div class="text" @click="redirectDashboard">Open Dashboard</div>
+                            </div>
                             <br>
                             <br>
                         </div>
@@ -30,7 +33,7 @@
                 <div class="row">
 
                     <!-- start first portfolio item -->
-                    <div class="col-sm-6 col-md-4 grid-portfolio" v-for="menu in menus" :key="menu">
+                    <div class="col-sm-6 col-md-4 grid-portfolio" v-for="menu in menus" :key="menu.gambar_menu">
                         <div class="portfolio-item-ct">
                             <div class="thumbnail">
                                 <img :src="menu.gambar_menu" class="img-responsive">
@@ -154,7 +157,9 @@
                         </div>
                         <div class="col-lg-6 stats">
                             <span class="fa fa-coffee" aria-hidden="true"></span>
-                            <div class="counter" data-count="999" v-for="dishes in dishes" :key="dishes">{{dishes.jml}}</div>
+                            <div v-for="dish in dishes" :key="dish.jml">
+                                <div class="counter" data-count="999">{{dish.jml}}</div>
+                            </div>
                             <h5>Dishes served</h5>
                         </div>
                     </div>
@@ -414,6 +419,7 @@ export default{
             items: [
                 { title: "Menu", to: "/menu" },
             ],
+            loggedIn: false,
         }
     },
     mounted() {
@@ -461,6 +467,10 @@ export default{
             }).catch(()=> {
                 this.loading = false;
             });
+            
+            if(localStorage.getItem('token') != null) {
+                this.loggedIn = true;
+            }
         },
         login() {
             this.snackbar=false;
@@ -473,6 +483,7 @@ export default{
             }).then(response => {
                 localStorage.setItem('id', response.data.karyawan.id_karyawan); //menyimpan id user yang sedang login
                 localStorage.setItem('role', response.data.karyawan.peran_karyawan); //menyimpan id user yang sedang login
+                localStorage.setItem('name', response.data.karyawan.nama_karyawan); //menyimpan id user yang sedang login
                 localStorage.setItem('token', response.data.access_token); //menyimpan auth token
                 this.error_message=response.data.message; 
                 this.color="green"
@@ -481,7 +492,7 @@ export default{
                 this.progressBar = false;
                 this.clear();
                 this.$router.push({
-                    path: '/products',
+                    path: '/dashboard',
                 })
             }).catch(error => {
                 if (error.response.data.message.email_karyawan)
@@ -506,18 +517,12 @@ export default{
                 path: '/menu',
             })
         },
+        redirectDashboard() {
+            this.$router.push({
+                path: '/dashboard',
+            });
+        }
     },
-    created() {
-    //   if (localStorage.getItem('reloaded')) {
-    //       // The page was just reloaded. Clear the value from local storage
-    //       // so that it will reload the next time this page is visited.
-    //       localStorage.removeItem('reloaded');
-    //   } else {
-    //       // Set a flag so that we know not to reload the page twice.
-    //       localStorage.setItem('reloaded', '1');
-    //       location.reload();
-    //   }
-    }
 }
 </script>
 

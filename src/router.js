@@ -18,15 +18,8 @@ const router = new VueRouter({
                 {
                     path: "/dashboard",
                     name: "Dashboard",
-                    meta: {title: 'Dashboard'},
-                    component: importComponent('Dashboard'),
-                },
-                //Products
-                {
-                    path: "/products",
-                    name: "Products",
-                    meta: {title: 'Products'},
-                    component: importComponent('DataMaster/Products'),
+                    meta: {title: 'Dashboard - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Dashboard'),
                 },
             ]
         },

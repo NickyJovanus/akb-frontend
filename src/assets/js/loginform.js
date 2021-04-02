@@ -3,7 +3,15 @@
   By: Neo
   Link: https://dribbble.com/shots/4485321-Login-Page-Homepage
 */
-window.onload=function(){
+var fireOnHashChangesToo = true
+var pageURLCheckTimer = setInterval (
+    function () {
+        if (this.lastPathStr !== location.pathname) {
+            form();
+        }
+}, 100);
+
+function form(){
 let usernameInput = document.querySelector('.email');
 let passwordInput = document.querySelector('.password');
 let showPasswordButton = document.querySelector('.password-button');
