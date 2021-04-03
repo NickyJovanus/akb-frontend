@@ -160,7 +160,6 @@ export default{
     mounted() {
         this.loadData();
         import('../assets/js/carouselfade.js');
-        import('../assets/js/navbarfade.js');
     },
     methods: {
         loadData() {

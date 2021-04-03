@@ -168,6 +168,19 @@ h2:hover:after {
 	margin: -100px 0 0 -100px;
 }
 
+.preloader-dashboard {
+	background-color: #2a1313 !important;
+}
+
+.preloader-dashboard #status {
+    -o-object-fit: cover;
+    object-fit: contain;
+    width: 100%;
+	background-image: url("~@/assets/loader2.gif");
+    margin: -20vh -50vw;
+    height: 250px;
+}
+
 
 /* END PRELOADER */
 
@@ -181,8 +194,8 @@ h2:hover:after {
 .navbar-brand {
     padding: 0px 15px;
     height: 70px;
-    left: 1px;
-    position: sticky;
+    left: 4px;
+    position: fixed;
 }
 
 .navbar {

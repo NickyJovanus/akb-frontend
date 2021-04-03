@@ -250,7 +250,7 @@
         <!-- end work experience -->
         
         <!-- start login -->
-        <section id="login">
+        <section id="login" v-if="!loggedIn">
             <br><br>
             <br><br>
             <div class="container">
@@ -485,15 +485,13 @@ export default{
                 localStorage.setItem('role', response.data.karyawan.peran_karyawan); //menyimpan id user yang sedang login
                 localStorage.setItem('name', response.data.karyawan.nama_karyawan); //menyimpan id user yang sedang login
                 localStorage.setItem('token', response.data.access_token); //menyimpan auth token
-                this.error_message=response.data.message; 
+                this.error_message='Logged in as ' + localStorage.getItem('name'); 
                 this.color="green"
                 this.snackbar=true;
                 this.load = false;
                 this.progressBar = false;
                 this.clear();
-                this.$router.push({
-                    path: '/dashboard',
-                })
+                location.href="/dashboard";
             }).catch(error => {
                 if (error.response.data.message.email_karyawan)
                     this.error_message= this.error_message + error.response.data.message.email_karyawan;

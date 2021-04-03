@@ -6,7 +6,8 @@
         <div id="preloader" v-if="loading == true" style="z-index: 9999;">
             <div id="status" style="text-align: center;"><br><br><br><br><br><br><br><br><br><br><br><br>
                 Loading...<br> 
-                This process may take up to 10 seconds.</div>
+                <div style="transition: 2s;">{{preloadertext}}</div>
+            </div>
         </div>
         <!-- END PRELOADER -->
         <!-- navigation -->
@@ -43,7 +44,7 @@
         </div>
       </keep-alive>
 
-        <v-dialog v-model="logoutdialog" persistent max-width="600px">
+        <v-dialog v-model="logoutdialog" max-width="600px">
             <v-card>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -54,15 +55,17 @@
                     </v-flex>
                 </v-card-actions>
                 <v-card-title>
-                    <span class="headline">Confirm Logout?</span>
+                    <span class="headline">Do you really want to log out?</span>
                 </v-card-title>
+                <v-card-text>
+                </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="white darken-1" text @click="logoutdialog = false;">
                         Cancel
                     </v-btn>
                     <v-btn color="yellow darken-1" text @click="logout"> 
-                        Yes
+                        Log Out
                     </v-btn>
                 </v-card-actions>
                 <v-flex>
@@ -97,14 +100,19 @@ export default{
             name: 'My Account',
             loggedIn : false,
             logoutdialog: false,
+            preloadertext: '',
         }
     },
     created() {
         this.loadData();
     },
+    mounted() {
+        import('../assets/js/navbarfade.js');
+    },
     methods: {
         loadData() {
             var url = this.$api + '/menu/top';
+            setTimeout(() => this.preloadertext = "This process may take up to 10 seconds.", 4000);
 
             this.$http.get(url, {
                 headers: {
@@ -159,11 +167,11 @@ export default{
                 delete this.$http.defaults.headers.common['Authorization'];
                 this.progressBarLogout = false;
 
-                //Push Login after logout
+                //Push index after logout
                 this.$router.push({
                     name: 'index',
                 }).then(()=> {
-                    location.href="#login";
+                    location.href="/index#login";
                 })
             }).catch(error => {
                 //prints error to console

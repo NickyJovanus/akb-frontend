@@ -10,19 +10,7 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
     mode: "history",
-    routes: [{
-            path: "/dashboard",
-            component: importComponent('DashboardLayout'),
-            children: [
-                //Dashboard
-                {
-                    path: "/dashboard",
-                    name: "Dashboard",
-                    meta: {title: 'Dashboard - Atma Korean BBQ'},
-                    component: importComponent('Dashboard/Dashboard'),
-                },
-            ]
-        },
+    routes: [
         {
             path: "/index",
             component: importComponent('Navbar'),
@@ -40,12 +28,25 @@ const router = new VueRouter({
             ]
         },
         {
+            path: "/dashboard",
+            component: importComponent('Dashboard/Sidebar'),
+            children: [
+                //Dashboard
+                {
+                    path: "/dashboard",
+                    name: "Dashboard",
+                    meta: {title: 'Dashboard - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Dashboard'),
+                },
+            ]
+        },
+        {
             path: '*',
             redirect: '/index',
         }
     ],
 });
-//Mengset judul
+
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title
     next()
