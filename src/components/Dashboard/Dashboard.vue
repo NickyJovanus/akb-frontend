@@ -43,6 +43,24 @@
                 </div>
                 <!-- end container portfolio -->
             </section>
+            <!-- start footer -->
+            <footer id="contact">
+                <div class="container">
+                    <div class="row">
+                        <h2>CONTACT</h2>
+                        <p>You can contact us at: 180709851@students.uajy.ac.id (Nicky Jovanus)</p>
+                        <div class="social">
+                            <a href="https://www.youtube.com/channel/UCocn4CLqmjfQ88-IjVYwRxA/featured" target="_blank" alt="Youtube profile"><span class="fa fa-youtube" aria-hidden="true"></span></a>
+                            <a href="https://www.facebook.com/nicky.jovanus/" target="_blank" alt="Facebook profile"><span class="fa fa-facebook" aria-hidden="true"></span></a>
+                            <a href="https://github.com/NickyJovanus" target="_blank" alt="GitHub profile"><span class="fa fa-github" aria-hidden="true"></span></a>
+                        </div>
+                        <p id="copyright">For Development Purposes Only.</p>
+                    </div>
+                    <!-- end row contact -->
+                </div>
+                <!-- end container footer section -->
+            </footer>
+            <!-- end footer -->
         </div>
     </v-main>
 </template>
@@ -55,18 +73,19 @@ export default{
         return {
             role: '',
             dashboardmenu: [
-                { title: "Manage Karyawan", to: "/manage/karyawan", image: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" },
-                { title: "Manage Menu", to: "/manage/menu", image: "" },
-                { title: "Manage Meja", to: "/manage/meja", image: "" },
-                { title: "Manage Pesanan", to: "/manage/pesanan", image: "" },
-                { title: "Manage Transaksi", to: "/manage/transaksi", image: "" },
-                { title: "Manage Customers", to: "/manage/customers", image: "" },
-                { title: "Manage Bahan", to: "/manage/bahan", image: "" },
-                { title: "Manage Stock", to: "/manage/stock", image: "" },
-                { title: "Manage History Stock", to: "/manage/history-stock", image: "" },
-                { title: "Print QR Code", to: "/print-qr", image: "" },
-                { title: "Laporan Pengeluaran", to: "/laporan/expenses", image: "" },
-                { title: "Laporan Pendapatan", to: "/laporan/income", image: "" },
+                { title: "Manage Karyawan", to: "/manage/karyawan", image: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=20" },
+                { title: "Manage Menu", to: "/manage/menu", image: "https://images.unsplash.com/photo-1538648023391-5db12763fce7?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=20" },
+                { title: "Manage Meja", to: "/manage/meja", image: "https://images.unsplash.com/photo-1601525824009-d15055b684d3?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1789&q=20" },
+                { title: "Manage Pesanan", to: "/manage/pesanan", image: "https://images.unsplash.com/photo-1499083097717-a156f85f0516?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=20" },
+                { title: "Manage Reservasi", to: "/manage/reservasi", image: "https://images.unsplash.com/photo-1524370200384-1fbe34f01f84?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=20" },
+                { title: "Manage Transaksi", to: "/manage/transaksi", image: "https://images.unsplash.com/photo-1556740767-414a9c4860c1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=20" },
+                { title: "Manage Customers", to: "/manage/customers", image: "https://images.unsplash.com/photo-1534470397273-a1c104354754?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1789&q=20" },
+                { title: "Manage Bahan", to: "/manage/bahan", image: "https://images.unsplash.com/photo-1470549813517-2fa741d25c92?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=20" },
+                { title: "Manage Stock", to: "/manage/stock", image: "https://images.unsplash.com/photo-1571989928541-674d0cf46c4a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2002&q=20" },
+                { title: "Manage History Stock", to: "/manage/history-stock", image: "https://images.unsplash.com/photo-1494883759339-0b042055a4ee?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1934&q=20" },
+                { title: "Print QR Code", to: "/print-qr", image: "https://images.unsplash.com/photo-1571867424488-4565932edb41?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1868&q=20" },
+                { title: "Laporan Pengeluaran", to: "/laporan/expenses", image: "https://images.unsplash.com/photo-1517971071642-34a2d3ecc9cd?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1868&q=20" },
+                { title: "Laporan Pendapatan", to: "/laporan/income", image: "https://images.unsplash.com/photo-1579444741963-5ae219cfe27c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=20" },
             ],
         }
     },

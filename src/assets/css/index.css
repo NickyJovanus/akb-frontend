@@ -1018,9 +1018,10 @@ div.button-weblink {
 /*/ start contact /*/
 
 footer {
-	text-align: center;
-	font-size: 18px;
-	margin-top: 20px;
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+    background-color: #151515;
 }
 
 #contact h2 {
