@@ -38,6 +38,13 @@ const router = new VueRouter({
                     meta: {title: 'Dashboard - Atma Korean BBQ'},
                     component: importComponent('Dashboard/Dashboard'),
                 },
+                //Karyawan
+                {
+                    path: "/manage/karyawan",
+                    name: "Karyawan",
+                    meta: {title: 'Dashboard - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Karyawan'),
+                },
             ]
         },
         {

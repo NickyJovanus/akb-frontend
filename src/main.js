@@ -3,8 +3,10 @@ import App from './App.vue'
 import vuetify from '@/plugins/vuetify'
 import router from './router'
 import axios from 'axios'
+import DisableAutocomplete from 'vue-disable-autocomplete';
 
 Vue.config.productionTip = false
+Vue.use(DisableAutocomplete);
 
 Vue.prototype.$http = axios;
 Vue.prototype.$api = 'https://akb-backend.herokuapp.com/api' //hosted api

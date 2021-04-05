@@ -15,7 +15,7 @@
                                 <br>
                                 Atma Korean BBQ
                             </p>
-                            <div class="button-group">
+                            <div class="button-group" v-if="loggedIn">
                                 <div class="text" @click="redirectDashboard">Open Dashboard</div>
                             </div>
                             <br>
