@@ -9,32 +9,22 @@
                     <div class="row">
 
                         <!-- start first portfolio item -->
-                        <div>
-                            <div class="col-sm-6 col-md-3 grid-portfolio"  v-for="(menu) in dashboardmenu" :key="menu.image">
-                                <v-card width="400" :to="menu.to">
-                                    <v-img
-                                    height="100px"
-                                    :src="menu.image"
-                                    >
-                                    <div class="testimonials-bg-opacity"></div>
-                                    <v-card-title class="white--text mb-15">
-                                        <p class="mr-10 float-right">
-                                        {{menu.title}}
-                                        </p>
-                                    </v-card-title>
-                                    </v-img>
-                                </v-card>
-                                <!--<div class="portfolio-item-ct">
-                                    <div class="thumbnail">
-                                        <img :src="menu.image" class="img-responsive">
-                                    </div>
-                                    <div class="caption portfolio-details">
-                                        <h3>{{menu.title}}</h3>
-                                        <p> {{menu.unit_menu}}<br>
-                                            {{menu.deskripsi_menu}}<br>
-                                        </p>
-                                    </div>
-                                </div>-->
+                        <div class="ma-10">
+                            <div class="col-md-4 grid-portfolio"  v-for="(menu) in dashboardmenu" :key="menu.image">
+                                <div style="width: 500px; height: 300px; margin-bottom: 100px;">
+                                    <v-card width="600" :to="menu.to">
+                                        <h2 class="white--text card-title">
+                                            <v-img
+                                            height="300px"
+                                            :src="menu.image"
+                                            class="dashboard-card">
+                                            <div class="testimonials-bg-opacity">
+                                            </div>
+                                            </v-img>
+                                        <div style="top: 50%;">{{menu.title}}</div>
+                                        </h2>
+                                    </v-card>
+                                </div>
                             </div>
                         </div>
                         <!-- end first portfolio item -->
@@ -98,4 +88,29 @@ export default{
 
 <style scoped>
   @import '~@/assets/css/index.css';
+
+  .dashboard-card {
+      background: black;
+      transition: 0.5s;
+      position: absolute;
+  }
+
+  .dashboard-card:hover {
+      opacity: 0.2;
+  }
+
+  .card-title {
+      opacity: 1 !important;
+      width: 100%;
+      height: 100%;
+      align-content: center;
+      text-align: center;
+      text-decoration: none !important;
+      transition: 600s;
+  }
+
+  a:hover {
+      text-decoration: none !important;
+  }
+
 </style>
