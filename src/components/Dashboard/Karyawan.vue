@@ -39,10 +39,14 @@
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
+                            <template v-slot:[`item.status_karyawan`]="{ item }">
+                                <v-icon v-if="item.status_karyawan == 'Active'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
+                                <v-icon v-else class="red--text text--lighten-2">mdi-close-circle-outline</v-icon>
+                            </template>
                             <template v-slot:[`item.actions`]="{ item }">
-                                <v-icon class="green--text mr-2" @click="editHandler(item)">mdi-pencil</v-icon>
-                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id)">mdi-delete</v-icon>
-                            </template> 
+                                <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
+                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id)">mdi-close-circle-outline</v-icon>
+                            </template>
                         </v-data-table>
                 </v-card>
                 <br><br>
@@ -59,7 +63,9 @@
                             <a href="https://www.facebook.com/nicky.jovanus/" target="_blank" alt="Facebook profile"><span class="fa fa-facebook" aria-hidden="true"></span></a>
                             <a href="https://github.com/NickyJovanus" target="_blank" alt="GitHub profile"><span class="fa fa-github" aria-hidden="true"></span></a>
                         </div>
-                        <p id="copyright">For Development Purposes Only.</p>
+                        <p id="copyright">For Development Purposes Only. <br>
+                            No Copyright Infringement Intended.
+                        </p>
                     </div>
                     <!-- end row contact -->
                 </div>
@@ -74,8 +80,11 @@
 
         
         <!-- register and edit data -->
-        <v-dialog v-model="dialog" persistent max-width="700px" class="mt-15">
+        <v-dialog v-model="dialog" persistent max-width="1300px" class="mt-10">
             <v-card>
+                <v-flex>
+                    <v-progress-linear v-show="loading" slot="progress" color="blue" indeterminate></v-progress-linear>
+                </v-flex>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
@@ -91,7 +100,7 @@
                     <v-container>
                         <v-text-field
                             label="Nama Karyawan"
-                            v-model="form.name_karyawan"
+                            v-model="form.nama_karyawan"
                             outlined
                         ></v-text-field>
                         
@@ -151,7 +160,7 @@
                             v-model="form.telpon_karyawan"
                             outlined
                         ></v-text-field>
-                        <v-select
+                        <v-select v-if="inputType != 'Register'"
                             v-model="form.status_karyawan"
                             label="Status"
                             :items="status"
@@ -161,13 +170,25 @@
                             :value="form.status_karyawan"
                         >
                         </v-select>
+                        <v-select
+                            v-model="form.peran_karyawan"
+                            label="Peran"
+                            :items="peran"
+                            item-text="name"
+                            outlined
+                            three-line
+                            :value="form.peran_karyawan"
+                        >
+                        </v-select>
                         <v-text-field
-                            label="Email"
+                            label="E-mail"
                             v-model="form.email_karyawan"
                             autocomplete="off"
+                            onfocus="this.removeAttribute('readonly');"
                             outlined
                         ></v-text-field>
                         <v-text-field
+                            v-if="inputType == 'Register'"
                             label="Password"
                             v-model="form.password"
                             type="password"
@@ -180,19 +201,21 @@
                     <v-btn color="white darken-1" text @click="cancel">
                         Cancel
                     </v-btn>
-                    <v-btn color="blue darken-1" text @click="register">
+                    <v-btn v-if="inputType == 'Register'" color="blue darken-1" text @click="register">
+                        Save
+                    </v-btn>
+                    <v-btn v-if="inputType == 'Edit'" color="blue darken-1" text @click="update">
                         Save
                     </v-btn>
                 </v-card-actions>
-                <v-flex>
-                    <v-progress-linear v-show="loading" slot="progress" color="blue" indeterminate></v-progress-linear>
-                </v-flex>
             </v-card>
         </v-dialog>
 
         </div>
 
-
+        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom>
+            <pre>{{error_message}}</pre>
+        </v-snackbar>
     </v-main>
 </template>
 
@@ -240,11 +263,24 @@ export default{
                 {name: 'Laki-laki'},
                 {name: 'Perempuan'}
             ],
+            peran: [
+                {name: 'Owner'},
+                {name: 'Operational Manager'},
+                {name: 'Chef'},
+                {name: 'Waiter'},
+                {name: 'Cashier'},
+            ],
             loading: false,
             date: new Date().toISOString().substr(0, 10),
             menu: false,
             modal: false,
+            menu2: false,
             search: '',
+            editId: null,
+            error_message: '',
+            snackbar: false,
+            color: '',
+            karyawandata: new FormData,
         }
     },
     mounted() {
@@ -274,9 +310,8 @@ export default{
         },
         cancel() {
             this.resetForm();
-            this.loadData();
             this.dialog = false;
-            this.inputType = 'Add';
+            this.inputType = 'Register';
         },
         resetForm() {
             this.form.nama_karyawan = '';
@@ -289,8 +324,60 @@ export default{
             this.form.password = '';
         },
         register() {
-            //
-        }
+            this.loading = true;
+            this.karyawandata.append('nama_karyawan', this.form.nama_karyawan);
+            this.karyawandata.append('jenis_kelamin_karyawan', this.form.jenis_kelamin_karyawan);
+            this.karyawandata.append('tanggal_rekrut_karyawan', this.date);
+            this.karyawandata.append('telpon_karyawan', this.form.telpon_karyawan);
+            this.karyawandata.append('status_karyawan', this.form.status_karyawan);
+            this.karyawandata.append('email_karyawan', this.form.email_karyawan);
+            this.karyawandata.append('password', this.form.password);
+            this.error_message='';
+
+            var url = this.$api + '/karyawan'
+            this.$http.post(url, this.reservation, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                this.error_message=response.data.message;
+                this.color="green"
+                this.snackbar=true;
+                this.cancel();
+                this.loadData();
+                this.loading = false;
+            }).catch(error => {
+                if(error.response.data.message.nama_karyawan)
+                    this.error_message= this.error_message + error.response.data.message.nama_karyawan;
+                if(error.response.data.message.jenis_kelamin_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
+                if(error.response.data.message.tanggal_rekrut_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.tanggal_rekrut_karyawan;
+                if(error.response.data.message.telpon_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.telpon_karyawan;
+                if(error.response.data.message.status_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.status_karyawan;
+                if(error.response.data.message.email_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.email_karyawan;
+                if(error.response.data.message.password)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.password;
+                this.color="red"
+                this.snackbar=true;
+                this.loading = false;
+            })
+        },
+        editHandler(item){
+            this.inputType = 'Edit';
+            this.editId = item.id;
+            this.form.nama_karyawan = item.nama_karyawan;
+            this.form.jenis_kelamin_karyawan = item.jenis_kelamin_karyawan;
+            this.date = item.tanggal_rekrut_karyawan;
+            this.form.telpon_karyawan = item.telpon_karyawan;
+            this.form.peran_karyawan = item.peran_karyawan;
+            this.form.status_karyawan = item.status_karyawan;
+            this.form.email_karyawan = item.email_karyawan;
+            this.dialog = true;
+        },
     }
 }
 </script>

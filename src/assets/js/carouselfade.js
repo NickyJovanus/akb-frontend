@@ -1,7 +1,9 @@
 var fireOnHashChangesToo = true
 var pageURLCheckTimer = setInterval (
     function () {
-        if (this.lastPathStr !== location.pathname) {
+        if (this.lastPathStr !== location.pathname
+            || this.lastQueryStr !== location.search
+            || (fireOnHashChangesToo && this.lastHashStr !== location.hash)) {
             locationHashChanged();
         }
 }, 100);
@@ -27,13 +29,13 @@ function locationHashChanged() {
     setInterval(function() {
         setTimeout(function(){
             if(cycle==0) {
-                content.style.background = "url(https://images.unsplash.com/photo-1550388342-b3fd986e4e67?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80) no-repeat top center scroll";
+                content.style.background = "url("+ require('@/assets/images/carousel1.jpg') +") no-repeat top center scroll";
                 cycle++;
             } else if(cycle == 1) {
-                content.style.background = "url(https://images.unsplash.com/photo-1563176057-26febab5c153?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80) no-repeat top center scroll";
+                content.style.background = "url("+ require('@/assets/images/carousel2.jpg') +") no-repeat top center scroll";
                 cycle++;
             } else {
-                content.style.background = "url(https://images.unsplash.com/photo-1591274014221-36d4fe45f4a5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1949&q=80) no-repeat top center scroll";
+                content.style.background = "url("+ require('@/assets/images/carousel3.jpg') +") no-repeat top center scroll";
                 cycle=0;
             }
         },100);

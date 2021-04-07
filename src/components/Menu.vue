@@ -32,6 +32,26 @@
                     <h2>MAKANAN UTAMA</h2>
                     <div class="row">
 
+                        <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
+
+                            <template class="col-sm-6 col-md-4 grid-portfolio"  v-if="loading == true">
+                                    <v-skeleton-loader
+                                        class="mx-auto .d-block d-lg-none"
+                                        min-width="95vw"
+                                        type="card"
+                                    ></v-skeleton-loader>
+                            </template>
+
+                            <template class="col-sm-6 col-md-4 grid-portfolio" v-if="loading == true">
+                                    <v-skeleton-loader
+                                        class="mx-auto .d-none d-lg-block"
+                                        min-width="600px"
+                                        type="card"
+                                    ></v-skeleton-loader>
+                            </template>
+
+                        </div>
+
                         <!-- start first portfolio item -->
                         <div>
                             <div class="col-sm-6 col-md-4 grid-portfolio"  v-for="(menu) in makanan" :key="menu.gambar_menu">
@@ -65,6 +85,28 @@
                     <h2>SIDE DISHES</h2>
                     <div class="row">
 
+                        
+
+                        <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
+
+                            <template class="col-sm-6 col-md-4 grid-portfolio"  v-if="loading == true">
+                                    <v-skeleton-loader
+                                        class="mx-auto .d-block d-lg-none"
+                                        min-width="95vw"
+                                        type="card"
+                                    ></v-skeleton-loader>
+                            </template>
+
+                            <template class="col-sm-6 col-md-4 grid-portfolio" v-if="loading == true">
+                                    <v-skeleton-loader
+                                        class="mx-auto .d-none d-lg-block"
+                                        min-width="600px"
+                                        type="card"
+                                    ></v-skeleton-loader>
+                            </template>
+
+                        </div>
+
                         <!-- start first portfolio item -->
                         <div class="col-sm-6 col-md-4 grid-portfolio"  v-for="(menu) in sidedish" :key="menu.id_menu">
                             <div class="portfolio-item-ct">
@@ -95,6 +137,28 @@
                 <div class="container-fluid portfolio-ct">
                     <h2>MINUMAN</h2>
                     <div class="row">
+
+                        
+
+                        <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
+
+                            <template class="col-sm-6 col-md-4 grid-portfolio"  v-if="loading == true">
+                                    <v-skeleton-loader
+                                        class="mx-auto .d-block d-lg-none"
+                                        min-width="95vw"
+                                        type="card"
+                                    ></v-skeleton-loader>
+                            </template>
+
+                            <template class="col-sm-6 col-md-4 grid-portfolio" v-if="loading == true">
+                                    <v-skeleton-loader
+                                        class="mx-auto .d-none d-lg-block"
+                                        min-width="600px"
+                                        type="card"
+                                    ></v-skeleton-loader>
+                            </template>
+
+                        </div>
 
                         <!-- start first portfolio item -->
                         <div class="col-sm-6 col-md-4 grid-portfolio"  v-for="(menu) in minuman" :key="menu.nama_menu">
@@ -133,7 +197,9 @@
                         <a href="https://www.facebook.com/nicky.jovanus/" target="_blank" alt="Facebook profile"><span class="fa fa-facebook" aria-hidden="true"></span></a>
                         <a href="https://github.com/NickyJovanus" target="_blank" alt="GitHub profile"><span class="fa fa-github" aria-hidden="true"></span></a>
                     </div>
-                    <p id="copyright">For Development Purposes Only.</p>
+                    <p id="copyright">For Development Purposes Only. <br>
+                        No Copyright Infringement Intended.
+                    </p>
                 </div>
                 <!-- end row contact -->
             </div>
@@ -155,6 +221,7 @@ export default{
             items: [
                 { title: "Menu", to: "/menu" },
             ],
+            loading: true,
         }
     },
     mounted() {
@@ -164,6 +231,7 @@ export default{
     methods: {
         loadData() {
             var url = this.$api + '/menu';
+            this.loading = true;
 
             this.$http.get(url, {
                 headers: {
@@ -194,14 +262,14 @@ export default{
             return this.menus.filter(menus => menus.kategori_menu === 'minuman')
         },
     },
-    watch: {
-    },
-    created() {
-    },
 }
 </script>
 
 <style scoped>
   @import '../assets/css/index.css';
   @import '../assets/css/scrollbar.css';
+
+  .intro .intro-body {
+    padding: 5%;
+  }
 </style>

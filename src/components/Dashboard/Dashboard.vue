@@ -9,20 +9,35 @@
                     <div class="row">
 
                         <!-- start first portfolio item -->
-                        <div class="ma-10">
+                        <div class="ma-15 d-none d-lg-block">
                             <div class="col-md-4 grid-portfolio"  v-for="(menu) in dashboardmenu" :key="menu.image">
-                                <div style="width: 500px; height: 300px; margin-bottom: 100px;">
+                                <div style="width: 500px; height: 300px; margin-bottom: 10px;">
                                     <v-card width="600" :to="menu.to">
-                                        <h2 class="white--text card-title">
-                                            <v-img
+                                        <v-img
                                             height="300px"
                                             :src="menu.image"
                                             class="dashboard-card">
                                             <div class="testimonials-bg-opacity">
-                                            </div>
-                                            </v-img>
-                                        <div style="top: 50%;">{{menu.title}}</div>
-                                        </h2>
+                                            <h2 class="white--text card-title">
+                                                <br><br>
+                                                <div style="top: 50%;">{{menu.title}}</div>
+                                                <br>
+                                            </h2></div>
+                                        </v-img>
+                                    </v-card>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-block d-sm-block d-lg-none ma-5">
+                            <div class="col-md-4 grid-portfolio"  v-for="(menu) in dashboardmenu" :key="menu.image">
+                                <div style="width: 100vw; height: 100px; margin-bottom: 0px;">
+                                    <v-card width="100%" :to="menu.to">
+                                        <div style="text-align-last: center;">{{menu.title}}</div>
+                                        <v-img
+                                            height="100px"
+                                            :src="menu.image"
+                                            class="dashboard-card">
+                                        </v-img>
                                     </v-card>
                                 </div>
                             </div>
@@ -44,7 +59,9 @@
                             <a href="https://www.facebook.com/nicky.jovanus/" target="_blank" alt="Facebook profile"><span class="fa fa-facebook" aria-hidden="true"></span></a>
                             <a href="https://github.com/NickyJovanus" target="_blank" alt="GitHub profile"><span class="fa fa-github" aria-hidden="true"></span></a>
                         </div>
-                        <p id="copyright">For Development Purposes Only.</p>
+                        <p id="copyright">For Development Purposes Only. <br>
+                            No Copyright Infringement Intended.
+                        </p>
                     </div>
                     <!-- end row contact -->
                 </div>
@@ -96,8 +113,25 @@ export default{
   }
 
   .dashboard-card:hover {
-      opacity: 0.2;
+      opacity: 1;
   }
+
+  .testimonials-bg-opacity:hover {
+      background: black;
+      opacity: 0.7;
+  }
+
+   .testimonials-bg-opacity {
+       opacity: 0.4;
+       width: 100%;
+       height: 100%;
+       transition: 0.2s;
+       margin-top: -22px;
+   }
+   
+   .testimonials-bg-opacity .card-title {
+       opacity: 1 !important;
+   }
 
   .card-title {
       opacity: 1 !important;

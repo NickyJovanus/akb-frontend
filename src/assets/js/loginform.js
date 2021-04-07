@@ -11,13 +11,26 @@ var pageURLCheckTimer = setInterval (
         }
 }, 100);
 
+setTimeout(function(){
+  document.querySelector('.password').removeAttribute('readonly');}, 
+2000);
+
+
 function form(){
+
 let usernameInput = document.querySelector('.email');
 let passwordInput = document.querySelector('.password');
 let showPasswordButton = document.querySelector('.password-button');
 let face = document.querySelector('.face');
 
-passwordInput.addEventListener('focus', event => {
+if(passwordInput) {
+
+setTimeout(function(){
+  if(passwordInput.hasAttribute('readonly'))
+    document.querySelector('.password').removeAttribute('readonly');}, 
+2000);
+
+passwordInput.addEventListener('focus', () => {
   document.querySelectorAll('.hand').forEach(hand => {
     hand.classList.add('hidepaw');
   });
@@ -67,4 +80,5 @@ showPasswordButton.addEventListener('click', event => {
     });
   }
 });
+}
 }

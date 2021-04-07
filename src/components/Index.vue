@@ -55,10 +55,10 @@
         <!-- end work portfolio -->
         <!-- start testimonials -->
         <section class="testimonials">
-            <div class="testimonials-bg" style="background: url(https://images.unsplash.com/photo-1527578054032-8d8f044e013d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80) no-repeat top center scroll;
-            background-position: center center;
-            background-size: cover;
-            background-attachment: fixed;">
+            <div class="testimonials-bg" :style="{background: 'url(' + require('../assets/images/test1.jpg') + ') no-repeat top center scroll',
+                backgroundPosition: 'center center',
+                backgroundSize: 'cover',
+                backgroundAttachment: 'fixed'}">
                 <div class="container testimonials-bg-opacity">
                     <br>
                     <h2>SIZZLE</h2>
@@ -87,10 +87,10 @@
         </section>
         <!-- end testimonials -->
         <section class="testimonials">
-            <div class="testimonials-bg" style="background: url(https://images.unsplash.com/photo-1498654896293-37aacf113fd9?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80) no-repeat top center scroll;
-            background-position: center center;
-            background-size: cover;
-            background-attachment: fixed;">
+            <div class="testimonials-bg" :style="{background: 'url(' + require('../assets/images/test2.jpg') + ') no-repeat top center scroll',
+                backgroundPosition: 'center center',
+                backgroundSize: 'cover',
+                backgroundAttachment: 'fixed'}">
                 <div class="container testimonials-bg-opacity">
                     <br>
                     <h2>AUTHENTIC KOREAN CUISINE</h2>
@@ -322,7 +322,7 @@
                       </label>
                       <label>
                         <div class="fa fa-key"></div>
-                        <input class="password" type="password"  v-model="password" autocomplete="off" placeholder="Password"/>
+                        <input class="password" type="password"  v-model="password" autocomplete="off" onfocus="this.removeAttribute('readonly');" placeholder="Password" name="password"/>
                         <button class="password-button">Reveal</button>
                       </label>
                       <button class="login-button" @click="login">Login</button>
@@ -333,9 +333,9 @@
         </section>
         <!-- end login -->
         <section class="testimonials">
-            <div class="testimonials-bg" style="background: url(https://images.unsplash.com/photo-1590577976322-3d2d6e2130d5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80) no-repeat top center scroll;
-            background-position: center center;
-            background-size: cover;">
+            <div class="testimonials-bg" :style="{background: 'url(' + require('../assets/images/commitment.jpg') + ') no-repeat top center scroll',
+                backgroundPosition: 'center center',
+                backgroundSize: 'cover'}">
                 <div class="container testimonials-bg-opacity">
                     <h2>OUR COMMITMENT</h2>
                     <div>
@@ -374,7 +374,9 @@
                         <a href="https://www.facebook.com/nicky.jovanus/" target="_blank" alt="Facebook profile"><span class="fa fa-facebook" aria-hidden="true"></span></a>
                         <a href="https://github.com/NickyJovanus" target="_blank" alt="GitHub profile"><span class="fa fa-github" aria-hidden="true"></span></a>
                     </div>
-                    <p id="copyright">For Development Purposes Only.</p>
+                    <p id="copyright">For Development Purposes Only. <br>
+                        No Copyright Infringement Intended.
+                    </p>
                 </div>
                 <!-- end row contact -->
             </div>
@@ -439,7 +441,10 @@ export default{
                 }
             }).then(response => {
                 this.menus = response.data.data;
-            }).catch(()=> {
+            }).catch(error => {
+                this.error_message= this.error_message + error.response.data.message;
+                this.color="red"
+                this.snackbar= true;
                 this.loading = false;
             });
 
@@ -471,6 +476,7 @@ export default{
             if(localStorage.getItem('token') != null) {
                 this.loggedIn = true;
             }
+            this.clear();
         },
         login() {
             this.snackbar=false;

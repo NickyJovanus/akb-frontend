@@ -194,6 +194,5 @@ export default{
 
 <style scoped>
   @import '~@/assets/css/index.css';
-  @import '~@/assets/css/login.css';
   @import '~@/assets/css/scrollbar.css';
 </style>
