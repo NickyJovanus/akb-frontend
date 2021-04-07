@@ -45,7 +45,8 @@
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
-                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id)">mdi-close-circle-outline</v-icon>
+                                <v-icon class="green--text ml-2" @click="changePassword">mdi-key-variant</v-icon>
+                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id_karyawan)">mdi-close-circle-outline</v-icon>
                             </template>
                         </v-data-table>
                 </v-card>
@@ -211,6 +212,38 @@
             </v-card>
         </v-dialog>
 
+        
+        <v-dialog v-model="dialogConfirm" persistent max-width="600px">
+            <v-card>
+                <v-flex>
+                    <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
+                </v-flex>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-flex class="text-right">
+                        <v-icon color="red" @click="dialogConfirm = false">mdi-close</v-icon>
+                    </v-flex>
+                </v-card-actions>
+                <v-card-title>
+                    <span class="headline">Deactivation Confirmation</span>
+                </v-card-title>
+                <v-card-text>
+                    Do you really want to deactivate this karyawan?
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="white darken-1" text @click="dialogConfirm = false">
+                        Cancel
+                    </v-btn>
+                    <v-btn color="red darken-1" text @click="deleteData"> 
+                        Deactivate
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         </div>
 
         <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom>
@@ -245,6 +278,7 @@ export default{
             karyawan: [],
             inputType: 'Register',
             dialog: false,
+            dialogConfirm: false,
             form: {
                 nama_karyawan: '',
                 jenis_kelamin_karyawan: '',
@@ -281,6 +315,8 @@ export default{
             snackbar: false,
             color: '',
             karyawandata: new FormData,
+            editId: null,
+            deleteId: null,
         }
     },
     mounted() {
@@ -312,6 +348,7 @@ export default{
             this.resetForm();
             this.dialog = false;
             this.inputType = 'Register';
+            this.editId = null;
         },
         resetForm() {
             this.form.nama_karyawan = '';
@@ -328,14 +365,14 @@ export default{
             this.karyawandata.append('nama_karyawan', this.form.nama_karyawan);
             this.karyawandata.append('jenis_kelamin_karyawan', this.form.jenis_kelamin_karyawan);
             this.karyawandata.append('tanggal_rekrut_karyawan', this.date);
+            this.karyawandata.append('peran_karyawan', this.form.peran_karyawan);
             this.karyawandata.append('telpon_karyawan', this.form.telpon_karyawan);
-            this.karyawandata.append('status_karyawan', this.form.status_karyawan);
             this.karyawandata.append('email_karyawan', this.form.email_karyawan);
             this.karyawandata.append('password', this.form.password);
             this.error_message='';
 
             var url = this.$api + '/karyawan'
-            this.$http.post(url, this.reservation, {
+            this.$http.post(url, this.karyawandata, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
@@ -355,20 +392,28 @@ export default{
                     this.error_message= this.error_message + '\n'  + error.response.data.message.tanggal_rekrut_karyawan;
                 if(error.response.data.message.telpon_karyawan)
                     this.error_message= this.error_message + '\n'  + error.response.data.message.telpon_karyawan;
-                if(error.response.data.message.status_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.status_karyawan;
+                if(error.response.data.message.peran_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.peran_karyawan;
                 if(error.response.data.message.email_karyawan)
                     this.error_message= this.error_message + '\n'  + error.response.data.message.email_karyawan;
                 if(error.response.data.message.password)
                     this.error_message= this.error_message + '\n'  + error.response.data.message.password;
+                if(!error.response.data.message.nama_karyawan
+                && !error.response.data.message.jenis_kelamin_karyawan
+                && !error.response.data.message.tanggal_rekrut_karyawan
+                && !error.response.data.message.telpon_karyawan
+                && !error.response.data.message.peran_karyawan
+                && !error.response.data.message.email_karyawan
+                && !error.response.data.message.password)
+                    this.error_message= error.response.data.message;
                 this.color="red"
                 this.snackbar=true;
                 this.loading = false;
-            })
+            });
         },
         editHandler(item){
             this.inputType = 'Edit';
-            this.editId = item.id;
+            this.editId = item.id_karyawan;
             this.form.nama_karyawan = item.nama_karyawan;
             this.form.jenis_kelamin_karyawan = item.jenis_kelamin_karyawan;
             this.date = item.tanggal_rekrut_karyawan;
@@ -377,6 +422,87 @@ export default{
             this.form.status_karyawan = item.status_karyawan;
             this.form.email_karyawan = item.email_karyawan;
             this.dialog = true;
+        },
+        deleteHandler(id){
+            this.deleteId = id;
+            this.dialogConfirm = true;
+        },
+        changePassword() {
+
+        },
+        update() {
+            let updateData = {
+                nama_karyawan: this.form.nama_karyawan,
+                jenis_kelamin_karyawan: this.form.jenis_kelamin_karyawan,
+                tanggal_rekrut_karyawan: this.date,
+                telpon_karyawan: this.form.telpon_karyawan,
+                peran_karyawan: this.form.peran_karyawan,
+                status_karyawan: this.form.status_karyawan,
+                email_karyawan: this.form.email_karyawan,
+            }
+            
+            var url = this.$api + '/karyawan/' + this.editId;
+            this.$http.put(url, updateData, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                this.error_message=response.data.message;
+                this.color="green"
+                this.snackbar=true;
+                this.cancel();
+                this.loadData();
+                this.loading = false;
+            }).catch(error => {
+                if(error.response.data.message.nama_karyawan)
+                    this.error_message= this.error_message + error.response.data.message.nama_karyawan;
+                if(error.response.data.message.jenis_kelamin_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
+                if(error.response.data.message.tanggal_rekrut_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.tanggal_rekrut_karyawan;
+                if(error.response.data.message.telpon_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.telpon_karyawan;
+                if(error.response.data.message.peran_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.peran_karyawan;
+                if(error.response.data.message.email_karyawan)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.email_karyawan;
+                if(error.response.data.message.password)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.password;
+                if(!error.response.data.message.nama_karyawan
+                && !error.response.data.message.jenis_kelamin_karyawan
+                && !error.response.data.message.tanggal_rekrut_karyawan
+                && !error.response.data.message.telpon_karyawan
+                && !error.response.data.message.peran_karyawan
+                && !error.response.data.message.email_karyawan
+                && !error.response.data.message.password)
+                    this.error_message= error.response.data.message;
+                this.color="red"
+                this.snackbar=true;
+                this.loading = false;
+            })
+        },
+        deleteData() {
+            this.loading = true;
+            var url = this.$api + '/karyawan/' + this.deleteId;
+            this.$http.delete(url, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                this.error_message=response.data.message;
+                this.color="green"
+                this.snackbar=true;
+                this.close();
+                this.loadData();
+                this.resetForm();
+                this.loading = false;
+                this.inputType = 'Register';
+            }).catch(error => {
+                this.error_message=error.response.data.message;
+                this.color="red"
+                this.snackbar=true;
+                this.loading = false;
+            })
         },
     }
 }
