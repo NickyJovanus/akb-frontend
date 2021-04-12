@@ -315,7 +315,6 @@ export default{
             snackbar: false,
             color: '',
             karyawandata: new FormData,
-            editId: null,
             deleteId: null,
         }
     },
