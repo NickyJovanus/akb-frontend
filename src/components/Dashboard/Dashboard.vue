@@ -11,7 +11,7 @@
                         <!-- start first portfolio item -->
                         <div class="ma-15 d-none d-lg-block">
                             <div class="col-md-4 grid-portfolio"  v-for="(menu) in dashboardmenu" :key="menu.image">
-                                <div style="width: 500px; height: 300px; margin-bottom: 10px;">
+                                <div style="height: 300px; margin-bottom: 10px;">
                                     <v-card width="600" :to="menu.to">
                                         <v-img
                                             height="300px"
