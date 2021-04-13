@@ -121,10 +121,13 @@ export default{
                 headers: {
                     //
                 }
-            }).then(response => {
+            }).then(() => {
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
+                this.error_message = 'The server https://akb-backend.herokuapp.com/ is currently offline. Please try again later.'
+                this.snackbar = true;
+                this.color = 'red';
             });
 
         },

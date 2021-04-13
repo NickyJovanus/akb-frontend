@@ -331,6 +331,7 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message= err.response.data.message;
+                // this.error_message='This meja is currently under reservation.'
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;
