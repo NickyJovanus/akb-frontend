@@ -1,6 +1,11 @@
 <template>
     <v-main>
         <div id="container">
+            <div class="d-block d-sm-block d-lg-none">
+                <br>
+                <br>
+                <br>
+            </div>
             <br><br>
             <section id="portfolio">
                 <div class="container-fluid portfolio-ct">
@@ -92,6 +97,7 @@ export default{
             qrcode:      { title: "Print QR Code", to: "/print-qr", image: "https://images.unsplash.com/photo-1571867424488-4565932edb41?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1868&q=20" },
             pengeluaran: { title: "Laporan Pengeluaran", to: "/laporan/expenses", image: "https://images.unsplash.com/photo-1517971071642-34a2d3ecc9cd?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1868&q=20" },
             pendapatan:  { title: "Laporan Pendapatan", to: "/laporan/income", image: "https://images.unsplash.com/photo-1579444741963-5ae219cfe27c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=20" },
+            ketersediaan:{ title: "Ketersediaan Meja", to: "/showMeja", image: "https://images.unsplash.com/photo-1606140164315-8ea68f6852d6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=20"},
         }
     },
     mounted() {
@@ -105,6 +111,7 @@ export default{
                 this.dashboardmenu.push(this.karyawan);
                 this.dashboardmenu.push(this.menu);
                 this.dashboardmenu.push(this.meja);
+                this.dashboardmenu.push(this.ketersediaan);
                 this.dashboardmenu.push(this.pesanan);
                 this.dashboardmenu.push(this.reservasi);
                 this.dashboardmenu.push(this.transaksi);
@@ -125,7 +132,7 @@ export default{
                 this.dashboardmenu.push(this.stock);
                 this.dashboardmenu.push(this.history);
             } else if (role =="Waiter") {
-                this.dashboardmenu.push(this.meja);
+                this.dashboardmenu.push(this.ketersediaan);
                 this.dashboardmenu.push(this.pesanan);
                 this.dashboardmenu.push(this.reservasi);
                 this.dashboardmenu.push(this.qrcode);

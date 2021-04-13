@@ -45,7 +45,7 @@
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
-                                <v-icon class="green--text ml-2" @click="changePassword">mdi-key-variant</v-icon>
+                                <v-icon class="green--text ml-2" @click="changePasswordHandler(item.id_karyawan)">mdi-key-variant</v-icon>
                                 <v-icon class="red--text ml-2" @click="deleteHandler(item.id_karyawan)">mdi-close-circle-outline</v-icon>
                             </template>
                         </v-data-table>
@@ -74,14 +74,9 @@
             </footer>
             <!-- end footer -->
 
-
-
-            
-
-
         
         <!-- register and edit data -->
-        <v-dialog v-model="dialog" persistent max-width="1300px" class="mt-10">
+        <v-dialog v-model="dialog" persistent max-width="600px" mt-10>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="loading" slot="progress" color="blue" indeterminate></v-progress-linear>
@@ -98,7 +93,7 @@
                     <span class="headline">{{ inputType }} Karyawan</span>
                 </v-card-title>
                 <v-card-text>
-                    <v-container>
+                    <container class="v-container" fluid ma-0 pa-5>
                         <v-text-field
                             label="Nama Karyawan"
                             v-model="form.nama_karyawan"
@@ -195,7 +190,7 @@
                             type="password"
                             outlined
                         ></v-text-field>
-                    </v-container>
+                    </container>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -205,7 +200,56 @@
                     <v-btn v-if="inputType == 'Register'" color="blue darken-1" text @click="register">
                         Save
                     </v-btn>
-                    <v-btn v-if="inputType == 'Edit'" color="blue darken-1" text @click="update">
+                    <v-btn v-if="inputType == 'Edit'" color="yellow darken-1" text @click="update">
+                        Save
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        
+        <v-dialog v-model="dialogPassword" persistent max-width="600px">
+            <v-card>
+                <v-flex>
+                    <v-progress-linear v-show="loading" slot="progress" color="green" indeterminate></v-progress-linear>
+                </v-flex>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-flex class="text-right">
+                        <v-icon color="red" @click="dialogConfirm = false">mdi-close</v-icon>
+                    </v-flex>
+                </v-card-actions>
+                <v-card-title>
+                    <span class="headline">Change Password</span>
+                </v-card-title>
+                <div style="margin: 30px;">
+                    <v-text-field
+                        label="Old Password"
+                        v-model="formpass.oldpassword"
+                        type="password"
+                        outlined
+                    ></v-text-field>
+                    <v-text-field
+                        label="New Password"
+                        v-model="formpass.newpassword"
+                        type="password"
+                        outlined
+                    ></v-text-field>
+                    <v-text-field
+                        label="Confirm New Password"
+                        v-model="formpass.confirmpassword"
+                        type="password"
+                        outlined
+                    ></v-text-field>
+                </div>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="white darken-1" text @click="dialogPassword = false; resetForm()">
+                        Cancel
+                    </v-btn>
+                    <v-btn color="green darken-1" text @click="changePass"> 
                         Save
                     </v-btn>
                 </v-card-actions>
@@ -279,6 +323,7 @@ export default{
             inputType: 'Register',
             dialog: false,
             dialogConfirm: false,
+            dialogPassword: false,
             form: {
                 nama_karyawan: '',
                 jenis_kelamin_karyawan: '',
@@ -288,6 +333,11 @@ export default{
                 status_karyawan: '',
                 email_karyawan: '',
                 password: '',
+            },
+            formpass: {
+                oldpassword: '',
+                newpassword: '',
+                confirmpassword: '',
             },
             status: [
                 {name: 'Active'},
@@ -316,6 +366,7 @@ export default{
             color: '',
             karyawandata: new FormData,
             deleteId: null,
+            passwordId: null,
         }
     },
     mounted() {
@@ -358,6 +409,9 @@ export default{
             this.form.status_karyawan = '';
             this.form.email_karyawan = '';
             this.form.password = '';
+            this.formpass.oldpassword = '';
+            this.formpass.newpassword = '';
+            this.formpass.confirmpassword = '';
         },
         register() {
             this.loading = true;
@@ -426,8 +480,9 @@ export default{
             this.deleteId = id;
             this.dialogConfirm = true;
         },
-        changePassword() {
-
+        changePasswordHandler(id) {
+            this.passwordId = id;
+            this.dialogPassword = true;
         },
         update() {
             let updateData = {
@@ -503,6 +558,45 @@ export default{
                 this.loading = false;
             })
         },
+        changePass() {
+            let passwordData = {
+                old_password: this.formpass.oldpassword,
+                new_password: this.formpass.newpassword,
+                confirm_password: this.formpass.confirmpassword,
+            }
+
+            this.loading = true;
+            var url = this.$api + '/karyawan/cp/' + this.passwordId;
+            this.$http.put(url, passwordData, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                this.error_message=response.data.message;
+                
+                this.error_message=response.data.message; 
+                if(this.error_message == "Data was successfully updated") {
+                    this.color="green"
+                    this.loading = false;
+                    this.loadData();
+                    this.dialogPassword = false;
+                } else {
+                    this.color="red"
+                    this.loading = false;
+                }
+                this.snackbar=true;
+                this.close();
+                this.resetForm();
+                this.inputType = 'Register';
+            }).catch(error => {
+                this.error_message=error.response.data.message;
+                this.color="red"
+                this.snackbar=true;
+                this.loading = false;
+                this.resetForm();
+            })
+
+        }
     }
 }
 </script>

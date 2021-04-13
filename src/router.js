@@ -42,8 +42,15 @@ const router = new VueRouter({
                 {
                     path: "/manage/karyawan",
                     name: "Karyawan",
-                    meta: {title: 'Dashboard - Atma Korean BBQ'},
+                    meta: {title: 'Manage Karyawan - Atma Korean BBQ'},
                     component: importComponent('Dashboard/Karyawan'),
+                },
+                //Meja
+                {
+                    path: "/manage/meja",
+                    name: "Meja",
+                    meta: {title: 'Manage Meja - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Meja'),
                 },
             ]
         },

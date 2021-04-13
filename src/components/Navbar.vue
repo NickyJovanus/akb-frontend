@@ -38,11 +38,11 @@
             <!-- end container fluid -->
         </nav>
         <!-- end navigation -->
-      <keep-alive>
         <div id="notNav"  @click="collapsed = true">
-        <router-view></router-view>
+            <keep-alive>
+                <router-view></router-view>
+            </keep-alive>
         </div>
-      </keep-alive>
 
         <v-dialog v-model="logoutdialog" max-width="600px">
             <v-card>
