@@ -46,7 +46,7 @@
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
-                                <v-icon v-if="role == 'Operational Manager'" class="red--text ml-2" @click="deleteHandler(item.id_meja)">mdi-close-circle-outline</v-icon>
+                                <v-icon v-if="role == 'Operational Manager'" class="red--text ml-2" @click="deleteHandler(item.id_meja)">mdi-delete-circle-outline</v-icon>
                             </template>
                         </v-data-table>
                 </v-card>
@@ -317,6 +317,8 @@ export default{
             });
         },
         deleteData() {
+            this.progressBar = true;
+
             var url = this.$api + '/meja/' + this.deleteId;
             this.$http.delete(url, {
                 headers: {
