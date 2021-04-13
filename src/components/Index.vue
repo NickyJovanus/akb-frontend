@@ -135,8 +135,10 @@
                     </div>
                     <div class="col-lg-6 about-intro-text">
                         <br><br>
-                        <p>Atma Korean BBQ is <span>indeed</span> a <span>Korean</span> restaurant.<br>
-                            건배! <span class="fa fa-beer" aria-hidden="true"></span></p>
+                        <p>Atma Korean BBQ (AKB) is one of <span>the best</span> Korean <span>BBQ</span> restaurant to ever exist.<br>
+                           Here at AKB, we offer the original and the most delicious taste of Korean BBQ for everyone's delicacy.<br>
+                           Invite your friends and family at our restaurant to truly have <span>the best experience</span>.<br>
+                        <br>건배! <span class="fa fa-beer" aria-hidden="true"></span></p>
                         <!--<div class="button-group">
                             <div class="text">Download CV</div>
                             <div class="icon-cv"><a href="http://marinamarques.pt/assets/MarinaMarques_CV.pdf" alt="Marina Marques CV" target="_blank"><span class="fa fa-arrow-circle-down" aria-hidden="true"></span></a></div>
