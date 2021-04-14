@@ -167,6 +167,8 @@
 </template>
 
 <script>
+import { EventBus } from './bus.js';
+
 export default{
     name: "Meja",
     data() {
@@ -229,6 +231,7 @@ export default{
                 }
             }).then(response => {
                 this.meja = response.data.data;
+                this.emitKetersediaan();
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -340,6 +343,9 @@ export default{
                 this.progressBar = false;
             });
 
+        },
+        emitKetersediaan() {
+            EventBus.$emit('load', 'extra data');
         }
     }
 }

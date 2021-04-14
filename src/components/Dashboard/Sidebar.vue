@@ -41,7 +41,7 @@
         <div id="notNav"  @click="collapsed = true">
             <transition name="slide-fade">
                 <keep-alive>
-                        <router-view></router-view>
+                    <router-view></router-view>
                 </keep-alive>
             </transition>
         </div>
@@ -79,6 +79,7 @@
 </template>
 
 <script>
+
 export default{
     name: "Sidebar",
     data() {

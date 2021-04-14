@@ -1,6 +1,6 @@
 <template>
     <v-main>
-        <div id="container">
+        <div id="container" @load='loadData'>
             <br><br>
             <div class="button-group" style="margin-left: 20px;">
                 <div class="text" @click="redirectDashboard"><i style="
@@ -15,90 +15,93 @@
             <div style="text-align: center; width: 100%;">
                 <h2>Ketersediaan Meja</h2>
             </div>
-            
-            <v-row class="fill-height overflow-auto">
-                <v-col ma-5
-                    v-for="(item) in meja"
-                    :key="item.id_meja"
-                    :cols="(12/itemsPerRow)"
-                    class="py-2"
-                    :style="{
-                        overflow: 'hidden'
-                    }"
-                > 
-                    <v-card
-                        v-if="item.status_meja=='Empty'"
-                        class="mx-auto"
-                        max-width="344"
+                <v-row class="overflow-auto">
+                    <v-col
+                        v-for="(item) in meja"
+                        :key="item.id_meja"
+                        :cols="(12/itemsPerRow)"
+                        class="py-2 ma-5"
                         :style="{
-                            backgroundColor: 'rgb(50, 255, 50);'
+                            overflow: 'hidden'
                         }"
-                    >
-                        <v-card-title>
-                            {{item.no_meja}}
-                        </v-card-title>
-
-                        <v-card-actions>
-
-                        </v-card-actions>
-                    </v-card>
-                    <v-card
-                        v-else
-                        class="mx-auto"
-                        max-width="344"
-                        :style="{
-                            backgroundColor: 'red;'
-                        }"
-                    >
-                        <v-card-title>
-                            {{item.no_meja}}
-                        </v-card-title>
-
-                        <v-card-actions>
-
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
-            </v-row>
+                    > 
+                        <transition name="fade">
+                            <v-card
+                                v-show="cards"
+                                class="mx-auto"
+                                max-width="250px"
+                                height="250px"
+                                :color="colorCard(item.status_meja)"
+                            >
+                                <v-card-title>
+                                    <h4>No. {{item.no_meja}}</h4>
+                                </v-card-title>
+                                <br>
+                                <v-card-text class="justify-center text-center">
+                                    <h3>{{item.status_meja}}</h3>
+                                </v-card-text>
+                            </v-card>
+                        </transition>
+                    </v-col>
+                </v-row>
         </div>
     </v-main>
 </template>
 
 <script>
+import { EventBus } from './bus.js';
 
 export default{
     name: "Ketersediaan",
     data() {
         return {
-            meja: [],
+            meja: [{status_meja: "Loading..."},{status_meja: "Loading..."},
+            {status_meja: "Loading..."},{status_meja: "Loading..."},
+            {status_meja: "Loading..."},{status_meja: "Loading..."},
+            {status_meja: "Loading..."},{status_meja: "Loading..."}],
+            loading: true,
+            cards: true,
+            renderComponent: true,
         }
     },
     mounted() {
-        this.loadData();
         import('@/assets/js/navbarfade.js');
+        
+        this.$nextTick(() => {
+            this.loadData();
+        });
     },
     methods: {
         redirectDashboard() {
             this.$router.push({
                 path: '/dashboard',
             });
-            this.collapsed = true;
         },
         loadData() {
             var url = this.$api + '/meja';
             this.loading = true;
-            this.role = localStorage.getItem('role');
 
             this.$http.get(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
+                this.cards = false;
+                setTimeout(() => this.cards = true, 50);
+                this.meja = [];
                 this.meja = response.data.data;
                 this.loading = false;
             }).catch(()=> {
+                this.meja = [];
                 this.loading = false;
             });
+        },
+        colorCard(status) {
+            switch(status) {
+                case 'Empty': return 'green'; 
+                case 'In-use': return 'red';
+                default:  return 'grey';
+            }
         },
         calcRowsPerPage() {
             let container = document.getElementById('container')
@@ -118,6 +121,19 @@ export default{
         shadeBox(color) {
             return '0 0 0px 1px '+color;
         },
+        forceRerender() {
+            // Remove my-component from the DOM
+            this.renderComponent = false;
+
+            this.$nextTick(() => {
+                // Add the component back in
+                this.renderComponent = true;
+            });
+        }
+    },
+
+    activated: function() {
+        this.forceRerender();
     },
 
     computed: {
@@ -145,8 +161,23 @@ export default{
     created () {
         window.addEventListener('resize', () => {
             this.calcRowsPerPage()
-        })
+        });
+        EventBus.$on('load', data => {
+            console.log(data);
+            this.loadData()
+        });
     },
 }
 
 </script>
+
+<style scoped>
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+
+</style>
