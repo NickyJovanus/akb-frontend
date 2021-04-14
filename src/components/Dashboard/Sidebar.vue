@@ -3,12 +3,14 @@
 <template>
     <main>
         <!-- START PRELOADER -->
-        <div id="preloader" class="preloader-dashboard" v-if="loading == true" style="z-index: 9999;">
-            <div id="status" style="text-align: center;"><br><br><br><br><br><br><br><br><br><br><br><br>
-                Loading Dashboard...<br> 
-                <div style="transition: 2s;">{{preloadertext}}</div>
+        <transition name="fade">
+            <div id="preloader" class="preloader-dashboard" v-if="loading == true" style="z-index: 9999;">
+                <div id="status" style="text-align: center;"><br><br><br><br><br><br><br><br><br><br><br><br>
+                    Loading Dashboard...<br> 
+                    <div style="transition: 2s;">{{preloadertext}}</div>
+                </div>
             </div>
-        </div>
+        </transition>
         <!-- END PRELOADER -->
         <!-- navigation -->
         <!-- start Fixed navbar -->
@@ -37,9 +39,11 @@
         </nav>
         <!-- end navigation -->
         <div id="notNav"  @click="collapsed = true">
-            <keep-alive>
-                    <router-view></router-view>
-            </keep-alive>
+            <transition name="slide-fade">
+                <keep-alive>
+                        <router-view></router-view>
+                </keep-alive>
+            </transition>
         </div>
 
         <v-dialog v-model="logoutdialog" max-width="600px">
@@ -198,4 +202,27 @@ export default{
 <style scoped>
   @import '~@/assets/css/index.css';
   @import '~@/assets/css/scrollbar.css';
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+  display: block;
+}
+.navbar-fixed-top {
+    background: black !important;
+    box-shadow: 0px 5px 20px #000000a1;
+}
 </style>

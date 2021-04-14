@@ -9,7 +9,9 @@ var pageURLCheckTimer = setInterval (
             this.lastHashStr = location.hash;
             scroll();
         }
-}, 100);
+}, 111);
+
+scroll();
 
 function scroll() {
     var content;
@@ -21,7 +23,7 @@ function scroll() {
     content.onscroll = function() {scrollFunction()};
 
     function scrollFunction() {
-        if (document.getElementById('container').scrollTop > 100 || document.getElementById('container').scrollTop > 100) {
+        if (document.getElementById('container').scrollTop > 80 || document.getElementById('container').scrollTop > 80) {
             document.querySelector(".navbar-fixed-top").style.background = "#000";
             document.querySelector(".navbar-fixed-top").style.transition = "0.2s";
             document.querySelector(".navbar-fixed-top").style.boxShadow = "0px 5px 20px #000000a1";

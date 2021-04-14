@@ -209,6 +209,7 @@ export default{
     },
     mounted() {
         this.loadData();
+        import('@/assets/js/navbarfade.js');
     },
     methods: {
         redirectDashboard() {

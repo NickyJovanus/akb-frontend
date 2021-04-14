@@ -85,8 +85,6 @@
                     <h2>SIDE DISHES</h2>
                     <div class="row">
 
-                        
-
                         <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
 
                             <template class="col-sm-6 col-md-4 grid-portfolio"  v-if="loading == true">
@@ -137,8 +135,6 @@
                 <div class="container-fluid portfolio-ct">
                     <h2>MINUMAN</h2>
                     <div class="row">
-
-                        
 
                         <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
 

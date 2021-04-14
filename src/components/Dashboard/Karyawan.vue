@@ -34,11 +34,13 @@
                             class="ml-5 mr-3"
                         ></v-text-field>
                     </v-card-title>
+                        <transition name="fade">
                         <v-data-table :headers="headers" 
                             :items="karyawan" 
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
+                            
                             <template v-slot:[`item.status_karyawan`]="{ item }">
                                 <v-icon v-if="item.status_karyawan == 'Active'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon v-else class="red--text text--lighten-2">mdi-close-circle-outline</v-icon>
@@ -49,6 +51,7 @@
                                 <v-icon class="red--text ml-2" @click="deleteHandler(item.id_karyawan)">mdi-close-circle-outline</v-icon>
                             </template>
                         </v-data-table>
+                        </transition>
                 </v-card>
                 <br><br>
             </div>
@@ -371,6 +374,7 @@ export default{
     },
     mounted() {
         this.loadData();
+        import('@/assets/js/navbarfade.js');
     },
     methods: {
         redirectDashboard() {

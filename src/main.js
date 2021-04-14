@@ -20,6 +20,7 @@ var $ = global.jQuery;
 window.$ = $;
 
 new Vue({
+  el: '#app',
   vuetify,
   router,
   render: h => h(App),
