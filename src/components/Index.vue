@@ -230,7 +230,7 @@
                                     <div class="timeline-experience-info clear-after">
                                         <h5>Established</h5>
                                         <div class="timeline-role">Establishment of Atma Korean BBQ</div>
-                                        <p>March 2018</p>
+                                        <p>March 2019</p>
                                     </div>
                                     <!-- history-info -->
                                 </div>
