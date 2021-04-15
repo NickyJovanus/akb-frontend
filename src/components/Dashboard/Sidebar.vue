@@ -105,11 +105,10 @@ export default{
         this.loadData();
     },
     mounted() {
-        import('@/assets/js/navbarfade.js');
+        //
     },
     methods: {
         loadData() {
-            var url = this.$api + '/menu/top';
             setTimeout(() => this.preloadertext = "This process may take up to 10 seconds.", 4000);
 
             if(localStorage.getItem('token') != null) {
@@ -118,10 +117,11 @@ export default{
                 this.loggedIn = true;
             } else {
                 this.$router.push({
-                    path: '/index',
+                    path: '/',
                 });
             }
 
+            var url = this.$api + '/menu/top';
             this.$http.get(url, {
                 headers: {
                     //
@@ -130,7 +130,7 @@ export default{
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
-                this.error_message = 'The server https://akb-backend.herokuapp.com/ is currently offline. Please try again later.'
+                this.error_message = 'The server '+ this.$http +' is currently offline. Please try again later.'
                 this.snackbar = true;
                 this.color = 'red';
             });

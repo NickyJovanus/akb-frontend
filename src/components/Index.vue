@@ -202,7 +202,7 @@
                                 <time datetime="2021">2021</time>
                                 <div class="timeline-experience">
                                     <span class="timeline-circle"></span>
-                                    <div class="timeline-experience-img"><img src="http://www.pngall.com/wp-content/uploads/4/World-Wide-Web-PNG-Picture.png"></div>
+                                    <div class="timeline-experience-img"><img :src="require('@/assets/images/web.png')"></div>
                                     <div class="timeline-experience-info clear-after">
                                         <h5>Website Published</h5>
                                         <div class="timeline-role">The official website of Atma Korean BBQ is published</div>
@@ -214,7 +214,7 @@
                                 <time datetime="2020">2020</time>
                                 <div class="timeline-experience">
                                     <span class="timeline-circle"></span>
-                                    <div class="timeline-experience-img"><img src="http://logos-vector.com/images/logo/lar/9/9/5/99575/UAJY_c0f3f_250x250.png" style="border-radius: 20px; border: 2px solid #ff6161;"></div>
+                                    <div class="timeline-experience-img"><img :src="require('@/assets/images/UAJY.png')" style="border-radius: 20px; border: 2px solid #ff6161;"></div>
                                     <div class="timeline-experience-info clear-after">
                                         <h5>Collaboration with UAJY</h5>
                                         <div class="timeline-role">Atma Korean BBQ collaborated with Universitas Atma Jaya Yogyakarta</div>

@@ -12,11 +12,11 @@ const router = new VueRouter({
     mode: "history",
     routes: [
         {
-            path: "/index",
+            path: "/",
             component: importComponent('Navbar'),
             children: [
                 {
-                    path: '/index',
+                    path: '/',
                     meta: {title: 'Atma Korean BBQ'},
                     component: importComponent('Index'),
                 },
@@ -63,7 +63,7 @@ const router = new VueRouter({
         },
         {
             path: '*',
-            redirect: '/index',
+            redirect: '/',
         }
     ],
 });
