@@ -223,7 +223,7 @@
                             </div>
                             <!-- year -->
                             <div class="timeline-year timeline-year1">
-                                <time datetime="2018">2018</time>
+                                <time datetime="2019">2019</time>
                                 <div class="timeline-experience">
                                     <span class="timeline-circle"></span>
                                     <div class="timeline-experience-img"><img src="https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+white+text.png"></div>
