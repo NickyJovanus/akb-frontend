@@ -34,6 +34,7 @@
 
                         <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
 
+                            <!-- Skeletons -->
                             <template class="col-sm-6 col-md-4 grid-portfolio"  v-if="loading == true">
                                     <v-skeleton-loader
                                         class="mx-auto .d-block d-lg-none"
@@ -214,9 +215,6 @@ export default{
             menus: [],
             customers: null,
             dishes: [],
-            items: [
-                { title: "Menu", to: "/menu" },
-            ],
             loading: true,
         }
     },
@@ -248,6 +246,7 @@ export default{
         },
     },
     computed: {
+        //Filters for category
         makanan() {
             return this.menus.filter(menus => menus.kategori_menu === 'makanan')
         },

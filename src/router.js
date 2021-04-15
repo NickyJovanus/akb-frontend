@@ -59,6 +59,13 @@ const router = new VueRouter({
                     meta: {title: 'Ketersediaan Meja - Atma Korean BBQ'},
                     component: importComponent('Dashboard/Ketersediaan'),
                 },
+                //Customer
+                {
+                    path: "/manage/customers",
+                    name: "Customers",
+                    meta: {title: 'Manage Customers - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Customers'),
+                },
             ]
         },
         {

@@ -55,10 +55,8 @@ export default{
     name: "Ketersediaan",
     data() {
         return {
-            meja: [{status_meja: "Loading..."},{status_meja: "Loading..."},
-            {status_meja: "Loading..."},{status_meja: "Loading..."},
-            {status_meja: "Loading..."},{status_meja: "Loading..."},
-            {status_meja: "Loading..."},{status_meja: "Loading..."}],
+            meja: [],
+            empty: {status_meja: "Loading..."},
             loading: true,
             cards: true,
             renderComponent: true,
@@ -66,16 +64,20 @@ export default{
     },
     mounted() {
         import('@/assets/js/navbarfade.js');
-        
-        this.$nextTick(() => {
-            this.loadData();
-        });
+        this.reload();
+        this.loadData();
     },
     methods: {
         redirectDashboard() {
             this.$router.push({
                 path: '/dashboard',
             });
+        },
+        reload() {
+            this.meja = [];
+            let i = 0;
+            for(i = 0; i<8; i++)
+                this.meja.push(this.empty);
         },
         loadData() {
             var url = this.$api + '/meja';
@@ -164,6 +166,7 @@ export default{
         });
         EventBus.$on('load', data => {
             console.log(data);
+            this.reload(); 
             this.loadData()
         });
     },

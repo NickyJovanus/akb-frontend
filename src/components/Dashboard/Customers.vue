@@ -13,7 +13,7 @@
             </div>
             <br><br>
             <div style="text-align: center; width: 100%;">
-                <h2>Meja Management</h2>
+                <h2>Customers Management</h2>
             </div>
             <div class="mt-5 table-section">
                 <v-card class="ma-6">
@@ -35,18 +35,18 @@
                         ></v-text-field>
                     </v-card-title>
                         <v-data-table :headers="headers" 
-                            :items="meja"
+                            :items="customers"
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
-                            <template v-slot:[`item.status_meja`]="{ item }">
-                                <v-icon v-if="item.status_meja == 'Empty'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
+                            <template v-slot:[`item.status_customers`]="{ item }">
+                                <v-icon v-if="item.status_customers == 'Empty'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon v-else class="red--text text--lighten-2">mdi-close-circle-outline</v-icon>
-                                {{item.status_meja}}
+                                {{item.status_customers}}
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
-                                <v-icon v-if="role == 'Operational Manager'" class="red--text ml-2" @click="deleteHandler(item.id_meja)">mdi-delete-circle-outline</v-icon>
+                                <v-icon v-if="role == 'Operational Manager'" class="red--text ml-2" @click="deleteHandler(item.id_customers)">mdi-delete-circle-outline</v-icon>
                             </template>
                         </v-data-table>
                 </v-card>
@@ -90,25 +90,25 @@
                         </v-flex>
                     </v-card-actions>
                     <v-card-title>
-                        <span class="headline">{{ inputType }} Meja</span>
+                        <span class="headline">{{ inputType }} customers</span>
                     </v-card-title>
                     <div style="margin: 30px;">
                         <v-flex>
                             <v-text-field
-                                label="Nomor Meja"
-                                v-model="form.nomor_meja"
+                                label="Nama Customer"
+                                v-model="form.nama_customer"
                                 outlined
                             ></v-text-field>
-                            
-                            <v-select
-                                v-model="form.status_meja"
-                                label="Status Meja"
-                                :items="status"
-                                item-text="name"
+                            <v-text-field
+                                label="No. Telepon"
+                                v-model="form.telpon_customer"
                                 outlined
-                                three-line
-                                :value="form.status_meja"
-                            ></v-select>
+                            ></v-text-field>
+                            <v-text-field
+                                label="E-mail Address"
+                                v-model="form.email_customer"
+                                outlined
+                            ></v-text-field>
                         </v-flex>
                     </div>
                     <v-card-actions>
@@ -146,7 +146,7 @@
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>
                 <v-card-text>
-                    Do you really want to delete this meja?
+                    Do you really want to delete this data?
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -170,7 +170,7 @@
 import { EventBus } from './bus.js';
 
 export default{
-    name: "Meja",
+    name: "customers",
     data() {
         return {
             role: '',
@@ -178,25 +178,23 @@ export default{
                 { text: "ID",
                     align: "start",
                     sortable: true,
-                    value: "id_meja" },
-                { text: "Nomor Meja", value: "no_meja" },
-                { text: "Status Meja", value: "status_meja" },
+                    value: "id_customer" },
+                { text: "Nama", value: "nama_customer" },
+                { text: "No. Telepon", value: "telpon_customer" },
+                { text: "E-mail", value: "email_customer" },
                 { text: "Actions",
                     sortable: false,
                     value: "actions" },
             ],
-            meja: [],
+            customers: [],
             inputType: 'Add',
             dialog: false,
             dialogConfirm: false,
             form: {
-                nomor_meja: '',
-                status_meja: '',
+                nama_customer: '',
+                telpon_customer: '',
+                email_customer: '',
             },
-            status: [
-                {name: 'Empty'},
-                {name: 'In-use'}
-            ],
             loading: false,
             search: '',
             editId: null,
@@ -220,7 +218,7 @@ export default{
             this.collapsed = true;
         },
         loadData() {
-            var url = this.$api + '/meja';
+            var url = this.$api + '/customer';
             this.loading = true;
             this.role = localStorage.getItem('role');
 
@@ -229,8 +227,8 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.meja = response.data.data;
-                this.emitKetersediaan();
+                this.customers = response.data.data;
+                this.emitCustomer();
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -238,9 +236,10 @@ export default{
         },
         editHandler(item) {
             this.inputType = 'Edit';
-            this.editId = item.id_meja;
-            this.form.nomor_meja = item.no_meja;
-            this.form.status_meja = item.status_meja;
+            this.editId = item.id_customer;
+            this.form.nama_customer = item.nama_customer;
+            this.form.telpon_customer = item.telpon_customer;
+            this.form.email_customer = item.email_customer;
             this.dialog = true;
         },
         deleteHandler(id) {
@@ -254,17 +253,19 @@ export default{
             this.inputType = 'Add';
         },
         resetForm() {
-            this.form.nomor_meja = '';
-            this.form.status_meja = '';
+            this.form.nama_customers = '';
+            this.form.telpon_customer = '';
+            this.form.email_customer = '';
         },
         add() {
             this.progressBar = true;
             let addData = {
-                no_meja: this.form.nomor_meja,
-                status_meja: this.form.status_meja,
+                nama_customers: this.form.nama_customers,
+                telpon_customer: this.form.telpon_customer,
+                email_customer: this.form.email_customer,
             }
 
-            var url = this.$api + '/meja'
+            var url = this.$api + '/customer'
             this.$http.post(url, addData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -277,11 +278,11 @@ export default{
                 this.loadData();
                 this.progressBar = false;
             }).catch(err => {
-                if(err.response.data.message.no_meja)
-                    this.error_message= err.response.data.message.no_meja;
-                if(err.response.data.message.status_meja)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
-                if(!err.response.data.message.no_meja && !err.response.data.message.status_meja)
+                if(err.response.data.message.no_customers)
+                    this.error_message= err.response.data.message.no_customers;
+                if(err.response.data.message.status_customers)
+                    this.error_message= this.error_message + '\n' + err.response.data.message.status_customers;
+                if(!err.response.data.message.no_customers && !err.response.data.message.status_customers)
                     this.error_message= err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
@@ -291,11 +292,12 @@ export default{
         update() {
             this.progressBar = true;
             let updateData = {
-                no_meja: this.form.nomor_meja,
-                status_meja: this.form.status_meja,
+                nama_customers: this.form.nama_customers,
+                telpon_customer: this.form.telpon_customer,
+                email_customer: this.form.email_customer,
             }
 
-            var url = this.$api + '/meja/' + this.editId;
+            var url = this.$api + '/customer/' + this.editId;
             this.$http.put(url, updateData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -308,11 +310,11 @@ export default{
                 this.loadData();
                 this.progressBar = false;
             }).catch(err => {
-                if(err.response.data.message.no_meja)
-                    this.error_message= err.response.data.message.no_meja;
-                if(err.response.data.message.status_meja)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
-                if(!err.response.data.message.no_meja && !err.response.data.message.status_meja)
+                if(err.response.data.message.no_customers)
+                    this.error_message= err.response.data.message.no_customers;
+                if(err.response.data.message.status_customers)
+                    this.error_message= this.error_message + '\n' + err.response.data.message.status_customers;
+                if(!err.response.data.message.no_customers && !err.response.data.message.status_customers)
                     this.error_message= err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
@@ -322,7 +324,7 @@ export default{
         deleteData() {
             this.progressBar = true;
 
-            var url = this.$api + '/meja/' + this.deleteId;
+            var url = this.$api + '/customer/' + this.deleteId;
             this.$http.delete(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -336,15 +338,15 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message= err.response.data.message;
-                // this.error_message='This meja is currently under reservation.'
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;
             });
 
         },
-        emitKetersediaan() {
-            EventBus.$emit('load', 'extra data');
+        // Send update signal through event bus (reload data for <keep-alive>)
+        emitCustomer() {
+            EventBus.$emit('customer', 'extra data');
         }
     }
 }

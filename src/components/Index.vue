@@ -121,7 +121,7 @@
             <!-- end div container testimonials -->
         </section>
         <!-- end testimonials -->
-        <!-- start about me -->
+        <!-- start about AKB -->
         <section id="about-me">
             <div class="container">
                 <div class="row">
@@ -139,10 +139,6 @@
                            Here at AKB, we offer the original and the most delicious taste of Korean BBQ for everyone's delicacy.<br>
                            Invite your friends and family at our restaurant to truly have <span>the best experience</span>.<br>
                         <br>건배! <span class="fa fa-beer" aria-hidden="true"></span></p>
-                        <!--<div class="button-group">
-                            <div class="text">Download CV</div>
-                            <div class="icon-cv"><a href="http://marinamarques.pt/assets/MarinaMarques_CV.pdf" alt="Marina Marques CV" target="_blank"><span class="fa fa-arrow-circle-down" aria-hidden="true"></span></a></div>
-                        </div> -->
                     </div>
                 </div>
                 <!-- end row about -->
@@ -171,8 +167,9 @@
             </section>
             <!-- end cont stats -->
         </section>
-        <!-- end about me -->
-        <!-- start work experience -->
+        <!-- end about AKB -->
+
+        <!-- start work history -->
         <section id="experience">
             <div class="container">
                 <h2>HISTORY</h2>
@@ -208,9 +205,9 @@
                                         <div class="timeline-role">The official website of Atma Korean BBQ is published</div>
                                         <p>April 2021</p>
                                     </div>
-                                    <!-- experience-info -->
+                                    <!-- history-info -->
                                 </div>
-                                <!-- experience -->
+                                <!-- history -->
                                 <time datetime="2020">2020</time>
                                 <div class="timeline-experience">
                                     <span class="timeline-circle"></span>
@@ -220,9 +217,9 @@
                                         <div class="timeline-role">Atma Korean BBQ collaborated with Universitas Atma Jaya Yogyakarta</div>
                                         <p>May 2020</p>
                                     </div>
-                                    <!-- experience-info -->
+                                    <!-- history-info -->
                                 </div>
-                                <!-- experience -->
+                                <!-- history -->
                             </div>
                             <!-- year -->
                             <div class="timeline-year timeline-year1">
@@ -235,21 +232,21 @@
                                         <div class="timeline-role">Establishment of Atma Korean BBQ</div>
                                         <p>March 2018</p>
                                     </div>
-                                    <!-- experience-info -->
+                                    <!-- history-info -->
                                 </div>
-                                <!-- experience -->
-                                <!-- experience -->
+                                <!-- history -->
+                                <!-- history -->
                             </div>
                             <!-- year -->
                         </div>
                     </div>
                     <!-- end row of two columns -->
                 </div>
-                <!-- end experience container of two columns -->
+                <!-- end history container of two columns -->
             </div>
-            <!-- end container experience -->
+            <!-- end container history -->
         </section>
-        <!-- end work experience -->
+        <!-- end work history -->
         
         <!-- start login -->
         <section id="login" v-if="!loggedIn">
@@ -334,6 +331,8 @@
             <!-- end div login section -->
         </section>
         <!-- end login -->
+
+        <!-- start commitment -->
         <section class="testimonials">
             <div class="testimonials-bg" :style="{background: 'url(' + require('../assets/images/commitment.jpg') + ') no-repeat top center scroll',
                 backgroundPosition: 'center center',
@@ -346,7 +345,7 @@
                     <div id="slider-testimonials" class="carousel slide" data-ride="carousel">
                         <!-- wrapper for slides -->
                         <div class="carousel-inner" role="listbox">
-                            <!-- start first testimional -->
+                            <!-- start first commitment -->
                             <div class="item active">
                                 <div class="row">
                                     <div class="col-md-6 col-md-offset-3">
@@ -363,8 +362,10 @@
                     <!-- end slider bootstrap -->
                 </div>
             </div>
-            <!-- end div container testimonials -->
+            <!-- end div container commitment -->
         </section>
+        <!-- end commitment -->
+
         <!-- start footer -->
         <footer id="contact">
             <div class="container">
@@ -398,21 +399,25 @@ import { MglMap, MglPopup, MglMarker } from "vue-mapbox";
 export default{
     name: "Index",
     components: {
-      MglMap,
-      MglMarker,
-      MglPopup
+        // Mapbox components
+        MglMap,
+        MglMarker,
+        MglPopup
     },
     data() {
         return {
+            //Mapbox data
             accessToken: 'pk.eyJ1Ijoibmlja3lqb3ZhbnVzIiwiYSI6ImNrZnFqc2Z6cTBqamUyeXBiaGNidzljOHEifQ.EmKNctj3vwr2nPn0beNhAQ',
             mapStyle: 'mapbox://styles/mapbox/streets-v11',
             coordinates: [110.416169, -7.779292],
+            //Snackbar
             error_message: '',
             color: '',
-            valid: false,
-            password: '',
-            email: '',
             snackbar: false,
+            //Login
+            email: '',
+            password: '',
+            valid: false,
             collapsed: true,
             load: false,
             progressBar: false,
@@ -420,9 +425,6 @@ export default{
             menus: [],
             customers: null,
             dishes: [],
-            items: [
-                { title: "Menu", to: "/menu" },
-            ],
             loggedIn: false,
         }
     },
