@@ -57,6 +57,7 @@ export default{
         return {
             meja: [],
             empty: {status_meja: "Loading..."},
+            error: {status_meja: "An Unknown Error Occured."},
             loading: true,
             cards: true,
             renderComponent: true,
@@ -95,6 +96,7 @@ export default{
                 this.loading = false;
             }).catch(()=> {
                 this.meja = [];
+                this.meja.push(this.error);
                 this.loading = false;
             });
         },

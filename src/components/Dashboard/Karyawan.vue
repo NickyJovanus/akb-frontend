@@ -79,7 +79,7 @@
 
         
         <!-- register and edit data -->
-        <v-dialog v-model="dialog" persistent max-width="600px" mt-10>
+        <v-dialog v-model="dialog" persistent max-width="600px" mt-10 style='z-index:9999;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="loading" slot="progress" color="blue" indeterminate></v-progress-linear>
@@ -96,7 +96,6 @@
                     <span class="headline">{{ inputType }} Karyawan</span>
                 </v-card-title>
                 <v-card-text>
-                    <container class="v-container" fluid ma-0 pa-5>
                         <v-text-field
                             label="Nama Karyawan"
                             v-model="form.nama_karyawan"
@@ -190,10 +189,34 @@
                             v-if="inputType == 'Register'"
                             label="Password"
                             v-model="form.password"
-                            type="password"
+                            :type="passwordtype"
                             outlined
-                        ></v-text-field>
-                    </container>
+                        >
+                            <template v-slot:append v-if="inputType == 'Register'">
+                                <v-btn 
+                                    v-if="passwordtype == 'password'" 
+                                    @click="passwordtype = 'text'" 
+                                    min-width="100"
+                                    height="100%"
+                                    color="red"
+                                    depressed 
+                                    tile
+                                    class="ma-0">
+                                    Reveal
+                                </v-btn>
+                                <v-btn 
+                                    v-else 
+                                    @click="passwordtype = 'password'"
+                                    min-width="100"
+                                    height="100%"
+                                    color="green"
+                                    depressed 
+                                    tile
+                                    class="ma-0">
+                                    Hide
+                                </v-btn>
+                            </template>
+                        </v-text-field>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -211,7 +234,7 @@
         </v-dialog>
 
         
-        <v-dialog v-model="dialogPassword" persistent max-width="600px">
+        <v-dialog v-model="dialogPassword" persistent max-width="600px" style='z-index:9999;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="loading" slot="progress" color="green" indeterminate></v-progress-linear>
@@ -221,7 +244,7 @@
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
                     <v-flex class="text-right">
-                        <v-icon color="red" @click="dialogConfirm = false">mdi-close</v-icon>
+                        <v-icon color="red" @click="dialogPassword = false; resetForm()">mdi-close</v-icon>
                     </v-flex>
                 </v-card-actions>
                 <v-card-title>
@@ -260,7 +283,7 @@
         </v-dialog>
 
         
-        <v-dialog v-model="dialogConfirm" persistent max-width="600px">
+        <v-dialog v-model="dialogConfirm" persistent max-width="600px" style='z-index:9999;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
@@ -294,7 +317,7 @@
         </div>
 
         <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom>
-            <pre>{{error_message}}</pre>
+            <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </v-main>
 </template>
@@ -370,6 +393,7 @@ export default{
             karyawandata: new FormData,
             deleteId: null,
             passwordId: null,
+            passwordtype: 'password',
         }
     },
     mounted() {
@@ -403,6 +427,7 @@ export default{
             this.dialog = false;
             this.inputType = 'Register';
             this.editId = null;
+            this.passwordtype = 'password';
         },
         resetForm() {
             this.form.nama_karyawan = '';

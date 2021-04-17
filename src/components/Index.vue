@@ -388,7 +388,7 @@
         <!-- end footer -->
     </div>
         <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom>
-            <p>{{error_message}}</p>
+            <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </main>
 </template>

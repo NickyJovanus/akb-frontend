@@ -75,7 +75,7 @@
             <!-- end footer -->
 
         <!-- add and edit data -->
-            <v-dialog v-model="dialog" persistent max-width="600px" mt-10>
+            <v-dialog v-model="dialog" persistent max-width="600px" mt-10 style='z-index:9999;'>
                 <v-card>
                     <v-flex>
                         <v-progress-linear v-if="inputType == 'Add'" v-show="progressBar" slot="progress" color="blue" indeterminate></v-progress-linear>
@@ -129,7 +129,7 @@
 
         
         
-        <v-dialog v-model="dialogConfirm" persistent max-width="600px">
+        <v-dialog v-model="dialogConfirm" persistent max-width="600px" style='z-index:9999;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
@@ -161,7 +161,7 @@
         </v-dialog>
 
         <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom>
-            <pre>{{error_message}}</pre>
+            <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </v-main>
 </template>

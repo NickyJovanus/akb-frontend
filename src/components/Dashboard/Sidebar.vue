@@ -75,6 +75,10 @@
                 </v-flex>
             </v-card>
         </v-dialog>
+        
+        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom>
+            <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
+        </v-snackbar>
     </main>
 </template>
 

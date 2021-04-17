@@ -32,25 +32,26 @@
                     <h2>MAKANAN UTAMA</h2>
                     <div class="row">
 
-                        <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
+                        <div v-if="loading == true">
+                            <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
 
-                            <!-- Skeletons -->
-                            <template class="col-sm-6 col-md-4 grid-portfolio"  v-if="loading == true">
-                                    <v-skeleton-loader
-                                        class="mx-auto .d-block d-lg-none"
-                                        min-width="95vw"
-                                        type="card"
-                                    ></v-skeleton-loader>
-                            </template>
+                                <!-- Skeletons -->
+                                <template class="col-sm-6 col-md-4 grid-portfolio">
+                                        <v-skeleton-loader
+                                            class="mx-auto .d-block d-lg-none"
+                                            min-width="95vw"
+                                            type="card"
+                                        ></v-skeleton-loader>
+                                </template>
 
-                            <template class="col-sm-6 col-md-4 grid-portfolio" v-if="loading == true">
-                                    <v-skeleton-loader
-                                        class="mx-auto .d-none d-lg-block"
-                                        min-width="600px"
-                                        type="card"
-                                    ></v-skeleton-loader>
-                            </template>
-
+                                <template class="col-sm-6 col-md-4 grid-portfolio">
+                                        <v-skeleton-loader
+                                            class="mx-auto .d-none d-lg-block"
+                                            min-width="600px"
+                                            type="card"
+                                        ></v-skeleton-loader>
+                                </template>
+                            </div>
                         </div>
 
                         <!-- start first portfolio item -->
@@ -85,25 +86,26 @@
                 <div class="container-fluid portfolio-ct">
                     <h2>SIDE DISHES</h2>
                     <div class="row">
+                        <div v-if="loading == true">
+                            <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
 
-                        <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
+                                <!-- Skeletons -->
+                                <template class="col-sm-6 col-md-4 grid-portfolio">
+                                        <v-skeleton-loader
+                                            class="mx-auto .d-block d-lg-none"
+                                            min-width="95vw"
+                                            type="card"
+                                        ></v-skeleton-loader>
+                                </template>
 
-                            <template class="col-sm-6 col-md-4 grid-portfolio"  v-if="loading == true">
-                                    <v-skeleton-loader
-                                        class="mx-auto .d-block d-lg-none"
-                                        min-width="95vw"
-                                        type="card"
-                                    ></v-skeleton-loader>
-                            </template>
-
-                            <template class="col-sm-6 col-md-4 grid-portfolio" v-if="loading == true">
-                                    <v-skeleton-loader
-                                        class="mx-auto .d-none d-lg-block"
-                                        min-width="600px"
-                                        type="card"
-                                    ></v-skeleton-loader>
-                            </template>
-
+                                <template class="col-sm-6 col-md-4 grid-portfolio">
+                                        <v-skeleton-loader
+                                            class="mx-auto .d-none d-lg-block"
+                                            min-width="600px"
+                                            type="card"
+                                        ></v-skeleton-loader>
+                                </template>
+                            </div>
                         </div>
 
                         <!-- start first portfolio item -->
@@ -136,25 +138,26 @@
                 <div class="container-fluid portfolio-ct">
                     <h2>MINUMAN</h2>
                     <div class="row">
+                        <div v-if="loading == true">
+                            <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
 
-                        <div class="col-sm-6 col-md-4 skeletons" v-for="(menu) in 9" :key="menu.id_menu">
+                                <!-- Skeletons -->
+                                <template class="col-sm-6 col-md-4 grid-portfolio">
+                                        <v-skeleton-loader
+                                            class="mx-auto .d-block d-lg-none"
+                                            min-width="95vw"
+                                            type="card"
+                                        ></v-skeleton-loader>
+                                </template>
 
-                            <template class="col-sm-6 col-md-4 grid-portfolio"  v-if="loading == true">
-                                    <v-skeleton-loader
-                                        class="mx-auto .d-block d-lg-none"
-                                        min-width="95vw"
-                                        type="card"
-                                    ></v-skeleton-loader>
-                            </template>
-
-                            <template class="col-sm-6 col-md-4 grid-portfolio" v-if="loading == true">
-                                    <v-skeleton-loader
-                                        class="mx-auto .d-none d-lg-block"
-                                        min-width="600px"
-                                        type="card"
-                                    ></v-skeleton-loader>
-                            </template>
-
+                                <template class="col-sm-6 col-md-4 grid-portfolio">
+                                        <v-skeleton-loader
+                                            class="mx-auto .d-none d-lg-block"
+                                            min-width="600px"
+                                            type="card"
+                                        ></v-skeleton-loader>
+                                </template>
+                            </div>
                         </div>
 
                         <!-- start first portfolio item -->
