@@ -66,6 +66,13 @@ const router = new VueRouter({
                     meta: {title: 'Manage Customers - Atma Korean BBQ'},
                     component: importComponent('Dashboard/Customers'),
                 },
+                //Pesanan
+                {
+                    path: "/manage/pesanan",
+                    name: "Pesanan",
+                    meta: {title: 'Manage Pesanan - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Pesanan'),
+                },
             ]
         },
         {

@@ -120,9 +120,10 @@ export default{
                 });
             }
 
-            var url = this.$api + '/meja';
-            var url2 = this.$api + '/karyawan';
-            this.$http.get(url, {
+            var urlmeja = this.$api + '/meja';
+            var urlkaryawan = this.$api + '/karyawan';
+            var urlpesanan = this.$api + '/pesanan';
+            this.$http.get(urlmeja, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
@@ -136,12 +137,20 @@ export default{
                 this.color = 'red';
             });
             
-            this.$http.get(url2, {
+            this.$http.get(urlkaryawan, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
                 localStorage.setItem('karyawan', JSON.stringify(response.data.data));
+            })
+            
+            this.$http.get(urlpesanan, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                localStorage.setItem('pesanan', JSON.stringify(response.data.data));
             })
 
         },
