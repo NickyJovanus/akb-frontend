@@ -209,8 +209,9 @@ export default{
         }
     },
     mounted() {
-        this.loadData();
-        import('@/assets/js/navbarfade.js');
+        this.meja = JSON.parse(localStorage.getItem('meja'));
+        this.role = localStorage.getItem('role');
+        // this.loadData();
     },
     methods: {
         redirectDashboard() {
@@ -222,7 +223,6 @@ export default{
         loadData() {
             var url = this.$api + '/meja';
             this.loading = true;
-            this.role = localStorage.getItem('role');
 
             this.$http.get(url, {
                 headers: {
@@ -230,6 +230,7 @@ export default{
                 }
             }).then(response => {
                 this.meja = response.data.data;
+                localStorage.setItem('meja', JSON.stringify(response.data.data));
                 this.emitKetersediaan();
                 this.loading = false;
             }).catch(()=> {

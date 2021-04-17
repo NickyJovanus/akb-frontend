@@ -397,8 +397,8 @@ export default{
         }
     },
     mounted() {
-        this.loadData();
-        import('@/assets/js/navbarfade.js');
+        this.karyawan = JSON.parse(localStorage.getItem('karyawan'));
+        // this.loadData();
     },
     methods: {
         redirectDashboard() {
@@ -417,6 +417,7 @@ export default{
                 }
             }).then(response => {
                 this.karyawan = response.data.data;
+                localStorage.setItem('karyawan', JSON.stringify(response.data.data));
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;

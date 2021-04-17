@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import { EventBus } from './bus.js';
 
 export default{
     name: "Sidebar",
@@ -95,9 +96,6 @@ export default{
             load: false,
             progressBarLogout: false,
             loading: true,
-            items: [
-                { title: "Menu", to: "/menu" },
-            ],
             name: 'My Account',
             loggedIn : false,
             logoutdialog: false,
@@ -107,9 +105,6 @@ export default{
     },
     created() {
         this.loadData();
-    },
-    mounted() {
-        //
     },
     methods: {
         loadData() {
@@ -125,12 +120,14 @@ export default{
                 });
             }
 
-            var url = this.$api + '/menu/top';
+            var url = this.$api + '/meja';
+            var url2 = this.$api + '/karyawan';
             this.$http.get(url, {
                 headers: {
-                    //
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
-            }).then(() => {
+            }).then(response => {
+                localStorage.setItem('meja', JSON.stringify(response.data.data));
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -138,11 +135,19 @@ export default{
                 this.snackbar = true;
                 this.color = 'red';
             });
+            
+            this.$http.get(url2, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                localStorage.setItem('karyawan', JSON.stringify(response.data.data));
+            })
 
         },
         redirectIndex() {
             this.$router.push({
-                path: '/index',
+                path: '/',
             });
             this.collapsed = true;
         },

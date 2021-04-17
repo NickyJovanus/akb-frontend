@@ -138,6 +138,7 @@ export default{
                 this.dashboardmenu.push(this.qrcode);
             } else if (role =="Cashier") {
                 this.dashboardmenu.push(this.meja);
+                this.dashboardmenu.push(this.ketersediaan);
                 this.dashboardmenu.push(this.pesanan);
                 this.dashboardmenu.push(this.reservasi);
                 this.dashboardmenu.push(this.qrcode);

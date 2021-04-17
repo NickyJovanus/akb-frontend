@@ -64,9 +64,9 @@ export default{
         }
     },
     mounted() {
-        import('@/assets/js/navbarfade.js');
-        this.reload();
-        this.loadData();
+        this.meja = JSON.parse(localStorage.getItem('meja'));
+        // this.reload();
+        // this.loadData();
     },
     methods: {
         redirectDashboard() {
@@ -167,9 +167,9 @@ export default{
             this.calcRowsPerPage()
         });
         EventBus.$on('load', data => {
-            console.log(data);
-            this.reload(); 
-            this.loadData()
+            this.meja = JSON.parse(localStorage.getItem('meja'));
+            // this.reload();
+            // this.loadData()
         });
     },
 }

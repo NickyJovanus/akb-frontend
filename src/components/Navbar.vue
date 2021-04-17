@@ -93,7 +93,7 @@ export default{
             load: false,
             progressBarLogout: false,
             loading: true,
-            menus: [],
+            menu: [],
             customers: null,
             dishes: [],
             items: [
@@ -113,7 +113,7 @@ export default{
     },
     methods: {
         loadData() {
-            var url = this.$api + '/menu/top';
+            var url = this.$api + '/menu';
             setTimeout(() => this.preloadertext = "This process may take up to 10 seconds.", 4000);
 
             this.$http.get(url, {
@@ -121,7 +121,8 @@ export default{
                     //
                 }
             }).then(response => {
-                this.menus = response.data.data;
+                this.menu = response.data.data;
+                localStorage.setItem('menu', JSON.stringify(this.menu));
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -131,11 +132,10 @@ export default{
                 this.name = localStorage.getItem('name');
                 this.loggedIn = true;
             }
-
         },
         redirectIndex() {
             this.$router.push({
-                path: '/index',
+                path: '/',
             });
             this.collapsed = true;
         },

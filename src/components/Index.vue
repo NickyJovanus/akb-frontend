@@ -129,7 +129,7 @@
                     <div class="col-lg-6 about-intro">
                         <div class="about-inner">
                             <div class="about-ct">
-                                <img src="https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+1080.png" class="img-responsive">
+                                <img src="https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+1080.png" class="img-responsive" style="height: auto;">
                             </div>
                         </div>
                     </div>
@@ -324,7 +324,7 @@
                         <input class="password" type="password"  v-model="password" autocomplete="off" onfocus="this.removeAttribute('readonly');" placeholder="Password" name="password"/>
                         <button class="password-button">Reveal</button>
                       </label>
-                      <button class="login-button" @click="login">Login</button>
+                      <button class="login-button" @click="login" :disabled="load==true">Login</button>
                     </div>
                 </div>
             </div>
@@ -437,7 +437,11 @@ export default{
     },
     methods: {
         loadData() {
-            var url = this.$api + '/menu/top';
+            var url  = this.$api + '/menu/top';
+            var url2 = this.$api + '/customercount';
+            var url3 = this.$api + '/servedDishes';
+
+            this.loading = true;
 
             this.$http.get(url, {
                 headers: {
@@ -445,35 +449,34 @@ export default{
                 }
             }).then(response => {
                 this.menus = response.data.data;
+
+                this.$http.get(url2, {
+                    headers: {
+                        //
+                    }
+                }).then(response => {
+                    this.customers = response.data.data;
+
+                    this.$http.get(url3, {
+                        headers: {
+                            //
+                        }
+                    }).then(response => {
+                        this.dishes = response.data.data;
+
+                        this.loading = false;
+                    }).catch(()=> {
+                        this.loading = false;
+                    });
+
+                }).catch(()=> {
+                    this.loading = false;
+                });
+
             }).catch(error => {
                 this.error_message= this.error_message + error.response.data.message;
                 this.color="red"
                 this.snackbar= true;
-                this.loading = false;
-            });
-
-            var url2 = this.$api + '/customercount'
-
-            this.$http.get(url2, {
-                headers: {
-                    //
-                }
-            }).then(response => {
-                this.customers = response.data.data;
-            }).catch(()=> {
-                this.loading = false;
-            });
-
-            var url3 = this.$api + '/servedDishes'
-
-            this.$http.get(url3, {
-                headers: {
-                    //
-                }
-            }).then(response => {
-                this.dishes = response.data.data;
-                this.loading = false;
-            }).catch(()=> {
                 this.loading = false;
             });
             
@@ -513,7 +516,7 @@ export default{
                 this.snackbar=true;
                 localStorage.removeItem('token');
                 this.load = false;
-                    this.progressBar = false;
+                this.progressBar = false;
             });
         },
         clear() {
