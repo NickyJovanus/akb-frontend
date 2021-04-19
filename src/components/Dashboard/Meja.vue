@@ -211,7 +211,7 @@ export default{
     mounted() {
         this.meja = JSON.parse(localStorage.getItem('meja'));
         this.role = localStorage.getItem('role');
-        // this.loadData();
+        if(localStorage.getItem('meja') == null) {this.loadData();}
     },
     methods: {
         redirectDashboard() {

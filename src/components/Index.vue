@@ -562,4 +562,8 @@ export default{
 .mapboxgl-popup-content {
     background: #00000000 !important;
 }
+
+.mapboxgl-popup-content {
+    background: #1b1b1b;
+}
 </style>

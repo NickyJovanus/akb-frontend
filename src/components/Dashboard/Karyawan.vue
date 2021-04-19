@@ -398,7 +398,7 @@ export default{
     },
     mounted() {
         this.karyawan = JSON.parse(localStorage.getItem('karyawan'));
-        // this.loadData();
+        if(localStorage.getItem('karyawan') == null) {this.loadData();}
     },
     methods: {
         redirectDashboard() {

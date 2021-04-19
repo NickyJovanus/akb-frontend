@@ -65,8 +65,7 @@ export default{
     },
     mounted() {
         this.meja = JSON.parse(localStorage.getItem('meja'));
-        // this.reload();
-        // this.loadData();
+        if(localStorage.getItem('meja') == null) {this.reload(); this.loadData();}
     },
     methods: {
         redirectDashboard() {

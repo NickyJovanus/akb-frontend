@@ -39,8 +39,19 @@
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
-                            <template v-slot:[`meja.id_meja`]="{ meja }"  :dataSource='meja' foreignKeyValue='id_meja'>
-                                {{meja.no_meja}}
+                            <template v-slot:[`item.id_meja`]="{ item }">
+                                <div v-for="item2 in meja" :key="item2.id_meja">
+                                    <div v-if="item.id_meja == item2.id_meja">
+                                        {{item2.no_meja}}
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-slot:[`item.id_karyawan`]="{ item }">
+                                <div v-for="item2 in karyawan" :key="item2.id_karyawan">
+                                    <div v-if="item.id_karyawan == item2.id_karyawan">
+                                        {{item2.nama_karyawan}}
+                                    </div>
+                                </div>
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
@@ -88,15 +99,57 @@
                         </v-flex>
                     </v-card-actions>
                     <v-card-title>
-                        <span class="headline">{{ inputType }} Meja</span>
+                        <span class="headline">{{ inputType }} Pesanan</span>
                     </v-card-title>
                     <div style="margin: 30px;">
                         <v-flex>
+                            <v-menu
+                                ref="menu"
+                                v-model="menu"
+                                :close-on-content-click="false"
+                                :return-value.sync="date"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="290px"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="date"
+                                    label="Tanggal Pesanan"
+                                    prepend-icon="mdi-calendar"
+                                    readonly
+                                    outlined
+                                    v-bind="attrs"
+                                    v-on="on"
+                                ></v-text-field>
+                                </template>
+                                <v-date-picker
+                                    v-model="date"
+                                    no-title
+                                    scrollable
+                                >
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    @click="menu = false"
+                                >
+                                    Cancel
+                                </v-btn>
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    @click="$refs.menu.save(date)"
+                                >
+                                    OK
+                                </v-btn>
+                                </v-date-picker>
+                            </v-menu>
                             <v-select
                                 v-model="form.no_meja"
                                 label="Nomor Meja"
-                                :items="meja.no_meja"
-                                item-text="name"
+                                :items="meja"
+                                item-text="no_meja"
                                 outlined
                                 three-line
                                 :value="form.no_meja"
@@ -104,8 +157,8 @@
                             <v-select
                                 v-model="form.nama_karyawan"
                                 label="Nama Karyawan"
-                                :items="karyawan.nama_karyawan"
-                                item-text="name"
+                                :items="karyawan"
+                                item-text="nama_karyawan"
                                 outlined
                                 three-line
                                 :value="form.nama_karyawan"
@@ -184,7 +237,7 @@ export default{
                 { text: "Total Item", value: "total_item" },
                 { text: "Tanggal Pesanan", value: "tanggal_pesanan" },
                 { text: "Nomor Meja", value: "id_meja" },
-                { text: "Nama Karyawan", value: "nama_karyawan" },
+                { text: "Nama Karyawan", value: "id_karyawan" },
                 { text: "Actions",
                     sortable: false,
                     value: "actions" },
@@ -220,10 +273,12 @@ export default{
         this.meja = JSON.parse(localStorage.getItem('meja'));
         this.karyawan = JSON.parse(localStorage.getItem('karyawan'));
         this.role = localStorage.getItem('role');
+
+        if(localStorage.getItem('pesanan') == null) {this.loadData();}
+
         EventBus.$on('load', data => {
             this.meja = JSON.parse(localStorage.getItem('meja'));
         });
-        // this.loadData();
     },
     methods: {
         redirectDashboard() {
@@ -274,7 +329,7 @@ export default{
         add() {
             this.progressBar = true;
             let addData = {
-                tanggal_pesanan: this.form.tanggal_pesanan,
+                tanggal_pesanan: this.date,
                 no_meja: this.form.no_meja,
                 nama_karyawan: this.form.nama_karyawan,
             }
