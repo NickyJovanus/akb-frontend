@@ -42,7 +42,7 @@
                             <template v-slot:[`item.id_meja`]="{ item }">
                                 <div v-for="item2 in meja" :key="item2.id_meja">
                                     <div v-if="item.id_meja == item2.id_meja">
-                                        {{item2.no_meja}}
+                                        {{item.no_meja}}
                                     </div>
                                 </div>
                             </template>
@@ -146,23 +146,37 @@
                                 </v-date-picker>
                             </v-menu>
                             <v-select
-                                v-model="form.no_meja"
+                                v-model="form.id_meja"
                                 label="Nomor Meja"
                                 :items="meja"
-                                item-text="no_meja"
+                                item-text="id_meja"
                                 outlined
                                 three-line
-                                :value="form.no_meja"
-                            ></v-select>
+                                :value="form.id_meja"
+                            >
+                                <template slot="selection" slot-scope="data">
+                                    No. {{ data.item.no_meja }}
+                                </template>
+                                <template slot="item" slot-scope="data">
+                                    No. {{ data.item.no_meja }}
+                                </template>
+                            </v-select>
                             <v-select
-                                v-model="form.nama_karyawan"
+                                v-model="form.id_karyawan"
                                 label="Nama Karyawan"
                                 :items="karyawan"
-                                item-text="nama_karyawan"
+                                item-text="id_karyawan"
                                 outlined
                                 three-line
-                                :value="form.nama_karyawan"
-                            ></v-select>
+                                :value="form.id_karyawan"
+                            >
+                                <template slot="selection" slot-scope="data">
+                                    {{ data.item.nama_karyawan }}
+                                </template>
+                                <template slot="item" slot-scope="data">
+                                    {{ data.item.nama_karyawan }}
+                                </template>
+                            </v-select>
                         </v-flex>
                     </div>
                     <v-card-actions>
@@ -250,8 +264,8 @@ export default{
             dialogConfirm: false,
             form: {
                 tanggal_pesanan: '',
-                no_meja: '',
-                nama_karyawan: '',
+                id_meja: '',
+                id_karyawan: '',
             },
             status: [
                 {name: 'Empty'},
@@ -307,8 +321,9 @@ export default{
         editHandler(item) {
             this.inputType = 'Edit';
             this.editId = item.id_pesanan;
-            this.form.nomor_pesanan = item.no_pesanan;
-            this.form.status_pesanan = item.status_pesanan;
+            this.date = item.tanggal_pesanan;
+            this.form.id_meja = item.id_meja;
+            this.form.id_karyawan = item.id_karyawan;
             this.dialog = true;
         },
         deleteHandler(id) {
@@ -323,15 +338,15 @@ export default{
         },
         resetForm() {
             this.form.tanggal_pesanan = '';
-            this.form.no_meja = '';
-            this.form.nama_karyawan = '';
+            this.form.id_meja = '';
+            this.form.id_karyawan = '';
         },
         add() {
             this.progressBar = true;
             let addData = {
                 tanggal_pesanan: this.date,
-                no_meja: this.form.no_meja,
-                nama_karyawan: this.form.nama_karyawan,
+                id_meja: this.form.id_meja,
+                id_karyawan: this.form.id_karyawan,
             }
 
             var url = this.$api + '/pesanan'
@@ -347,11 +362,13 @@ export default{
                 this.loadData();
                 this.progressBar = false;
             }).catch(err => {
-                if(err.response.data.message.no_pesanan)
-                    this.error_message= err.response.data.message.no_pesanan;
-                if(err.response.data.message.status_pesanan)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_pesanan;
-                if(!err.response.data.message.no_pesanan && !err.response.data.message.status_pesanan)
+                if(err.response.data.message.tanggal_pesanan)
+                    this.error_message= err.response.data.message.tanggal_pesanan;
+                if(err.response.data.message.id_meja)
+                    this.error_message= this.error_message + '\n' + err.response.data.message.id_meja;
+                if(err.response.data.message.id_karyawan)
+                    this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
+                if(!err.response.data.message.tanggal_pesanan && !err.response.data.message.id_meja && !err.response.data.message.id_karyawan)
                     this.error_message= err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
@@ -361,8 +378,9 @@ export default{
         update() {
             this.progressBar = true;
             let updateData = {
-                no_pesanan: this.form.nomor_pesanan,
-                status_pesanan: this.form.status_pesanan,
+                tanggal_pesanan: this.date,
+                id_meja: this.form.id_meja,
+                id_karyawan: this.form.id_karyawan,
             }
 
             var url = this.$api + '/pesanan/' + this.editId;
