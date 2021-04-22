@@ -480,11 +480,12 @@ export default{
                 
                 if(this.detailtext.length > 0) {
                     let i = 0;
-                    for(i = 0; i<=this.detailtext.length; i++) {
+                    for(i = 0; i<this.detailtext.length; i++) {
+                        let detail = this.detailtext[i];
                         let detailData = {
                             id_pesanan: id_pesanan,
-                            id_menu: this.detailtext[i].id_menu,
-                            jumlah_item: this.detailtext[i].jumlah_item,
+                            id_menu: detail.id_menu,
+                            jumlah_item: detail.jumlah_item,
                         }
 
                         var url = this.$api + '/detailpesanan'
@@ -522,7 +523,7 @@ export default{
                                     this.progressBar = false;
                                     return;
                                 }
-                                else if(err.response.data.message.id_pesanan && pesananmade == 0) {
+                                if(pesananmade == 0) {
                                     i-=1;
                                     
                                     var url2 = this.$api + '/pesanan'
@@ -540,13 +541,17 @@ export default{
                                         pesananmade = 1;
                                     }).catch(err => {
                                         this.error_message = '';
-                                        if(!err.response.data.message.no_pesanan && !err.response.data.message.status_pesanan)
+                                        if(!err.response.data.message.tanggal_pesanan 
+                                            && !err.response.data.message.id_meja 
+                                            && !err.response.data.message.id_karyawan)
                                             this.error_message= err.response.data.message;
                                         else {
-                                            if(err.response.data.message.no_pesanan)
-                                                this.error_message= err.response.data.message.no_pesanan;
-                                            if(err.response.data.message.status_pesanan)
-                                                this.error_message= this.error_message + '\n' + err.response.data.message.status_pesanan;
+                                            if(err.response.data.message.tanggal_pesanan)
+                                                this.error_message= err.response.data.message.tanggal_pesanan;
+                                            if(err.response.data.message.id_meja)
+                                                this.error_message= this.error_message + '\n' + err.response.data.message.id_meja;
+                                            if(err.response.data.message.id_karyawan)
+                                                this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
                                         }
                                         this.color="red"
                                         this.snackbar=true;
