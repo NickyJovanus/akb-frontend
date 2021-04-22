@@ -109,7 +109,7 @@
             <!-- end footer -->
 
         <!-- add and edit data -->
-            <v-dialog v-model="dialog" persistent max-width="600px" mt-10 style='z-index:9999;'>
+            <v-dialog v-model="dialog" persistent max-width="600px" mt-10 style='z-index:8000;'>
                 <v-card>
                     <v-flex>
                         <v-progress-linear v-if="inputType == 'Add'" v-show="progressBar" slot="progress" color="blue" indeterminate></v-progress-linear>
@@ -354,6 +354,7 @@ export default{
             loading: false,
             search: '',
             editId: null,
+            editItem: null,
             error_message: '',
             snackbar: false,
             color: '',
@@ -443,6 +444,7 @@ export default{
         editHandler(item) {
             this.inputType = 'Edit';
             this.editId = item.id_pesanan;
+            this.editItem = item;
             this.date = item.tanggal_pesanan;
             this.form.id_meja = item.id_meja;
             this.form.id_karyawan = item.id_karyawan;
@@ -469,135 +471,94 @@ export default{
         },
         add() {
             if (this.$refs.form.validate()) {
-                let pesananmade = 0;
-                let id_pesanan = null;
+                let pesananmade = false;
+                var idPesanan = null;
                 this.progressBar = true;
                 let addData = {
                     tanggal_pesanan: this.date,
                     id_meja: this.form.id_meja,
                     id_karyawan: this.form.id_karyawan,
                 }
+                var url = this.$api + '/detailpesanan'
+                var url2 = this.$api + '/pesanan'
                 
-                if(this.detailtext.length > 0) {
+                this.$http.post(url2, addData, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                }).then(response => {
+                    this.error_message = '';
+                    this.error_message= response.data.message;
+                    idPesanan = response.data.data.id_pesanan;
+                    this.color="green"
+                    this.snackbar=true;
+                    this.progressBar = false;
+                    this.loadData();
+                    pesananmade = true;
+                    if(this.detailtext.length > 0) {
                     let i = 0;
-                    for(i = 0; i<this.detailtext.length; i++) {
+                    for(i = 0; i < this.detailtext.length; i++) {
                         let detail = this.detailtext[i];
                         let detailData = {
-                            id_pesanan: id_pesanan,
+                            id_pesanan: idPesanan,
                             id_menu: detail.id_menu,
                             jumlah_item: detail.jumlah_item,
                         }
-
-                        var url = this.$api + '/detailpesanan'
                         this.$http.post(url, detailData, {
                             headers: {
                                 'Authorization': 'Bearer ' + localStorage.getItem('token')
                             }
                         }).then(() => {
                             this.progressBar = false;
+                            this.dialog = false;
                             this.loadData();
                             this.cancel();
                         }).catch(err => {
+                            console.log('error');
                             this.error_message = '';
-                            if(!err.response.data.message.id_pesanan && !err.response.data.message.jumlah_item)
+                            if(!err.response.data.message.id_menu 
+                            && !err.response.data.message.jumlah_item
+                            && !err.response.data.message.id_pesanan) {
                                 this.error_message= err.response.data.message;
-                            else {
+                            } else {
                                 if(err.response.data.message.id_menu) {
                                     this.error_message= this.error_message + err.response.data.message.id_menu;
-                                    this.color="red"
-                                    this.snackbar=true;
-                                    this.progressBar = false;
-                                    return;
                                 }
                                 if(err.response.data.message == "Jumlah item exceeds available stock") {
                                     this.error_message= this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                    this.color="red"
-                                    this.snackbar=true;
-                                    this.progressBar = false;
-                                    return;
                                 }
                                 if(err.response.data.message.jumlah_item) {
                                     this.error_message= this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                    this.color="red"
-                                    this.snackbar=true;
-                                    this.progressBar = false;
-                                    return;
                                 }
-                                if(pesananmade == 0) {
-                                    i-=1;
-                                    
-                                    var url2 = this.$api + '/pesanan'
-                                    this.$http.post(url2, addData, {
-                                        headers: {
-                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                        }
-                                    }).then(response => {
-                                        this.error_message = '';
-                                        this.error_message= response.data.message;
-                                        id_pesanan = response.data.data.id_pesanan;
-                                        this.color="green"
-                                        this.snackbar=true;
-                                        this.loadData();
-                                        pesananmade = 1;
-                                    }).catch(err => {
-                                        this.error_message = '';
-                                        if(!err.response.data.message.tanggal_pesanan 
-                                            && !err.response.data.message.id_meja 
-                                            && !err.response.data.message.id_karyawan)
-                                            this.error_message= err.response.data.message;
-                                        else {
-                                            if(err.response.data.message.tanggal_pesanan)
-                                                this.error_message= err.response.data.message.tanggal_pesanan;
-                                            if(err.response.data.message.id_meja)
-                                                this.error_message= this.error_message + '\n' + err.response.data.message.id_meja;
-                                            if(err.response.data.message.id_karyawan)
-                                                this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
-                                        }
-                                        this.color="red"
-                                        this.snackbar=true;
-                                        this.progressBar = false;
-                                    });
-
-                                } else if(err.response.data.message.id_pesanan) {
+                                if(err.response.data.message.id_pesanan) {
                                     this.error_message= this.error_message + '\n' + err.response.data.message.id_pesanan;
-                                    this.color="red"
-                                    this.snackbar=true;
-                                    this.progressBar = false;
-                                    return;
                                 }
                             }
+                            this.color="red"
+                            this.snackbar=true;
+                            this.progressBar = false;
                         });
                     }
-                } else {
-                    var url3 = this.$api + '/pesanan'
-                    this.$http.post(url3, addData, {
-                        headers: {
-                            'Authorization': 'Bearer ' + localStorage.getItem('token')
-                        }
-                    }).then(response => {
-                        this.error_message = '';
-                        this.error_message= response.data.message;
-                        id_pesanan = response.data.data.id_pesanan;
-                        this.color="green"
-                        this.snackbar=true;
-                        this.cancel();
-                        this.loadData();
-                        pesananmade = 1;
-                    }).catch(err => {
-                        this.error_message = '';
-                        if(!err.response.data.message.no_pesanan && !err.response.data.message.status_pesanan)
-                            this.error_message= err.response.data.message;
-                        else {
-                            if(err.response.data.message.no_pesanan)
-                                this.error_message= err.response.data.message.no_pesanan;
-                            if(err.response.data.message.status_pesanan)
-                                this.error_message= this.error_message + '\n' + err.response.data.message.status_pesanan;
-                        }
-                        this.color="red"
-                        this.snackbar=true;
-                        this.progressBar = false;
-                    });
                 }
+                }).catch(err => {
+                    this.error_message = '';
+                    if(!err.response.data.message.tanggal_pesanan 
+                        && !err.response.data.message.id_meja 
+                        && !err.response.data.message.id_karyawan)
+                        this.error_message= err.response.data.message;
+                    else {
+                        if(err.response.data.message.tanggal_pesanan)
+                            this.error_message= err.response.data.message.tanggal_pesanan;
+                        if(err.response.data.message.id_meja)
+                            this.error_message= this.error_message + '\n' + err.response.data.message.id_meja;
+                        if(err.response.data.message.id_karyawan)
+                            this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
+                    }
+                    this.color="red"
+                    this.snackbar=true;
+                    this.progressBar = false;
+                });
+                
             }
         },
         update() {

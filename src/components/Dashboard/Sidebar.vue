@@ -123,6 +123,9 @@ export default{
             var urlmeja = this.$api + '/meja';
             var urlkaryawan = this.$api + '/karyawan';
             var urlpesanan = this.$api + '/pesanan';
+            var urlcustomer = this.$api + '/customer';
+            var urldetail = this.$api + '/detailpesanan';
+
             this.$http.get(urlmeja, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -143,7 +146,7 @@ export default{
                 }
             }).then(response => {
                 localStorage.setItem('karyawan', JSON.stringify(response.data.data));
-            })
+            });
             
             this.$http.get(urlpesanan, {
                 headers: {
@@ -151,16 +154,23 @@ export default{
                 }
             }).then(response => {
                 localStorage.setItem('pesanan', JSON.stringify(response.data.data));
-            })
+            });
+            
+            this.$http.get(urlcustomer, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                localStorage.setItem('customer', JSON.stringify(response.data.data));
+            });
 
-            var url2 = this.$api + '/detailpesanan';
-            this.$http.get(url2, {
+            this.$http.get(urldetail, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
                 localStorage.setItem('detailpesanan', JSON.stringify(response.data.data));
-            })
+            });
 
         },
         redirectIndex() {

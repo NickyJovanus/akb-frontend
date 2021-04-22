@@ -205,7 +205,8 @@ export default{
         }
     },
     mounted() {
-        this.loadData();
+        this.customers = JSON.parse(localStorage.getItem('customer'));
+        if(localStorage.getItem('customer') == null) {this.loadData();}
     },
     methods: {
         redirectDashboard() {
@@ -225,6 +226,7 @@ export default{
                 }
             }).then(response => {
                 this.customers = response.data.data;
+                localStorage.setItem('customer', JSON.stringify(response.data.data));
                 this.emitCustomer();
                 this.loading = false;
             }).catch(()=> {
