@@ -460,6 +460,7 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
+                this.error_message = '';
                 this.error_message=response.data.message;
                 this.color="green"
                 this.snackbar=true;
@@ -467,20 +468,7 @@ export default{
                 this.loadData();
                 this.loading = false;
             }).catch(error => {
-                if(error.response.data.message.nama_karyawan)
-                    this.error_message= this.error_message + error.response.data.message.nama_karyawan;
-                if(error.response.data.message.jenis_kelamin_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
-                if(error.response.data.message.tanggal_rekrut_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.tanggal_rekrut_karyawan;
-                if(error.response.data.message.telpon_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.telpon_karyawan;
-                if(error.response.data.message.peran_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.peran_karyawan;
-                if(error.response.data.message.email_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.email_karyawan;
-                if(error.response.data.message.password)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.password;
+                this.error_message = '';
                 if(!error.response.data.message.nama_karyawan
                 && !error.response.data.message.jenis_kelamin_karyawan
                 && !error.response.data.message.tanggal_rekrut_karyawan
@@ -489,6 +477,22 @@ export default{
                 && !error.response.data.message.email_karyawan
                 && !error.response.data.message.password)
                     this.error_message= error.response.data.message;
+                else {
+                    if(error.response.data.message.nama_karyawan)
+                        this.error_message= this.error_message + error.response.data.message.nama_karyawan;
+                    if(error.response.data.message.jenis_kelamin_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
+                    if(error.response.data.message.tanggal_rekrut_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.tanggal_rekrut_karyawan;
+                    if(error.response.data.message.telpon_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.telpon_karyawan;
+                    if(error.response.data.message.peran_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.peran_karyawan;
+                    if(error.response.data.message.email_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.email_karyawan;
+                    if(error.response.data.message.password)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.password;
+                }
                 this.color="red"
                 this.snackbar=true;
                 this.loading = false;
@@ -531,6 +535,7 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
+                this.error_message = '';
                 this.error_message=response.data.message;
                 this.color="green"
                 this.snackbar=true;
@@ -538,20 +543,7 @@ export default{
                 this.loadData();
                 this.loading = false;
             }).catch(error => {
-                if(error.response.data.message.nama_karyawan)
-                    this.error_message= this.error_message + error.response.data.message.nama_karyawan;
-                if(error.response.data.message.jenis_kelamin_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
-                if(error.response.data.message.tanggal_rekrut_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.tanggal_rekrut_karyawan;
-                if(error.response.data.message.telpon_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.telpon_karyawan;
-                if(error.response.data.message.peran_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.peran_karyawan;
-                if(error.response.data.message.email_karyawan)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.email_karyawan;
-                if(error.response.data.message.password)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.password;
+                this.error_message = '';
                 if(!error.response.data.message.nama_karyawan
                 && !error.response.data.message.jenis_kelamin_karyawan
                 && !error.response.data.message.tanggal_rekrut_karyawan
@@ -560,6 +552,22 @@ export default{
                 && !error.response.data.message.email_karyawan
                 && !error.response.data.message.password)
                     this.error_message= error.response.data.message;
+                else {
+                    if(error.response.data.message.nama_karyawan)
+                        this.error_message= this.error_message + error.response.data.message.nama_karyawan;
+                    if(error.response.data.message.jenis_kelamin_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
+                    if(error.response.data.message.tanggal_rekrut_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.tanggal_rekrut_karyawan;
+                    if(error.response.data.message.telpon_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.telpon_karyawan;
+                    if(error.response.data.message.peran_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.peran_karyawan;
+                    if(error.response.data.message.email_karyawan)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.email_karyawan;
+                    if(error.response.data.message.password)
+                        this.error_message= this.error_message + '\n'  + error.response.data.message.password;
+                }
                 this.color="red"
                 this.snackbar=true;
                 this.loading = false;

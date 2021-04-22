@@ -39,14 +39,14 @@
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
-                            <template v-slot:[`item.status_customers`]="{ item }">
-                                <v-icon v-if="item.status_customers == 'Empty'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
+                            <template v-slot:[`item.status_customer`]="{ item }">
+                                <v-icon v-if="item.status_customer == 'Empty'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon v-else class="red--text text--lighten-2">mdi-close-circle-outline</v-icon>
-                                {{item.status_customers}}
+                                {{item.status_customer}}
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
-                                <v-icon v-if="role == 'Operational Manager'" class="red--text ml-2" @click="deleteHandler(item.id_customers)">mdi-delete-circle-outline</v-icon>
+                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id_customer)">mdi-delete-circle-outline</v-icon>
                             </template>
                         </v-data-table>
                 </v-card>
@@ -90,7 +90,7 @@
                         </v-flex>
                     </v-card-actions>
                     <v-card-title>
-                        <span class="headline">{{ inputType }} customers</span>
+                        <span class="headline">{{ inputType }} Customer</span>
                     </v-card-title>
                     <div style="margin: 30px;">
                         <v-flex>
@@ -126,8 +126,6 @@
                 </v-card>
             </v-dialog>
         </div>
-
-        
         
         <v-dialog v-model="dialogConfirm" persistent max-width="600px" style='z-index:9999;'>
             <v-card>
@@ -252,14 +250,14 @@ export default{
             this.inputType = 'Add';
         },
         resetForm() {
-            this.form.nama_customers = '';
+            this.form.nama_customer = '';
             this.form.telpon_customer = '';
             this.form.email_customer = '';
         },
         add() {
             this.progressBar = true;
             let addData = {
-                nama_customers: this.form.nama_customers,
+                nama_customer: this.form.nama_customer,
                 telpon_customer: this.form.telpon_customer,
                 email_customer: this.form.email_customer,
             }
@@ -270,6 +268,7 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
+                this.error_message = '';
                 this.error_message= response.data.message;
                 this.color="green"
                 this.snackbar=true;
@@ -277,12 +276,19 @@ export default{
                 this.loadData();
                 this.progressBar = false;
             }).catch(err => {
-                if(err.response.data.message.no_customers)
-                    this.error_message= err.response.data.message.no_customers;
-                if(err.response.data.message.status_customers)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_customers;
-                if(!err.response.data.message.no_customers && !err.response.data.message.status_customers)
+                this.error_message = '';
+                if(!err.response.data.message.nama_customer
+                    && !err.response.data.message.telpon_customer
+                    && !err.response.data.message.email_customer)
                     this.error_message= err.response.data.message;
+                else {
+                    if(err.response.data.message.nama_customer)
+                        this.error_message= err.response.data.message.nama_customer;
+                    if(err.response.data.message.telpon_customer)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.telpon_customer;
+                    if(err.response.data.message.email_customer)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.email_customer;
+                }
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;
@@ -291,7 +297,7 @@ export default{
         update() {
             this.progressBar = true;
             let updateData = {
-                nama_customers: this.form.nama_customers,
+                nama_customer: this.form.nama_customer,
                 telpon_customer: this.form.telpon_customer,
                 email_customer: this.form.email_customer,
             }
@@ -302,6 +308,7 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
+                this.error_message = '';
                 this.error_message= response.data.message;
                 this.color="green"
                 this.snackbar=true;
@@ -309,12 +316,19 @@ export default{
                 this.loadData();
                 this.progressBar = false;
             }).catch(err => {
-                if(err.response.data.message.no_customers)
-                    this.error_message= err.response.data.message.no_customers;
-                if(err.response.data.message.status_customers)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_customers;
-                if(!err.response.data.message.no_customers && !err.response.data.message.status_customers)
+                this.error_message = '';
+                if(!err.response.data.message.nama_customer
+                    && !err.response.data.message.telpon_customer
+                    && !err.response.data.message.email_customer)
                     this.error_message= err.response.data.message;
+                else {
+                    if(err.response.data.message.nama_customer)
+                        this.error_message= err.response.data.message.nama_customer;
+                    if(err.response.data.message.telpon_customer)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.telpon_customer;
+                    if(err.response.data.message.email_customer)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.email_customer;
+                }
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;

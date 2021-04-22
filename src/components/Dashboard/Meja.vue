@@ -271,6 +271,7 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
+                this.error_message = '';
                 this.error_message= response.data.message;
                 this.color="green"
                 this.snackbar=true;
@@ -278,6 +279,7 @@ export default{
                 this.loadData();
                 this.progressBar = false;
             }).catch(err => {
+                this.error_message = '';
                 if(err.response.data.message.no_meja)
                     this.error_message= err.response.data.message.no_meja;
                 if(err.response.data.message.status_meja)
@@ -302,6 +304,7 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
+                this.error_message = '';
                 this.error_message= response.data.message;
                 this.color="green"
                 this.snackbar=true;
@@ -309,6 +312,7 @@ export default{
                 this.loadData();
                 this.progressBar = false;
             }).catch(err => {
+                this.error_message = '';
                 if(err.response.data.message.no_meja)
                     this.error_message= err.response.data.message.no_meja;
                 if(err.response.data.message.status_meja)
