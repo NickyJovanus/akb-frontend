@@ -153,6 +153,15 @@ export default{
                 localStorage.setItem('pesanan', JSON.stringify(response.data.data));
             })
 
+            var url2 = this.$api + '/detailpesanan';
+            this.$http.get(url2, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                localStorage.setItem('detailpesanan', JSON.stringify(response.data.data));
+            })
+
         },
         redirectIndex() {
             this.$router.push({
