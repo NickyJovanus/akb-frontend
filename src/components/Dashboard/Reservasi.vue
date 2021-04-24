@@ -13,7 +13,7 @@
             </div>
             <br><br>
             <div style="text-align: center; width: 100%;">
-                <h2>Meja Management</h2>
+                <h2>Reservasi Management</h2>
             </div>
             <div class="mt-5 table-section">
                 <v-card class="ma-6">
@@ -35,18 +35,18 @@
                         ></v-text-field>
                     </v-card-title>
                         <v-data-table :headers="headers" 
-                            :items="meja"
+                            :items="reservasi"
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
-                            <template v-slot:[`item.status_meja`]="{ item }">
-                                <v-icon v-if="item.status_meja == 'Empty'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
+                            <template v-slot:[`item.status_reservasi`]="{ item }">
+                                <v-icon v-if="item.status_reservasi == 'Empty'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon v-else class="red--text text--lighten-2">mdi-close-circle-outline</v-icon>
-                                {{item.status_meja}}
+                                {{item.status_reservasi}}
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
-                                <v-icon v-if="role == 'Operational Manager'" class="red--text ml-2" @click="deleteHandler(item.id_meja)">mdi-delete-circle-outline</v-icon>
+                                <v-icon v-if="role == 'Operational Manager'" class="red--text ml-2" @click="deleteHandler(item.id_reservasi)">mdi-delete-circle-outline</v-icon>
                             </template>
                         </v-data-table>
                 </v-card>
@@ -90,24 +90,24 @@
                         </v-flex>
                     </v-card-actions>
                     <v-card-title>
-                        <span class="headline">{{ inputType }} Meja</span>
+                        <span class="headline">{{ inputType }} Reservasi</span>
                     </v-card-title>
                     <div style="margin: 30px;">
                         <v-flex>
                             <v-text-field
-                                label="Nomor Meja"
-                                v-model="form.nomor_meja"
+                                label="Nomor Reservasi"
+                                v-model="form.nomor_reservasi"
                                 outlined
                             ></v-text-field>
                             
                             <v-select
-                                v-model="form.status_meja"
-                                label="Status Meja"
+                                v-model="form.status_reservasi"
+                                label="Status Reservasi"
                                 :items="status"
                                 item-text="name"
                                 outlined
                                 three-line
-                                :value="form.status_meja"
+                                :value="form.status_reservasi"
                             ></v-select>
                         </v-flex>
                     </div>
@@ -146,7 +146,7 @@
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>
                 <v-card-text>
-                    Do you really want to delete this meja?
+                    Do you really want to delete this reservasi?
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -170,7 +170,7 @@
 import { EventBus } from './bus.js';
 
 export default{
-    name: "Meja",
+    name: "Reservasi",
     data() {
         return {
             role: '',
@@ -178,20 +178,20 @@ export default{
                 { text: "ID",
                     align: "start",
                     sortable: true,
-                    value: "id_meja" },
-                { text: "Nomor Meja", value: "no_meja" },
-                { text: "Status Meja", value: "status_meja" },
+                    value: "id_reservasi" },
+                { text: "Tanggal Reservasi", value: "tanggal_reservasi" },
+                { text: "Sesi Reservasi", value: "sesi_reservasi" },
                 { text: "Actions",
                     sortable: false,
                     value: "actions" },
             ],
-            meja: [],
+            reservasi: [],
             inputType: 'Add',
             dialog: false,
             dialogConfirm: false,
             form: {
-                nomor_meja: '',
-                status_meja: '',
+                nomor_reservasi: '',
+                status_reservasi: '',
             },
             status: [
                 {name: 'Empty'},
@@ -209,9 +209,9 @@ export default{
         }
     },
     mounted() {
-        this.meja = JSON.parse(localStorage.getItem('meja'));
+        this.reservasi = JSON.parse(localStorage.getItem('reservasi'));
         this.role = localStorage.getItem('role');
-        if(localStorage.getItem('meja') == null) {this.loadData();}
+        // if(localStorage.getItem('reservasi') == null) {this.loadData();}
     },
     methods: {
         redirectDashboard() {
@@ -221,7 +221,7 @@ export default{
             this.collapsed = true;
         },
         loadData() {
-            var url = this.$api + '/meja';
+            var url = this.$api + '/reservasi';
             this.loading = true;
 
             this.$http.get(url, {
@@ -229,8 +229,8 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.meja = response.data.data;
-                localStorage.setItem('meja', JSON.stringify(response.data.data));
+                this.reservasi = response.data.data;
+                localStorage.setItem('reservasi', JSON.stringify(response.data.data));
                 this.emitKetersediaan();
                 this.loading = false;
             }).catch(()=> {
@@ -239,9 +239,9 @@ export default{
         },
         editHandler(item) {
             this.inputType = 'Edit';
-            this.editId = item.id_meja;
-            this.form.nomor_meja = item.no_meja;
-            this.form.status_meja = item.status_meja;
+            this.editId = item.id_reservasi;
+            this.form.nomor_reservasi = item.no_reservasi;
+            this.form.status_reservasi = item.status_reservasi;
             this.dialog = true;
         },
         deleteHandler(id) {
@@ -255,17 +255,17 @@ export default{
             this.inputType = 'Add';
         },
         resetForm() {
-            this.form.nomor_meja = '';
-            this.form.status_meja = '';
+            this.form.nomor_reservasi = '';
+            this.form.status_reservasi = '';
         },
         add() {
             this.progressBar = true;
             let addData = {
-                no_meja: this.form.nomor_meja,
-                status_meja: this.form.status_meja,
+                no_reservasi: this.form.nomor_reservasi,
+                status_reservasi: this.form.status_reservasi,
             }
 
-            var url = this.$api + '/meja'
+            var url = this.$api + '/reservasi'
             this.$http.post(url, addData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -280,11 +280,11 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
-                if(err.response.data.message.no_meja)
-                    this.error_message= err.response.data.message.no_meja;
-                if(err.response.data.message.status_meja)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
-                if(!err.response.data.message.no_meja && !err.response.data.message.status_meja)
+                if(err.response.data.message.no_reservasi)
+                    this.error_message= err.response.data.message.no_reservasi;
+                if(err.response.data.message.status_reservasi)
+                    this.error_message= this.error_message + '\n' + err.response.data.message.status_reservasi;
+                if(!err.response.data.message.no_reservasi && !err.response.data.message.status_reservasi)
                     this.error_message= err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
@@ -294,11 +294,11 @@ export default{
         update() {
             this.progressBar = true;
             let updateData = {
-                no_meja: this.form.nomor_meja,
-                status_meja: this.form.status_meja,
+                no_reservasi: this.form.nomor_reservasi,
+                status_reservasi: this.form.status_reservasi,
             }
 
-            var url = this.$api + '/meja/' + this.editId;
+            var url = this.$api + '/reservasi/' + this.editId;
             this.$http.put(url, updateData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -313,11 +313,11 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
-                if(err.response.data.message.no_meja)
-                    this.error_message= err.response.data.message.no_meja;
-                if(err.response.data.message.status_meja)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
-                if(!err.response.data.message.no_meja && !err.response.data.message.status_meja)
+                if(err.response.data.message.no_reservasi)
+                    this.error_message= err.response.data.message.no_reservasi;
+                if(err.response.data.message.status_reservasi)
+                    this.error_message= this.error_message + '\n' + err.response.data.message.status_reservasi;
+                if(!err.response.data.message.no_reservasi && !err.response.data.message.status_reservasi)
                     this.error_message= err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
@@ -327,7 +327,7 @@ export default{
         deleteData() {
             this.progressBar = true;
 
-            var url = this.$api + '/meja/' + this.deleteId;
+            var url = this.$api + '/reservasi/' + this.deleteId;
             this.$http.delete(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -341,7 +341,6 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message= err.response.data.message;
-                // this.error_message='This meja is currently under reservation.'
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;

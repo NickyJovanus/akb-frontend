@@ -4,7 +4,7 @@
     <main>
         <!-- START PRELOADER -->
         <transition name="fade">
-            <div id="preloader" class="preloader-dashboard" v-if="loading == true" style="z-index: 9999;">
+            <div id="preloader" class="preloader-dashboard" v-if="loading == true" style="z-index: 8000;">
                 <div id="status" style="text-align: center;"><br><br><br><br><br><br><br><br><br><br><br><br>
                     Loading Dashboard...<br> 
                     <div style="transition: 2s;">{{preloadertext}}</div>
@@ -76,7 +76,7 @@
             </v-card>
         </v-dialog>
         
-        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom>
+        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom style='z-index:10000;'>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </main>
@@ -121,10 +121,13 @@ export default{
             }
 
             var urlmeja = this.$api + '/meja';
-            var urlkaryawan = this.$api + '/karyawan';
-            var urlpesanan = this.$api + '/pesanan';
-            var urlcustomer = this.$api + '/customer';
-            var urldetail = this.$api + '/detailpesanan';
+            var urls = [
+                {url: this.$api + '/karyawan', store: 'karyawan'}, 
+                {url: this.$api + '/pesanan', store: 'pesanan'}, 
+                {url: this.$api + '/detailpesanan', store: 'detailpesanan'}, 
+                {url: this.$api + '/customer', store: 'customer'}, 
+                {url: this.$api + '/reservasi', store: 'reservasi'}, 
+            ];
 
             this.$http.get(urlmeja, {
                 headers: {
@@ -140,37 +143,16 @@ export default{
                 this.color = 'red';
             });
             
-            this.$http.get(urlkaryawan, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-                localStorage.setItem('karyawan', JSON.stringify(response.data.data));
-            });
-            
-            this.$http.get(urlpesanan, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-                localStorage.setItem('pesanan', JSON.stringify(response.data.data));
-            });
-            
-            this.$http.get(urlcustomer, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-                localStorage.setItem('customer', JSON.stringify(response.data.data));
-            });
-
-            this.$http.get(urldetail, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-                localStorage.setItem('detailpesanan', JSON.stringify(response.data.data));
-            });
+            for(var i=0; i<urls.length; i++) {
+                let url = urls[i];
+                this.$http.get(url.url, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                }).then(response => {
+                    localStorage.setItem(url.store, JSON.stringify(response.data.data));
+                });
+            }
 
         },
         redirectIndex() {
