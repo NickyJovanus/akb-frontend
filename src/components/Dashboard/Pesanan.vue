@@ -83,7 +83,7 @@
                                 <v-icon v-if="role == 'Operational Manager'" class="red--text ml-2" @click="deleteHandler(item.id_pesanan)">mdi-delete-circle-outline</v-icon>
                             </template>
                         </v-data-table>
-                </v-card>
+                    </v-card>
                 <br><br>
             </div>
         <br><br>
@@ -211,7 +211,7 @@
                                 </v-select>
                                 <v-row v-for="(detail) in detailtext" 
                                     :key="detail.id">
-                                    <v-col>
+                                    <v-col cols="5">
                                         <v-select
                                             v-model="detail.id_menu"
                                             outlined
@@ -231,7 +231,7 @@
                                         </v-select>
                                     </v-col>
 
-                                    <v-col>
+                                    <v-col cols="2">
                                         <v-text-field
                                             v-model="detail.jumlah_item"
                                             outlined
@@ -242,7 +242,19 @@
                                         >
                                         </v-text-field>
                                     </v-col>
-                                    <v-col>
+
+                                    <v-col v-if="inputType == 'Edit'" cols="3">
+                                        <v-select
+                                            v-model="detail.status_item"
+                                            outlined
+                                            label="Status Item"
+                                            :rules="rules.statusRule"
+                                            :items="['Preparing', 'Ready to Serve', 'Served']"
+                                            required
+                                        >
+                                        </v-select>
+                                    </v-col>
+                                    <v-col cols="2">
                                         <v-btn color="red" @click="removeDetail(detail)">
                                             X
                                         </v-btn>
@@ -368,6 +380,7 @@ export default{
                 id: 0,
                 id_menu: '',
                 jumlah_item: '',
+                status_item: '',
             },
             rules: {
                 tanggalRule: [
@@ -384,6 +397,9 @@ export default{
                 ],
                 jumlahRule: [
                     (v) => !!v || 'Jumlah Item field is required.',
+                ],
+                statusRule: [
+                    (v) => !!v || 'Status Item field is required.',
                 ],
             },
             valid: false,
@@ -471,7 +487,6 @@ export default{
         },
         add() {
             if (this.$refs.form.validate()) {
-                let pesananmade = false;
                 var idPesanan = null;
                 this.progressBar = true;
                 let addData = {
@@ -487,58 +502,77 @@ export default{
                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                     }
                 }).then(response => {
-                    this.error_message = '';
-                    this.error_message= response.data.message;
                     idPesanan = response.data.data.id_pesanan;
-                    this.color="green"
-                    this.snackbar=true;
-                    this.progressBar = false;
-                    this.loadData();
-                    pesananmade = true;
                     if(this.detailtext.length > 0) {
-                    let i = 0;
-                    for(i = 0; i < this.detailtext.length; i++) {
-                        let detail = this.detailtext[i];
-                        let detailData = {
-                            id_pesanan: idPesanan,
-                            id_menu: detail.id_menu,
-                            jumlah_item: detail.jumlah_item,
-                        }
-                        this.$http.post(url, detailData, {
-                            headers: {
-                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        let i = 0;
+                        for(i = 0; i < this.detailtext.length; i++) {
+                            let detail = this.detailtext[i];
+                            let detailData = {
+                                id_pesanan: idPesanan,
+                                id_menu: detail.id_menu,
+                                jumlah_item: detail.jumlah_item,
                             }
-                        }).then(() => {
-                            this.progressBar = false;
-                            this.dialog = false;
-                            this.loadData();
-                            this.cancel();
-                        }).catch(err => {
-                            console.log('error');
-                            this.error_message = '';
-                            if(!err.response.data.message.id_menu 
-                            && !err.response.data.message.jumlah_item
-                            && !err.response.data.message.id_pesanan) {
-                                this.error_message= err.response.data.message;
-                            } else {
-                                if(err.response.data.message.id_menu) {
-                                    this.error_message= this.error_message + err.response.data.message.id_menu;
+                            this.$http.post(url, detailData, {
+                                headers: {
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                                 }
-                                if(err.response.data.message == "Jumlah item exceeds available stock") {
-                                    this.error_message= this.error_message + '\n' + err.response.data.message.jumlah_item;
+                            }).then(() => {
+                                this.error_message = '';
+                                this.error_message = 'Add Pesanan Success';
+                                this.color = "green";
+                                this.snackbar = true;
+                                this.progressBar = false;
+                                this.cancel();
+                                this.loadData();
+                            }).catch(err => {
+                                console.log('error');
+                                this.error_message = '';
+                                if(!err.response.data.message.id_menu 
+                                && !err.response.data.message.jumlah_item
+                                && !err.response.data.message.id_pesanan) {
+                                    this.error_message= err.response.data.message;
+                                } else {
+                                    if(err.response.data.message.id_menu) {
+                                        this.error_message= this.error_message + err.response.data.message.id_menu;
+                                    }
+                                    if(err.response.data.message == "Jumlah item exceeds available stock") {
+                                        this.error_message= this.error_message + '\n' + err.response.data.message.jumlah_item;
+                                    }
+                                    if(err.response.data.message.jumlah_item) {
+                                        this.error_message= this.error_message + '\n' + err.response.data.message.jumlah_item;
+                                    }
+                                    if(err.response.data.message.id_pesanan) {
+                                        this.error_message= this.error_message + '\n' + err.response.data.message.id_pesanan;
+                                    }
                                 }
-                                if(err.response.data.message.jumlah_item) {
-                                    this.error_message= this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                }
-                                if(err.response.data.message.id_pesanan) {
-                                    this.error_message= this.error_message + '\n' + err.response.data.message.id_pesanan;
-                                }
-                            }
-                            this.color="red"
-                            this.snackbar=true;
-                            this.progressBar = false;
-                        });
+                                
+                                var url = this.$api + '/pesanan/cancel/' + idPesanan;
+                                this.$http.delete(url, {
+                                    headers: {
+                                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                    }
+                                }).then(() => {
+                                    this.progressBar = false;
+                                    this.loadData();
+                                }).catch(err => {
+                                    this.error_message= err.response.data.message;
+                                    this.color="red"
+                                    this.snackbar=true;
+                                    this.progressBar = false;
+                                });
+
+                                this.color="red"
+                                this.snackbar=true;
+                                this.progressBar = false;
+                            });
                     }
+                } else {
+                    this.error_message = response.data.message;
+                    this.color = "green";
+                    this.snackbar = true;
+                    this.progressBar = false;
+                    this.cancel();
+                    this.loadData();
                 }
                 }).catch(err => {
                     this.error_message = '';
@@ -614,7 +648,6 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message= err.response.data.message;
-                // this.error_message='This pesanan is currently under reservation.'
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;

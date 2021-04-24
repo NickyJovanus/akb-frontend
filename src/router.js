@@ -17,6 +17,7 @@ const router = new VueRouter({
             children: [
                 {
                     path: '/',
+                    name: 'Index',
                     meta: {title: 'Atma Korean BBQ'},
                     component: importComponent('Index'),
                 },

@@ -211,9 +211,9 @@ export default{
 
                 //Push index after logout
                 this.$router.push({
-                    name: 'index',
+                    name: 'Index',
                 }).then(()=> {
-                    location.href="/index";
+                    location.href="/";
                 })
             }).catch(error => {
                 //prints error to console

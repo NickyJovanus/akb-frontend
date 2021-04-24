@@ -40,11 +40,27 @@
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
-                            
+
+                            <template v-slot:[`item.jenis_kelamin_karyawan`]="{ item }">
+                                {{item.jenis_kelamin_karyawan}}
+                                <v-icon v-if="item.jenis_kelamin_karyawan == 'Perempuan'">mdi-gender-female</v-icon>
+                                <v-icon v-else>mdi-gender-male</v-icon>
+                            </template>
+
+                            <template v-slot:[`item.peran_karyawan`]="{ item }">
+                                <v-btn 
+                                    :disabled="true" 
+                                    style="color: white !important;"
+                                    :style="{'background-color':`${filterbg(item.peran_karyawan)} !important`}">
+                                    {{item.peran_karyawan}}
+                                </v-btn>
+                            </template>
+
                             <template v-slot:[`item.status_karyawan`]="{ item }">
                                 <v-icon v-if="item.status_karyawan == 'Active'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon v-else class="red--text text--lighten-2">mdi-close-circle-outline</v-icon>
                             </template>
+
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
                                 <v-icon class="green--text ml-2" @click="changePasswordHandler(item.id_karyawan)">mdi-key-variant</v-icon>
@@ -633,7 +649,13 @@ export default{
                 this.loading = false;
                 this.resetForm();
             })
-
+        },
+        filterbg(role) {
+            if(role == 'Owner') {return 'green'}
+            else if(role == 'Operational Manager') {return '#185fff'}
+            else if(role == 'Chef') {return 'rgb(255 58 58)'}
+            else if(role == 'Waiter') {return '#ff7600'}
+            else {return 'purple'}
         }
     }
 }

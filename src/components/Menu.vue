@@ -159,7 +159,7 @@ export default{
     mounted() {
         this.menus = JSON.parse(localStorage.getItem('menu'));
         import('../assets/js/carouselfade.js');
-        import('../assets/js/loginform.js');
+        // import('../assets/js/loginform.js');
     },
     methods: {
         redirectIndex() {
