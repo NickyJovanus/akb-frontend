@@ -39,10 +39,12 @@
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
-                            <template v-slot:[`item.status_reservasi`]="{ item }">
-                                <v-icon v-if="item.status_reservasi == 'Empty'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
-                                <v-icon v-else class="red--text text--lighten-2">mdi-close-circle-outline</v-icon>
-                                {{item.status_reservasi}}
+                            <template v-slot:[`item.id_meja`]="{ item }">
+                                <div v-for="item2 in meja" :key="item2.id_meja">
+                                    <div v-if="item.id_meja == item2.id_meja">
+                                        No. {{item2.no_meja}}
+                                    </div>
+                                </div>
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
@@ -94,21 +96,110 @@
                     </v-card-title>
                     <div style="margin: 30px;">
                         <v-flex>
-                            <v-text-field
-                                label="Nomor Reservasi"
-                                v-model="form.nomor_reservasi"
+                            <v-menu
+                                ref="menu"
+                                v-model="menu"
+                                :close-on-content-click="false"
+                                :return-value.sync="date"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="290px"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="form.sesi_reservasi"
+                                    label="Sesi Reservasi"
+                                    prepend-icon="mdi-clock"
+                                    readonly
+                                    outlined
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    required
+                                ></v-text-field>
+                                </template>
+                                <v-time-picker
+                                    label="Sesi Reservasi"
+                                    v-model="form.sesi_reservasi"
+                                    type="time" 
+                                    min="11:00:00"
+                                    max="21:00:00"
+                                    format="24hr"
+                                    use-seconds
+                                    outlined
+                                >
+                                </v-time-picker>
+                            </v-menu>
+                            
+                            <v-select
+                                v-model="form.id_pesanan"
+                                label="ID Pesanan"
+                                :items="pesanan"
+                                item-text="id_pesanan"
                                 outlined
+                                three-line
+                                :value="form.id_pesanan"
+                                @change="fillForm(item)"
+                            >
+                                <!-- <template slot="selection" slot-scope="data">
+                                    {{ data.item.id_pesanan }} - No.
+                                    <span v-for="item2 in meja" :key="item2.id_meja">
+                                        <span v-if="data.item.id_meja == item2.id_meja"> 
+                                            {{item2.no_meja}} 
+                                        </span>
+                                    </span> - [{{data.item.tanggal_pesanan}}]
+                                </template> -->
+                                <template slot="item" slot-scope="data">
+                                    {{ data.item.id_pesanan }} - No.
+                                    <span v-for="item2 in meja" :key="item2.id_meja">
+                                        <span v-if="data.item.id_meja == item2.id_meja"> 
+                                            {{item2.no_meja}} 
+                                        </span>
+                                    </span> - [{{data.item.tanggal_pesanan}}]
+                                </template>
+                            </v-select>
+
+                            <v-select
+                                v-model="form.id_meja"
+                                label="Nomor Meja"
+                                :items="meja"
+                                item-text="id_meja"
+                                outlined
+                                three-line
+                                disabled
+                                :value="form.id_meja"
+                            >
+                                <template slot="selection" slot-scope="data">
+                                    No. {{ data.item.id_meja }}
+                                </template>
+                                <template slot="item" slot-scope="data">
+                                    No. {{ data.item.id_meja }}
+                                </template>
+                            </v-select>
+
+                            <v-text-field
+                                v-model="form.tanggal_reservasi"
+                                label="Tanggal Reservasi"
+                                outlined
+                                :value="form.tanggal_reservasi"
+                                disabled
                             ></v-text-field>
                             
                             <v-select
-                                v-model="form.status_reservasi"
-                                label="Status Reservasi"
-                                :items="status"
-                                item-text="name"
+                                v-model="form.id_customer"
+                                label="Nama Customer"
+                                :items="customer"
+                                item-text="id_customer"
                                 outlined
                                 three-line
-                                :value="form.status_reservasi"
-                            ></v-select>
+                                :value="form.id_customer"
+                            >
+                                <template slot="selection" slot-scope="data">
+                                    {{ data.item.nama_customer }}
+                                </template>
+                                <template slot="item" slot-scope="data">
+                                    {{ data.item.nama_customer }}
+                                </template>
+                            </v-select>
                         </v-flex>
                     </div>
                     <v-card-actions>
@@ -129,7 +220,7 @@
 
         
         
-        <v-dialog v-model="dialogConfirm" persistent max-width="600px" style='z-index:8000;'>
+        <v-dialog v-model="dialogDelete" persistent max-width="600px" style='z-index:8000;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
@@ -181,22 +272,27 @@ export default{
                     value: "id_reservasi" },
                 { text: "Tanggal Reservasi", value: "tanggal_reservasi" },
                 { text: "Sesi Reservasi", value: "sesi_reservasi" },
+                { text: "Nomor Meja", value: "id_meja" },
+                { text: "ID Pesanan", value: "id_pesanan" },
                 { text: "Actions",
                     sortable: false,
                     value: "actions" },
             ],
             reservasi: [],
+            pesanan: [],
+            meja: [],
+            customer: [],
             inputType: 'Add',
             dialog: false,
-            dialogConfirm: false,
+            dialogDelete: false,
             form: {
-                nomor_reservasi: '',
-                status_reservasi: '',
+                sesi_reservasi: '',
+                tanggal_reservasi: '',
+                id_pesanan: '',
+                id_meja: '',
+                id_customer: '',
             },
-            status: [
-                {name: 'Empty'},
-                {name: 'In-use'}
-            ],
+            menu: false,
             loading: false,
             search: '',
             editId: null,
@@ -210,8 +306,21 @@ export default{
     },
     mounted() {
         this.reservasi = JSON.parse(localStorage.getItem('reservasi'));
+        this.pesanan = JSON.parse(localStorage.getItem('pesanan'));
+        this.customer = JSON.parse(localStorage.getItem('customer'));
+        this.meja = JSON.parse(localStorage.getItem('meja'));
         this.role = localStorage.getItem('role');
-        // if(localStorage.getItem('reservasi') == null) {this.loadData();}
+        if(localStorage.getItem('reservasi') == null) {this.loadData();}
+        
+        EventBus.$on('pesanan', () => {
+            this.pesanan = JSON.parse(localStorage.getItem('pesanan'));
+            this.loadData();
+        });
+        
+        EventBus.$on('customer', () => {
+            this.customer = JSON.parse(localStorage.getItem('customer'));
+            this.loadData();
+        });
     },
     methods: {
         redirectDashboard() {
@@ -231,7 +340,6 @@ export default{
             }).then(response => {
                 this.reservasi = response.data.data;
                 localStorage.setItem('reservasi', JSON.stringify(response.data.data));
-                this.emitKetersediaan();
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -240,29 +348,42 @@ export default{
         editHandler(item) {
             this.inputType = 'Edit';
             this.editId = item.id_reservasi;
-            this.form.nomor_reservasi = item.no_reservasi;
-            this.form.status_reservasi = item.status_reservasi;
+            this.form.sesi_reservasi = item.sesi_reservasi;
+            this.form.tanggal_reservasi = item.tanggal_reservasi;
+            this.form.id_pesanan = item.id_pesanan;
+            this.form.id_meja = item.id_meja;
+            this.form.id_customer = item.id_customer;
             this.dialog = true;
         },
         deleteHandler(id) {
             this.deleteId = id;
-            this.dialogConfirm = true;
+            this.dialogDelete = true;
         },
         cancel() {
-            this.dialogConfirm = false;
+            this.dialogDelete = false;
             this.dialog = false;
             this.resetForm();
             this.inputType = 'Add';
         },
         resetForm() {
-            this.form.nomor_reservasi = '';
-            this.form.status_reservasi = '';
+            this.form.sesi_reservasi = '';
+            this.form.tanggal_reservasi = '';
+            this.form.id_pesanan = '';
+            this.form.id_meja = '';
+            this.form.id_customer = '';
+        },
+        fillForm(item) {
+            this.form.tanggal_reservasi = item.tanggal_pesanan;
+            this.form.id_meja = item.id_meja;
         },
         add() {
             this.progressBar = true;
             let addData = {
-                no_reservasi: this.form.nomor_reservasi,
-                status_reservasi: this.form.status_reservasi,
+                sesi_reservasi: this.form.sesi_reservasi,
+                tanggal_reservasi: this.form.tanggal_reservasi,
+                id_pesanan: this.form.id_pesanan,
+                id_meja: this.form.id_meja,
+                id_customer: this.form.id_customer,
             }
 
             var url = this.$api + '/reservasi'
@@ -280,12 +401,25 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
-                if(err.response.data.message.no_reservasi)
-                    this.error_message= err.response.data.message.no_reservasi;
-                if(err.response.data.message.status_reservasi)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_reservasi;
-                if(!err.response.data.message.no_reservasi && !err.response.data.message.status_reservasi)
+                if(!err.response.data.message.no_reservasi 
+                && !err.response.data.message.status_reservasi
+                && !err.response.data.message.tanggal_reservasi
+                && !err.response.data.message.id_pesanan
+                && !err.response.data.message.id_meja
+                && !err.response.data.message.id_customer)
                     this.error_message= err.response.data.message;
+                else {
+                    if(err.response.data.message.sesi_reservasi)
+                        this.error_message= err.response.data.message.sesi_reservasi;
+                    if(err.response.data.message.tanggal_reservasi)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.tanggal_reservasi;
+                    if(err.response.data.message.id_pesanan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.id_pesanan;
+                    if(err.response.data.message.id_meja)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.id_meja;
+                    if(err.response.data.message.id_customer)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.id_customer;
+                }
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;
@@ -294,8 +428,11 @@ export default{
         update() {
             this.progressBar = true;
             let updateData = {
-                no_reservasi: this.form.nomor_reservasi,
-                status_reservasi: this.form.status_reservasi,
+                sesi_reservasi: this.form.sesi_reservasi,
+                tanggal_reservasi: this.form.tanggal_reservasi,
+                id_pesanan: this.form.id_pesanan,
+                id_meja: this.form.id_meja,
+                id_customer: this.form.id_customer,
             }
 
             var url = this.$api + '/reservasi/' + this.editId;
@@ -313,12 +450,25 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
-                if(err.response.data.message.no_reservasi)
-                    this.error_message= err.response.data.message.no_reservasi;
-                if(err.response.data.message.status_reservasi)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_reservasi;
-                if(!err.response.data.message.no_reservasi && !err.response.data.message.status_reservasi)
+                if(!err.response.data.message.no_reservasi 
+                && !err.response.data.message.status_reservasi
+                && !err.response.data.message.tanggal_reservasi
+                && !err.response.data.message.id_pesanan
+                && !err.response.data.message.id_meja
+                && !err.response.data.message.id_customer)
                     this.error_message= err.response.data.message;
+                else {
+                    if(err.response.data.message.sesi_reservasi)
+                        this.error_message= err.response.data.message.sesi_reservasi;
+                    if(err.response.data.message.tanggal_reservasi)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.tanggal_reservasi;
+                    if(err.response.data.message.id_pesanan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.id_pesanan;
+                    if(err.response.data.message.id_meja)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.id_meja;
+                    if(err.response.data.message.id_customer)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.id_customer;
+                }
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;
@@ -347,8 +497,8 @@ export default{
             });
 
         },
-        emitKetersediaan() {
-            EventBus.$emit('load', 'extra data');
+        emitPesanan() {
+            EventBus.$emit('reservasi', 'extra data');
         }
     }
 }

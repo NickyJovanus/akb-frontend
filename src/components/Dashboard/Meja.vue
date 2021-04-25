@@ -126,10 +126,8 @@
                 </v-card>
             </v-dialog>
         </div>
-
         
-        
-        <v-dialog v-model="dialogConfirm" persistent max-width="600px" style='z-index:8000;'>
+        <v-dialog v-model="dialogDelete" persistent max-width="600px" style='z-index:8000;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
@@ -188,7 +186,7 @@ export default{
             meja: [],
             inputType: 'Add',
             dialog: false,
-            dialogConfirm: false,
+            dialogDelete: false,
             form: {
                 nomor_meja: '',
                 status_meja: '',
@@ -246,10 +244,10 @@ export default{
         },
         deleteHandler(id) {
             this.deleteId = id;
-            this.dialogConfirm = true;
+            this.dialogDelete = true;
         },
         cancel() {
-            this.dialogConfirm = false;
+            this.dialogDelete = false;
             this.dialog = false;
             this.resetForm();
             this.inputType = 'Add';
@@ -280,12 +278,16 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
-                if(err.response.data.message.no_meja)
-                    this.error_message= err.response.data.message.no_meja;
-                if(err.response.data.message.status_meja)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
                 if(!err.response.data.message.no_meja && !err.response.data.message.status_meja)
                     this.error_message= err.response.data.message;
+                else {
+                    if(err.response.data.message.no_meja && !err.response.data.message.status_meja)
+                        this.error_message= err.response.data.message.no_meja + '\n';
+                    else if(err.response.data.message.no_meja)
+                        this.error_message= err.response.data.message.no_meja;
+                    if(err.response.data.message.status_meja)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
+                }
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;
@@ -313,12 +315,16 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
-                if(err.response.data.message.no_meja)
-                    this.error_message= err.response.data.message.no_meja;
-                if(err.response.data.message.status_meja)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
                 if(!err.response.data.message.no_meja && !err.response.data.message.status_meja)
                     this.error_message= err.response.data.message;
+                else {
+                    if(err.response.data.message.no_meja && !err.response.data.message.status_meja)
+                        this.error_message= err.response.data.message.no_meja + '\n';
+                    else if(err.response.data.message.no_meja)
+                        this.error_message= err.response.data.message.no_meja;
+                    if(err.response.data.message.status_meja)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
+                }
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;

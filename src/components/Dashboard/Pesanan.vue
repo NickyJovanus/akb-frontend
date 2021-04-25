@@ -284,7 +284,7 @@
 
         
         
-        <v-dialog v-model="dialogConfirm" persistent max-width="600px" style='z-index:9999;'>
+        <v-dialog v-model="dialogDelete" persistent max-width="600px" style='z-index:9999;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
@@ -353,7 +353,7 @@ export default{
             karyawan: [],
             inputType: 'Add',
             dialog: false,
-            dialogConfirm: false,
+            dialogDelete: false,
             form: {
                 tanggal_pesanan: '',
                 id_meja: '',
@@ -437,6 +437,7 @@ export default{
             }).then(response => {
                 this.pesanan = response.data.data;
                 localStorage.setItem('pesanan', JSON.stringify(response.data.data));
+                this.emitPesanan();
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -468,10 +469,10 @@ export default{
         },
         deleteHandler(id) {
             this.deleteId = id;
-            this.dialogConfirm = true;
+            this.dialogDelete = true;
         },
         cancel() {
-            this.dialogConfirm = false;
+            this.dialogDelete = false;
             this.dialog = false;
             this.resetForm();
             this.inputType = 'Add';
@@ -664,6 +665,9 @@ export default{
         },
         removeDetail(item) {
             this.detailtext.splice(this.detailtext.indexOf(item), 1);
+        },
+        emitPesanan() {
+            EventBus.$emit('pesanan', null);
         }
     },
 }

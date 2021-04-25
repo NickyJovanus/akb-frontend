@@ -7,6 +7,7 @@ export const EventBus = new Vue();
 |                when using keep-alive                   |
 ----------------------------------------------------------
 Emitted data list:
-'load' for Meja and Ketersediaan
-'customer' for Customers and Transaksi
+'load' for Meja to Ketersediaan
+'customer' for Customers to Transaksi and Reservasi
+'pesanan' for pesanan to reservasi
 */

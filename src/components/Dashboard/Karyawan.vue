@@ -299,7 +299,7 @@
         </v-dialog>
 
         
-        <v-dialog v-model="dialogConfirm" persistent max-width="600px" style='z-index:8000;'>
+        <v-dialog v-model="dialogDelete" persistent max-width="600px" style='z-index:8000;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
@@ -309,7 +309,7 @@
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
                     <v-flex class="text-right">
-                        <v-icon color="red" @click="dialogConfirm = false">mdi-close</v-icon>
+                        <v-icon color="red" @click="dialogDelete = false">mdi-close</v-icon>
                     </v-flex>
                 </v-card-actions>
                 <v-card-title>
@@ -320,7 +320,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="white darken-1" text @click="dialogConfirm = false">
+                    <v-btn color="white darken-1" text @click="dialogDelete = false">
                         Cancel
                     </v-btn>
                     <v-btn color="red darken-1" text @click="deleteData"> 
@@ -364,7 +364,7 @@ export default{
             karyawan: [],
             inputType: 'Register',
             dialog: false,
-            dialogConfirm: false,
+            dialogDelete: false,
             dialogPassword: false,
             form: {
                 nama_karyawan: '',
@@ -528,7 +528,7 @@ export default{
         },
         deleteHandler(id){
             this.deleteId = id;
-            this.dialogConfirm = true;
+            this.dialogDelete = true;
         },
         changePasswordHandler(id) {
             this.passwordId = id;

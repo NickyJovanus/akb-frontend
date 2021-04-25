@@ -108,7 +108,7 @@ export default{
     },
     methods: {
         loadData() {
-            setTimeout(() => this.preloadertext = "This process may take up to 10 seconds.", 4000);
+            setTimeout(() => this.preloadertext = "This process may take up to 10 seconds.", 4500);
 
             if(localStorage.getItem('token') != null) {
                 this.name = localStorage.getItem('name');

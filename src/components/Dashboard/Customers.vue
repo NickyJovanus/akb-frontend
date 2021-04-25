@@ -127,7 +127,7 @@
             </v-dialog>
         </div>
         
-        <v-dialog v-model="dialogConfirm" persistent max-width="600px" style='z-index:8000;'>
+        <v-dialog v-model="dialogDelete" persistent max-width="600px" style='z-index:8000;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
@@ -187,7 +187,7 @@ export default{
             customers: [],
             inputType: 'Add',
             dialog: false,
-            dialogConfirm: false,
+            dialogDelete: false,
             form: {
                 nama_customer: '',
                 telpon_customer: '',
@@ -243,10 +243,10 @@ export default{
         },
         deleteHandler(id) {
             this.deleteId = id;
-            this.dialogConfirm = true;
+            this.dialogDelete = true;
         },
         cancel() {
-            this.dialogConfirm = false;
+            this.dialogDelete = false;
             this.dialog = false;
             this.resetForm();
             this.inputType = 'Add';

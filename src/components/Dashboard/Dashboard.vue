@@ -40,8 +40,7 @@
                                         <div style="text-align-last: center;">{{menu.title}}</div>
                                         <v-img
                                             height="100px"
-                                            :src="menu.image"
-                                            class="dashboard-card">
+                                            :src="menu.image">
                                         </v-img>
                                     </v-card>
                                 </div>
