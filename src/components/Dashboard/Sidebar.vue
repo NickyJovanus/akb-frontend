@@ -76,7 +76,10 @@
             </v-card>
         </v-dialog>
         
-        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom style='z-index:10000;'>
+        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
+            <v-flex class="text-right">
+                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
+            </v-flex>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </main>
@@ -129,6 +132,7 @@ export default{
                 {url: this.$api + '/detailpesanan', store: 'detailpesanan'}, 
                 {url: this.$api + '/customer', store: 'customer'}, 
                 {url: this.$api + '/reservasi', store: 'reservasi'}, 
+                {url: this.$api + '/bahan', store: 'bahan'}, 
             ];
 
             this.$http.get(urlmeja, {

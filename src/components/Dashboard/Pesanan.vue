@@ -315,7 +315,10 @@
             </v-card>
         </v-dialog>
 
-        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom style='z-index:10000;'>
+        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
+            <v-flex class="text-right">
+                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
+            </v-flex>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </v-main>
@@ -406,19 +409,19 @@ export default{
         }
     },
     mounted() {
-        this.pesanan = JSON.parse(localStorage.getItem('pesanan'));
-        this.meja = JSON.parse(localStorage.getItem('meja'));
-        this.karyawan = JSON.parse(localStorage.getItem('karyawan'));
-        this.role = localStorage.getItem('role');
+        this.pesanan        = JSON.parse(localStorage.getItem('pesanan'));
+        this.meja           = JSON.parse(localStorage.getItem('meja'));
+        this.karyawan       = JSON.parse(localStorage.getItem('karyawan'));
         this.detail_pesanan = JSON.parse(localStorage.getItem('detailpesanan'));
-        this.menus = JSON.parse(localStorage.getItem('menu'));
+        this.menus          = JSON.parse(localStorage.getItem('menu'));
+        this.role           = localStorage.getItem('role');
 
         if(localStorage.getItem('pesanan') == null) {this.loadData();}
 
         EventBus.$on('load', data => {
             this.meja = JSON.parse(localStorage.getItem('meja'));
         });
-        
+
         if (this.role == 'Owner')
             this.redirectDashboard();
     },

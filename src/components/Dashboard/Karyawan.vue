@@ -332,7 +332,10 @@
 
         </div>
 
-        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom style='z-index:10000;'>
+        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
+            <v-flex class="text-right">
+                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
+            </v-flex>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </v-main>
@@ -413,8 +416,10 @@ export default{
     },
     mounted() {
         this.karyawan = JSON.parse(localStorage.getItem('karyawan'));
-        this.role = localStorage.getItem('role');
+        this.role     = localStorage.getItem('role');
+
         if(localStorage.getItem('karyawan') == null) {this.loadData();}
+
         if (this.role != 'Operational Manager' && this.role != 'Owner')
             this.redirectDashboard();
     },
@@ -449,17 +454,17 @@ export default{
             this.passwordtype = 'password';
         },
         resetForm() {
-            this.form.nama_karyawan = '';
-            this.form.jenis_kelamin_karyawan = '';
+            this.form.nama_karyawan           = '';
+            this.form.jenis_kelamin_karyawan  = '';
             this.form.tanggal_rekrut_karyawan = '';
-            this.form.telpon_karyawan = '';
-            this.form.peran_karyawan = '';
-            this.form.status_karyawan = '';
-            this.form.email_karyawan = '';
-            this.form.password = '';
-            this.formpass.oldpassword = '';
-            this.formpass.newpassword = '';
-            this.formpass.confirmpassword = '';
+            this.form.telpon_karyawan         = '';
+            this.form.peran_karyawan          = '';
+            this.form.status_karyawan         = '';
+            this.form.email_karyawan          = '';
+            this.form.password                = '';
+            this.formpass.oldpassword         = '';
+            this.formpass.newpassword         = '';
+            this.formpass.confirmpassword     = '';
         },
         register() {
             this.loading = true;
@@ -479,9 +484,9 @@ export default{
                 }
             }).then(response => {
                 this.error_message = '';
-                this.error_message=response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color = "green"
+                this.snackbar = true;
                 this.cancel();
                 this.loadData();
                 this.loading = false;
@@ -497,7 +502,7 @@ export default{
                     this.error_message= error.response.data.message;
                 else {
                     if(error.response.data.message.nama_karyawan)
-                        this.error_message= this.error_message + error.response.data.message.nama_karyawan;
+                        this.error_message= this.error_message + error.response.data.message.nama_karyawan + "";
                     if(error.response.data.message.jenis_kelamin_karyawan)
                         this.error_message= this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
                     if(error.response.data.message.tanggal_rekrut_karyawan)
@@ -518,14 +523,14 @@ export default{
         },
         editHandler(item){
             this.inputType = 'Edit';
-            this.editId = item.id_karyawan;
-            this.form.nama_karyawan = item.nama_karyawan;
+            this.editId                      = item.id_karyawan;
+            this.form.nama_karyawan          = item.nama_karyawan;
             this.form.jenis_kelamin_karyawan = item.jenis_kelamin_karyawan;
-            this.date = item.tanggal_rekrut_karyawan;
-            this.form.telpon_karyawan = item.telpon_karyawan;
-            this.form.peran_karyawan = item.peran_karyawan;
-            this.form.status_karyawan = item.status_karyawan;
-            this.form.email_karyawan = item.email_karyawan;
+            this.date                        = item.tanggal_rekrut_karyawan;
+            this.form.telpon_karyawan        = item.telpon_karyawan;
+            this.form.peran_karyawan         = item.peran_karyawan;
+            this.form.status_karyawan        = item.status_karyawan;
+            this.form.email_karyawan         = item.email_karyawan;
             this.dialog = true;
         },
         deleteHandler(id){
@@ -538,13 +543,13 @@ export default{
         },
         update() {
             let updateData = {
-                nama_karyawan: this.form.nama_karyawan,
-                jenis_kelamin_karyawan: this.form.jenis_kelamin_karyawan,
+                nama_karyawan:           this.form.nama_karyawan,
+                jenis_kelamin_karyawan:  this.form.jenis_kelamin_karyawan,
                 tanggal_rekrut_karyawan: this.date,
-                telpon_karyawan: this.form.telpon_karyawan,
-                peran_karyawan: this.form.peran_karyawan,
-                status_karyawan: this.form.status_karyawan,
-                email_karyawan: this.form.email_karyawan,
+                telpon_karyawan:         this.form.telpon_karyawan,
+                peran_karyawan:          this.form.peran_karyawan,
+                status_karyawan:         this.form.status_karyawan,
+                email_karyawan:          this.form.email_karyawan,
             }
             
             var url = this.$api + '/karyawan/' + this.editId;
@@ -572,7 +577,7 @@ export default{
                     this.error_message= error.response.data.message;
                 else {
                     if(error.response.data.message.nama_karyawan)
-                        this.error_message= this.error_message + error.response.data.message.nama_karyawan;
+                        this.error_message= this.error_message + error.response.data.message.nama_karyawan + "";
                     if(error.response.data.message.jenis_kelamin_karyawan)
                         this.error_message= this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
                     if(error.response.data.message.tanggal_rekrut_karyawan)
@@ -631,8 +636,8 @@ export default{
                 this.error_message=response.data.message;
                 
                 this.error_message=response.data.message; 
-                if(this.error_message == "Data was successfully updated") {
-                    this.color="green"
+                if(this.error_message === "Data was successfully updated") {
+                    this.color = "green"
                     this.loading = false;
                     this.loadData();
                     this.dialogPassword = false;
@@ -645,9 +650,9 @@ export default{
                 this.resetForm();
                 this.inputType = 'Register';
             }).catch(error => {
-                this.error_message=error.response.data.message;
-                this.color="red"
-                this.snackbar=true;
+                this.error_message = error.response.data.message;
+                this.color = "red"
+                this.snackbar = true;
                 this.loading = false;
                 this.resetForm();
             })

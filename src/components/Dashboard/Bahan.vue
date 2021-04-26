@@ -13,7 +13,7 @@
             </div>
             <br><br>
             <div style="text-align: center; width: 100%;">
-                <h2>Customers Management</h2>
+                <h2>Bahan Management</h2>
             </div>
             <div class="mt-5 table-section">
                 <v-card class="ma-6">
@@ -35,18 +35,16 @@
                         ></v-text-field>
                     </v-card-title>
                         <v-data-table :headers="headers" 
-                            :items="customers"
+                            :items="bahan"
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
-                            <template v-slot:[`item.status_customer`]="{ item }">
-                                <v-icon v-if="item.status_customer == 'Empty'" class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon>
-                                <v-icon v-else class="red--text text--lighten-2">mdi-close-circle-outline</v-icon>
-                                {{item.status_customer}}
+                            <template v-slot:[`item.jml_bahan`]="{ item }">
+                                {{item.jml_bahan}} {{item.unit_bahan}}
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
-                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id_customer)">mdi-delete-circle-outline</v-icon>
+                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id_bahan)">mdi-delete-circle-outline</v-icon>
                             </template>
                         </v-data-table>
                 </v-card>
@@ -90,23 +88,33 @@
                         </v-flex>
                     </v-card-actions>
                     <v-card-title>
-                        <span class="headline">{{ inputType }} Customer</span>
+                        <span class="headline">{{ inputType }} Bahan</span>
                     </v-card-title>
                     <div style="margin: 30px;">
                         <v-flex>
                             <v-text-field
-                                label="Nama Customer"
-                                v-model="form.nama_customer"
+                                label="Nama Bahan"
+                                v-model="form.nama_bahan"
                                 outlined
                             ></v-text-field>
+
                             <v-text-field
-                                label="No. Telepon"
-                                v-model="form.telpon_customer"
+                                label="Jumlah Bahan"
+                                v-model="form.jml_bahan"
+                                type="number"
                                 outlined
                             ></v-text-field>
+
                             <v-text-field
-                                label="E-mail Address"
-                                v-model="form.email_customer"
+                                label="Unit Bahan"
+                                v-model="form.unit_bahan"
+                                outlined
+                            ></v-text-field>
+
+                            <v-text-field
+                                label="Stok per Unit"
+                                v-model="form.stok_per_unit"
+                                type="number"
                                 outlined
                             ></v-text-field>
                         </v-flex>
@@ -144,7 +152,7 @@
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>
                 <v-card-text>
-                    Do you really want to delete this data?
+                    Do you really want to delete this bahan?
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -171,7 +179,7 @@
 import { EventBus } from './bus.js';
 
 export default{
-    name: "customers",
+    name: "Bahan",
     data() {
         return {
             role: '',
@@ -179,22 +187,23 @@ export default{
                 { text: "ID",
                     align: "start",
                     sortable: true,
-                    value: "id_customer" },
-                { text: "Nama", value: "nama_customer" },
-                { text: "No. Telepon", value: "telpon_customer" },
-                { text: "E-mail", value: "email_customer" },
+                    value: "id_bahan" },
+                { text: "Nama Bahan", value: "nama_bahan" },
+                { text: "Jumlah Bahan", value: "jml_bahan" },
+                { text: "Stok per Unit", value: "stok_per_unit" },
                 { text: "Actions",
                     sortable: false,
                     value: "actions" },
             ],
-            customers: [],
+            bahan: [],
             inputType: 'Add',
             dialog: false,
             dialogDelete: false,
             form: {
-                nama_customer: '',
-                telpon_customer: '',
-                email_customer: '',
+                nama_bahan: '',
+                jml_bahan: '',
+                unit_bahan: '',
+                stok_per_unit: '',
             },
             loading: false,
             search: '',
@@ -208,12 +217,12 @@ export default{
         }
     },
     mounted() {
-        this.customers = JSON.parse(localStorage.getItem('customer'));
-        this.role      = localStorage.getItem('role');
+        this.bahan = JSON.parse(localStorage.getItem('bahan'));
+        this.role = localStorage.getItem('role');
 
-        if(localStorage.getItem('customer') == null) {this.loadData();}
-
-        if (this.role != 'Operational Manager')
+        if(localStorage.getItem('bahan') == null) {this.loadData();}
+        
+        if (this.role != 'Operational Manager' && this.role != 'Chef')
             this.redirectDashboard();
     },
     methods: {
@@ -224,18 +233,17 @@ export default{
             this.collapsed = true;
         },
         loadData() {
-            var url = this.$api + '/customer';
+            var url = this.$api + '/bahan';
             this.loading = true;
-            this.role = localStorage.getItem('role');
 
             this.$http.get(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.customers = response.data.data;
-                localStorage.setItem('customer', JSON.stringify(response.data.data));
-                this.emitCustomer();
+                this.bahan = response.data.data;
+                localStorage.setItem('bahan', JSON.stringify(response.data.data));
+                this.emitKetersediaan();
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -243,10 +251,11 @@ export default{
         },
         editHandler(item) {
             this.inputType = 'Edit';
-            this.editId = item.id_customer;
-            this.form.nama_customer = item.nama_customer;
-            this.form.telpon_customer = item.telpon_customer;
-            this.form.email_customer = item.email_customer;
+            this.editId             = item.id_bahan;
+            this.form.nama_bahan    = item.nama_bahan;
+            this.form.jml_bahan     = item.jml_bahan;
+            this.form.unit_bahan    = item.unit_bahan;
+            this.form.stok_per_unit = item.stok_per_unit;
             this.dialog = true;
         },
         deleteHandler(id) {
@@ -260,44 +269,49 @@ export default{
             this.inputType = 'Add';
         },
         resetForm() {
-            this.form.nama_customer = '';
-            this.form.telpon_customer = '';
-            this.form.email_customer = '';
+            this.form.nama_bahan = '';
+            this.form.jml_bahan = '';
+            this.form.unit_bahan = '';
+            this.form.stok_per_unit = '';
         },
         add() {
             this.progressBar = true;
             let addData = {
-                nama_customer: this.form.nama_customer,
-                telpon_customer: this.form.telpon_customer,
-                email_customer: this.form.email_customer,
+                nama_bahan: this.form.nama_bahan,
+                jml_bahan: this.form.jml_bahan,
+                unit_bahan: this.form.unit_bahan,
+                stok_per_unit: this.form.stok_per_unit,
             }
 
-            var url = this.$api + '/customer'
+            var url = this.$api + '/bahan'
             this.$http.post(url, addData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
                 this.error_message = '';
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color = "green"
+                this.snackbar = true;
+                this.progressBar = false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
-                if(!err.response.data.message.nama_customer
-                    && !err.response.data.message.telpon_customer
-                    && !err.response.data.message.email_customer)
+                if(!err.response.data.message.nama_bahan 
+                && !err.response.data.message.jml_bahan
+                && !err.response.data.message.unit_bahan
+                && !err.response.data.message.stok_per_unit)
                     this.error_message= err.response.data.message;
                 else {
-                    if(err.response.data.message.nama_customer)
-                        this.error_message= err.response.data.message.nama_customer;
-                    if(err.response.data.message.telpon_customer)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.telpon_customer;
-                    if(err.response.data.message.email_customer)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.email_customer;
+                    if(err.response.data.message.nama_bahan)
+                        this.error_message= err.response.data.message.nama_bahan + "";
+                    if(err.response.data.message.jml_bahan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.jml_bahan;
+                    if(err.response.data.message.unit_bahan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.unit_bahan;
+                    if(err.response.data.message.stok_per_unit)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.stok_per_unit;
                 }
                 this.color="red"
                 this.snackbar=true;
@@ -307,37 +321,41 @@ export default{
         update() {
             this.progressBar = true;
             let updateData = {
-                nama_customer: this.form.nama_customer,
-                telpon_customer: this.form.telpon_customer,
-                email_customer: this.form.email_customer,
+                nama_bahan: this.form.nama_bahan,
+                jml_bahan: this.form.jml_bahan,
+                unit_bahan: this.form.unit_bahan,
+                stok_per_unit: this.form.stok_per_unit,
             }
 
-            var url = this.$api + '/customer/' + this.editId;
+            var url = this.$api + '/bahan/' + this.editId;
             this.$http.put(url, updateData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
                 this.error_message = '';
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color = "green"
+                this.snackbar = true;
+                this.progressBar = false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
-                if(!err.response.data.message.nama_customer
-                    && !err.response.data.message.telpon_customer
-                    && !err.response.data.message.email_customer)
+                if(!err.response.data.message.nama_bahan 
+                && !err.response.data.message.jml_bahan
+                && !err.response.data.message.unit_bahan
+                && !err.response.data.message.stok_per_unit)
                     this.error_message= err.response.data.message;
                 else {
-                    if(err.response.data.message.nama_customer)
-                        this.error_message= err.response.data.message.nama_customer;
-                    if(err.response.data.message.telpon_customer)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.telpon_customer;
-                    if(err.response.data.message.email_customer)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.email_customer;
+                    if(err.response.data.message.nama_bahan)
+                        this.error_message= err.response.data.message.nama_bahan + "";
+                    if(err.response.data.message.jml_bahan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.jml_bahan;
+                    if(err.response.data.message.unit_bahan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.unit_bahan;
+                    if(err.response.data.message.stok_per_unit)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.stok_per_unit;
                 }
                 this.color="red"
                 this.snackbar=true;
@@ -347,29 +365,28 @@ export default{
         deleteData() {
             this.progressBar = true;
 
-            var url = this.$api + '/customer/' + this.deleteId;
+            var url = this.$api + '/bahan/' + this.deleteId;
             this.$http.delete(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color = "green"
+                this.snackbar = true;
                 this.cancel();
                 this.loadData();
                 this.progressBar = false;
             }).catch(err => {
-                this.error_message= err.response.data.message;
-                this.color="red"
-                this.snackbar=true;
+                this.error_message = err.response.data.message;
+                this.color = "red"
+                this.snackbar = true;
                 this.progressBar = false;
             });
 
         },
-        // Send update signal through event bus (reload data for <keep-alive>)
-        emitCustomer() {
-            EventBus.$emit('customer', 'extra data');
+        emitMenu() {
+            EventBus.$emit('bahan', '');
         }
     }
 }

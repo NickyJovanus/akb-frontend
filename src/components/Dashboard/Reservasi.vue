@@ -257,7 +257,10 @@
             </v-card>
         </v-dialog>
 
-        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom style='z-index:10000;'>
+        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
+            <v-flex class="text-right">
+                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
+            </v-flex>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </v-main>
@@ -312,10 +315,11 @@ export default{
     },
     mounted() {
         this.reservasi = JSON.parse(localStorage.getItem('reservasi'));
-        this.pesanan = JSON.parse(localStorage.getItem('pesanan'));
-        this.customer = JSON.parse(localStorage.getItem('customer'));
-        this.meja = JSON.parse(localStorage.getItem('meja'));
-        this.role = localStorage.getItem('role');
+        this.pesanan   = JSON.parse(localStorage.getItem('pesanan'));
+        this.customer  = JSON.parse(localStorage.getItem('customer'));
+        this.meja      = JSON.parse(localStorage.getItem('meja'));
+        this.role      = localStorage.getItem('role');
+
         if(localStorage.getItem('reservasi') == null) {this.loadData();}
         
         EventBus.$on('pesanan', () => {
@@ -353,12 +357,12 @@ export default{
         },
         editHandler(item) {
             this.inputType = 'Edit';
-            this.editId = item.id_reservasi;
-            this.form.sesi_reservasi = item.sesi_reservasi;
+            this.editId                 = item.id_reservasi;
+            this.form.sesi_reservasi    = item.sesi_reservasi;
             this.form.tanggal_reservasi = item.tanggal_reservasi;
-            this.form.id_pesanan = item.id_pesanan;
-            this.form.id_meja = item.id_meja;
-            this.form.id_customer = item.id_customer;
+            this.form.id_pesanan        = item.id_pesanan;
+            this.form.id_meja           = item.id_meja;
+            this.form.id_customer       = item.id_customer;
             this.dialog = true;
         },
         deleteHandler(id) {
@@ -372,32 +376,32 @@ export default{
             this.inputType = 'Add';
         },
         resetForm() {
-            this.form.sesi_reservasi = '';
+            //reset dialog form
+            this.form.sesi_reservasi    = '';
             this.form.tanggal_reservasi = '';
-            this.form.id_pesanan = '';
-            this.form.id_meja = '';
-            this.form.id_customer = '';
+            this.form.id_pesanan        = '';
+            this.form.id_meja           = '';
+            this.form.id_customer       = '';
         },
-        setActiveItem(val) {
-            this.$store.commit('setActiveItem', val)
-        },
-        fillForm(item) {
-            for(var i=0; i<this.pesanan.length; i++) {
-                let currentPesanan = this.pesanan[i];
-                if( item == currentPesanan.id_pesanan) {
-                    this.form.tanggal_reservasi = currentPesanan.tanggal_pesanan;
-                    this.form.id_meja = currentPesanan.id_meja;
+        fillForm(id) {
+            //loop index array
+            let index= 0;
+            for(; index<this.pesanan.length; index++) {
+                //match id
+                if(id === this.pesanan[index].id_pesanan) {
+                    this.form.tanggal_reservasi = this.pesanan[index].tanggal_pesanan;
+                    this.form.id_meja = this.pesanan[index].id_meja;
                 }
             }
         },
         add() {
             this.progressBar = true;
             let addData = {
-                sesi_reservasi: this.form.sesi_reservasi,
+                sesi_reservasi:    this.form.sesi_reservasi,
                 tanggal_reservasi: this.form.tanggal_reservasi,
-                id_pesanan: this.form.id_pesanan,
-                id_meja: this.form.id_meja,
-                id_customer: this.form.id_customer,
+                id_pesanan:        this.form.id_pesanan,
+                id_meja:           this.form.id_meja,
+                id_customer:       this.form.id_customer,
             }
 
             var url = this.$api + '/reservasi'
@@ -407,9 +411,9 @@ export default{
                 }
             }).then(response => {
                 this.error_message = '';
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color = "green"
+                this.snackbar = true;
                 this.cancel();
                 this.loadData();
                 this.progressBar = false;
@@ -442,11 +446,11 @@ export default{
         update() {
             this.progressBar = true;
             let updateData = {
-                sesi_reservasi: this.form.sesi_reservasi,
+                sesi_reservasi:    this.form.sesi_reservasi,
                 tanggal_reservasi: this.form.tanggal_reservasi,
-                id_pesanan: this.form.id_pesanan,
-                id_meja: this.form.id_meja,
-                id_customer: this.form.id_customer,
+                id_pesanan:        this.form.id_pesanan,
+                id_meja:           this.form.id_meja,
+                id_customer:       this.form.id_customer,
             }
 
             var url = this.$api + '/reservasi/' + this.editId;
@@ -456,9 +460,9 @@ export default{
                 }
             }).then(response => {
                 this.error_message = '';
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color = "green"
+                this.snackbar = true;
                 this.cancel();
                 this.loadData();
                 this.progressBar = false;

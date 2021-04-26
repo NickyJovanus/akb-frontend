@@ -83,20 +83,6 @@ export default{
         return {
             role: '',
             dashboardmenu: [],
-            karyawan:    { title: "Manage Karyawan", to: "/manage/karyawan", image: require("@/assets/images/dashboard/karyawan.jpg") },
-            menu:        { title: "Manage Menu", to: "/manage/menu", image: require("@/assets/images/dashboard/menu.jpg")  },
-            meja:        { title: "Manage Meja", to: "/manage/meja", image: require("@/assets/images/dashboard/meja.jpg")  },
-            pesanan:     { title: "Manage Pesanan", to: "/manage/pesanan", image: require("@/assets/images/dashboard/pesanan.jpg")  },
-            reservasi:   { title: "Manage Reservasi", to: "/manage/reservasi", image: require("@/assets/images/dashboard/reservasi.jpg")  },
-            transaksi:   { title: "Manage Transaksi", to: "/manage/transaksi", image: require("@/assets/images/dashboard/transaksi.jpg")  },
-            customers:   { title: "Manage Customers", to: "/manage/customers", image: require("@/assets/images/dashboard/customers.jpg") },
-            bahan:       { title: "Manage Bahan", to: "/manage/bahan", image: require("@/assets/images/dashboard/bahan.jpg") },
-            stock:       { title: "Manage Stock", to: "/manage/stock", image: require("@/assets/images/dashboard/stock.jpg") },
-            history:     { title: "Manage History Stock", to: "/manage/history-stock", image: require("@/assets/images/dashboard/history.jpg") },
-            qrcode:      { title: "Print QR Code", to: "/print-qr", image: require("@/assets/images/dashboard/qrcode.jpg") },
-            pengeluaran: { title: "Laporan Pengeluaran", to: "/laporan/expenses", image: require("@/assets/images/dashboard/pengeluaran.jpg") },
-            pendapatan:  { title: "Laporan Pendapatan", to: "/laporan/income", image: require("@/assets/images/dashboard/pendapatan.jpg") },
-            ketersediaan:{ title: "Ketersediaan Meja", to: "/showMeja", image: require("@/assets/images/dashboard/ketersediaan.jpg") },
         }
     },
     mounted() {
@@ -106,42 +92,61 @@ export default{
         filtermenu() {
             let role = localStorage.getItem('role');
             this.role = role;
-            if(role=="Operational Manager") {
-                this.dashboardmenu.push(this.karyawan);
-                this.dashboardmenu.push(this.menu);
-                this.dashboardmenu.push(this.meja);
-                this.dashboardmenu.push(this.ketersediaan);
-                this.dashboardmenu.push(this.pesanan);
-                this.dashboardmenu.push(this.reservasi);
-                this.dashboardmenu.push(this.transaksi);
-                this.dashboardmenu.push(this.customers);
-                this.dashboardmenu.push(this.bahan);
-                this.dashboardmenu.push(this.stock);
-                this.dashboardmenu.push(this.history);
-                this.dashboardmenu.push(this.qrcode);
-                this.dashboardmenu.push(this.pengeluaran);
-                this.dashboardmenu.push(this.pendapatan);
-            } else if (role =="Owner") {
-                this.dashboardmenu.push(this.karyawan);
-                this.dashboardmenu.push(this.pengeluaran);
-                this.dashboardmenu.push(this.pendapatan);
-            } else if (role =="Chef") {
-                this.dashboardmenu.push(this.pesanan);
-                this.dashboardmenu.push(this.bahan);
-                this.dashboardmenu.push(this.stock);
-                this.dashboardmenu.push(this.history);
-            } else if (role =="Waiter") {
-                this.dashboardmenu.push(this.ketersediaan);
-                this.dashboardmenu.push(this.pesanan);
-                this.dashboardmenu.push(this.reservasi);
-                this.dashboardmenu.push(this.qrcode);
-            } else if (role =="Cashier") {
-                this.dashboardmenu.push(this.meja);
-                this.dashboardmenu.push(this.ketersediaan);
-                this.dashboardmenu.push(this.pesanan);
-                this.dashboardmenu.push(this.reservasi);
-                this.dashboardmenu.push(this.qrcode);
-                this.dashboardmenu.push(this.transaksi);
+            
+            var karyawan =     { title: "Manage Karyawan",      to: "/manage/karyawan",      image: require("@/assets/images/dashboard/karyawan.jpg")     };
+            var menu =         { title: "Manage Menu",          to: "/manage/menu",          image: require("@/assets/images/dashboard/menu.jpg")         };
+            var meja =         { title: "Manage Meja",          to: "/manage/meja",          image: require("@/assets/images/dashboard/meja.jpg")         };
+            var pesanan =      { title: "Manage Pesanan",       to: "/manage/pesanan",       image: require("@/assets/images/dashboard/pesanan.jpg")      };
+            var reservasi =    { title: "Manage Reservasi",     to: "/manage/reservasi",     image: require("@/assets/images/dashboard/reservasi.jpg")    };
+            var transaksi =    { title: "Manage Transaksi",     to: "/manage/transaksi",     image: require("@/assets/images/dashboard/transaksi.jpg")    };
+            var customers =    { title: "Manage Customers",     to: "/manage/customers",     image: require("@/assets/images/dashboard/customers.jpg")    };
+            var bahan =        { title: "Manage Bahan",         to: "/manage/bahan",         image: require("@/assets/images/dashboard/bahan.jpg")        };
+            var stock =        { title: "Manage Stock",         to: "/manage/stock",         image: require("@/assets/images/dashboard/stock.jpg")        };
+            var history =      { title: "Manage History Stock", to: "/manage/history-stock", image: require("@/assets/images/dashboard/history.jpg")      };
+            var qrcode =       { title: "Print QR Code",        to: "/print-qr",             image: require("@/assets/images/dashboard/qrcode.jpg")       };
+            var pengeluaran =  { title: "Laporan Pengeluaran",  to: "/laporan/expenses",     image: require("@/assets/images/dashboard/pengeluaran.jpg")  };
+            var pendapatan =   { title: "Laporan Pendapatan",   to: "/laporan/income",       image: require("@/assets/images/dashboard/pendapatan.jpg")   };
+            var ketersediaan = { title: "Ketersediaan Meja",    to: "/showMeja",             image: require("@/assets/images/dashboard/ketersediaan.jpg") };
+
+            if(role === "Operational Manager") {
+                this.dashboardmenu.push(karyawan);
+                this.dashboardmenu.push(menu);
+                this.dashboardmenu.push(meja);
+                this.dashboardmenu.push(ketersediaan);
+                this.dashboardmenu.push(pesanan);
+                this.dashboardmenu.push(reservasi);
+                this.dashboardmenu.push(transaksi);
+                this.dashboardmenu.push(customers);
+                this.dashboardmenu.push(bahan);
+                this.dashboardmenu.push(stock);
+                this.dashboardmenu.push(history);
+                this.dashboardmenu.push(qrcode);
+                this.dashboardmenu.push(pengeluaran);
+                this.dashboardmenu.push(pendapatan);
+            } else if (role === "Owner") {
+                this.dashboardmenu.push(karyawan);
+                this.dashboardmenu.push(pengeluaran);
+                this.dashboardmenu.push(pendapatan);
+            } else if (role === "Chef") {
+                this.dashboardmenu.push(pesanan);
+                this.dashboardmenu.push(bahan);
+                this.dashboardmenu.push(stock);
+                this.dashboardmenu.push(history);
+            } else if (role === "Waiter") {
+                this.dashboardmenu.push(menu);
+                this.dashboardmenu.push(meja);
+                this.dashboardmenu.push(ketersediaan);
+                this.dashboardmenu.push(pesanan);
+                this.dashboardmenu.push(reservasi);
+                this.dashboardmenu.push(qrcode);
+            } else if (role === "Cashier") {
+                this.dashboardmenu.push(menu);
+                this.dashboardmenu.push(meja);
+                this.dashboardmenu.push(ketersediaan);
+                this.dashboardmenu.push(pesanan);
+                this.dashboardmenu.push(reservasi);
+                this.dashboardmenu.push(qrcode);
+                this.dashboardmenu.push(transaksi);
             }
         }
     }

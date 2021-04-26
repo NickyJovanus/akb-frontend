@@ -67,7 +67,9 @@ export default{
     mounted() {
         this.meja = JSON.parse(localStorage.getItem('meja'));
         this.role = localStorage.getItem('role');
+
         if(localStorage.getItem('meja') == null) {this.reload(); this.loadData();}
+
         if (this.role != 'Operational Manager' && this.role != 'Waiter' && this.role != 'Cashier')
             this.redirectDashboard();
     },
@@ -169,10 +171,8 @@ export default{
         window.addEventListener('resize', () => {
             this.calcRowsPerPage()
         });
-        EventBus.$on('load', data => {
+        EventBus.$on('meja', () => {
             this.meja = JSON.parse(localStorage.getItem('meja'));
-            // this.reload();
-            // this.loadData()
         });
     },
 }

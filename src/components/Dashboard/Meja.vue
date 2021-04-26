@@ -158,7 +158,10 @@
             </v-card>
         </v-dialog>
 
-        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom style='z-index:10000;'>
+        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
+            <v-flex class="text-right">
+                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
+            </v-flex>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </v-main>
@@ -209,7 +212,9 @@ export default{
     mounted() {
         this.meja = JSON.parse(localStorage.getItem('meja'));
         this.role = localStorage.getItem('role');
+
         if(localStorage.getItem('meja') == null) {this.loadData();}
+
         if (this.role != 'Operational Manager' && this.role != 'Cashier')
             this.redirectDashboard();
     },
@@ -239,8 +244,8 @@ export default{
         },
         editHandler(item) {
             this.inputType = 'Edit';
-            this.editId = item.id_meja;
-            this.form.nomor_meja = item.no_meja;
+            this.editId           = item.id_meja;
+            this.form.nomor_meja  = item.no_meja;
             this.form.status_meja = item.status_meja;
             this.dialog = true;
         },
@@ -255,7 +260,7 @@ export default{
             this.inputType = 'Add';
         },
         resetForm() {
-            this.form.nomor_meja = '';
+            this.form.nomor_meja  = '';
             this.form.status_meja = '';
         },
         add() {
@@ -272,26 +277,24 @@ export default{
                 }
             }).then(response => {
                 this.error_message = '';
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color = "green"
+                this.snackbar = true;
+                this.progressBar = false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
                 if(!err.response.data.message.no_meja && !err.response.data.message.status_meja)
                     this.error_message= err.response.data.message;
                 else {
-                    if(err.response.data.message.no_meja && !err.response.data.message.status_meja)
-                        this.error_message= err.response.data.message.no_meja + '\n';
-                    else if(err.response.data.message.no_meja)
-                        this.error_message= err.response.data.message.no_meja;
+                    if(err.response.data.message.no_meja)
+                        this.error_message= err.response.data.message.no_meja + "";
                     if(err.response.data.message.status_meja)
                         this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color = "red"
+                this.snackbar = true;
                 this.progressBar = false;
             });
         },
@@ -309,26 +312,24 @@ export default{
                 }
             }).then(response => {
                 this.error_message = '';
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color = "green"
+                this.snackbar = true;
+                this.progressBar = false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
                 if(!err.response.data.message.no_meja && !err.response.data.message.status_meja)
                     this.error_message= err.response.data.message;
                 else {
-                    if(err.response.data.message.no_meja && !err.response.data.message.status_meja)
-                        this.error_message= err.response.data.message.no_meja + '\n';
-                    else if(err.response.data.message.no_meja)
-                        this.error_message= err.response.data.message.no_meja;
+                    if(err.response.data.message.no_meja)
+                        this.error_message= err.response.data.message.no_meja + "";
                     if(err.response.data.message.status_meja)
                         this.error_message= this.error_message + '\n' + err.response.data.message.status_meja;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color = "red"
+                this.snackbar = true;
                 this.progressBar = false;
             });
         },
@@ -349,7 +350,6 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message= err.response.data.message;
-                // this.error_message='This meja is currently under reservation.'
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;
@@ -357,7 +357,7 @@ export default{
 
         },
         emitKetersediaan() {
-            EventBus.$emit('load', 'extra data');
+            EventBus.$emit('meja', 'extra data');
         }
     }
 }
