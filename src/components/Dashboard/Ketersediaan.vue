@@ -56,6 +56,7 @@ export default{
     data() {
         return {
             meja: [],
+            role: '',
             empty: {status_meja: "Loading..."},
             error: {status_meja: "An Unknown Error Occured."},
             loading: true,
@@ -65,7 +66,10 @@ export default{
     },
     mounted() {
         this.meja = JSON.parse(localStorage.getItem('meja'));
+        this.role = localStorage.getItem('role');
         if(localStorage.getItem('meja') == null) {this.reload(); this.loadData();}
+        if (this.role != 'Operational Manager' && this.role != 'Waiter' && this.role != 'Cashier')
+            this.redirectDashboard();
     },
     methods: {
         redirectDashboard() {

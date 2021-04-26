@@ -83,12 +83,12 @@ export default{
     name: "Navbar",
     data() {
         return {
+            //snackbar
             error_message: '',
             color: '',
             valid: false,
-            password: '',
-            email: '',
             snackbar: false,
+            //navbar
             collapsed: true,
             load: false,
             progressBarLogout: false,

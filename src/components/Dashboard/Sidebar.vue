@@ -89,9 +89,11 @@ export default{
     name: "Sidebar",
     data() {
         return {
+            //snackbar
             error_message: '',
             color: '',
             snackbar: false,
+            //navbar
             collapsed: true,
             load: false,
             progressBarLogout: false,

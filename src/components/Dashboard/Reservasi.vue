@@ -48,7 +48,7 @@
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
-                                <v-icon v-if="role == 'Operational Manager'" class="red--text ml-2" @click="deleteHandler(item.id_reservasi)">mdi-delete-circle-outline</v-icon>
+                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id_reservasi)">mdi-delete-circle-outline</v-icon>
                             </template>
                         </v-data-table>
                 </v-card>
@@ -100,7 +100,7 @@
                                 ref="menu"
                                 v-model="menu"
                                 :close-on-content-click="false"
-                                :return-value.sync="date"
+                                :return-value.sync="form.sesi_reservasi"
                                 transition="scale-transition"
                                 offset-y
                                 min-width="290px"
@@ -127,6 +127,21 @@
                                     use-seconds
                                     outlined
                                 >
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        text
+                                        color="primary"
+                                        @click="menu = false"
+                                    >
+                                        Cancel
+                                    </v-btn>
+                                    <v-btn
+                                        text
+                                        color="primary"
+                                        @click="$refs.menu.save(form.sesi_reservasi)"
+                                    >
+                                        OK
+                                    </v-btn>
                                 </v-time-picker>
                             </v-menu>
                             
@@ -137,17 +152,8 @@
                                 item-text="id_pesanan"
                                 outlined
                                 three-line
-                                :value="form.id_pesanan"
-                                @change="fillForm(item)"
+                                v-on:change="fillForm($event)"
                             >
-                                <!-- <template slot="selection" slot-scope="data">
-                                    {{ data.item.id_pesanan }} - No.
-                                    <span v-for="item2 in meja" :key="item2.id_meja">
-                                        <span v-if="data.item.id_meja == item2.id_meja"> 
-                                            {{item2.no_meja}} 
-                                        </span>
-                                    </span> - [{{data.item.tanggal_pesanan}}]
-                                </template> -->
                                 <template slot="item" slot-scope="data">
                                     {{ data.item.id_pesanan }} - No.
                                     <span v-for="item2 in meja" :key="item2.id_meja">
@@ -372,9 +378,17 @@ export default{
             this.form.id_meja = '';
             this.form.id_customer = '';
         },
+        setActiveItem(val) {
+            this.$store.commit('setActiveItem', val)
+        },
         fillForm(item) {
-            this.form.tanggal_reservasi = item.tanggal_pesanan;
-            this.form.id_meja = item.id_meja;
+            for(var i=0; i<this.pesanan.length; i++) {
+                let currentPesanan = this.pesanan[i];
+                if( item == currentPesanan.id_pesanan) {
+                    this.form.tanggal_reservasi = currentPesanan.tanggal_pesanan;
+                    this.form.id_meja = currentPesanan.id_meja;
+                }
+            }
         },
         add() {
             this.progressBar = true;
@@ -410,7 +424,7 @@ export default{
                     this.error_message= err.response.data.message;
                 else {
                     if(err.response.data.message.sesi_reservasi)
-                        this.error_message= err.response.data.message.sesi_reservasi;
+                        this.error_message= err.response.data.message.sesi_reservasi + "";
                     if(err.response.data.message.tanggal_reservasi)
                         this.error_message= this.error_message + '\n' + err.response.data.message.tanggal_reservasi;
                     if(err.response.data.message.id_pesanan)
@@ -459,7 +473,7 @@ export default{
                     this.error_message= err.response.data.message;
                 else {
                     if(err.response.data.message.sesi_reservasi)
-                        this.error_message= err.response.data.message.sesi_reservasi;
+                        this.error_message= err.response.data.message.sesi_reservasi + "";
                     if(err.response.data.message.tanggal_reservasi)
                         this.error_message= this.error_message + '\n' + err.response.data.message.tanggal_reservasi;
                     if(err.response.data.message.id_pesanan)
@@ -500,6 +514,7 @@ export default{
         emitPesanan() {
             EventBus.$emit('reservasi', 'extra data');
         }
-    }
+    },
 }
+
 </script>

@@ -400,7 +400,6 @@ export default{
             date: new Date().toISOString().substr(0, 10),
             menu: false,
             modal: false,
-            menu2: false,
             search: '',
             editId: null,
             error_message: '',
@@ -414,7 +413,10 @@ export default{
     },
     mounted() {
         this.karyawan = JSON.parse(localStorage.getItem('karyawan'));
+        this.role = localStorage.getItem('role');
         if(localStorage.getItem('karyawan') == null) {this.loadData();}
+        if (this.role != 'Operational Manager' && this.role != 'Owner')
+            this.redirectDashboard();
     },
     methods: {
         redirectDashboard() {

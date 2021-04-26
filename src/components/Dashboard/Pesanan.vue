@@ -418,6 +418,9 @@ export default{
         EventBus.$on('load', data => {
             this.meja = JSON.parse(localStorage.getItem('meja'));
         });
+        
+        if (this.role == 'Owner')
+            this.redirectDashboard();
     },
     methods: {
         redirectDashboard() {

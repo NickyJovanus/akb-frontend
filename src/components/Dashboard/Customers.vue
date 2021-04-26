@@ -206,7 +206,10 @@ export default{
     },
     mounted() {
         this.customers = JSON.parse(localStorage.getItem('customer'));
+        this.role = localStorage.getItem('role');
         if(localStorage.getItem('customer') == null) {this.loadData();}
+        if (this.role != 'Operational Manager')
+            this.redirectDashboard();
     },
     methods: {
         redirectDashboard() {

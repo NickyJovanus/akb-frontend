@@ -210,6 +210,8 @@ export default{
         this.meja = JSON.parse(localStorage.getItem('meja'));
         this.role = localStorage.getItem('role');
         if(localStorage.getItem('meja') == null) {this.loadData();}
+        if (this.role != 'Operational Manager' && this.role != 'Cashier')
+            this.redirectDashboard();
     },
     methods: {
         redirectDashboard() {

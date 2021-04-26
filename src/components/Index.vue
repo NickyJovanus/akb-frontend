@@ -187,7 +187,7 @@
                                 <MglMarker :coordinates="coordinates" color="orange">
                                   <MglPopup :style="{'background': '#00000000'}">
                                     <VCard>
-                                      <div class="ma-2">Atma Korean BBQ</div>
+                                      <div class="ma-2" light>Atma Korean BBQ</div>
                                     </VCard>
                                   </MglPopup>
                                 </MglMarker>
@@ -565,5 +565,9 @@ export default{
 
 .mapboxgl-popup-content {
     background: #1b1b1b;
+}
+
+.mapboxgl-popup-close-button {
+    color: red !important;
 }
 </style>
