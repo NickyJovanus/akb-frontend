@@ -13,7 +13,7 @@
             </div>
             <br><br>
             <div style="text-align: center; width: 100%;">
-                <h2>Bahan Management</h2>
+                <h2>Menu Management</h2>
             </div>
             <div class="mt-5 table-section">
                 <v-card class="ma-6">
@@ -35,16 +35,44 @@
                         ></v-text-field>
                     </v-card-title>
                         <v-data-table :headers="headers" 
-                            :items="bahan"
+                            :items="menu"
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
-                            <template v-slot:[`item.jml_bahan`]="{ item }">
-                                {{item.jml_bahan}} {{item.unit_bahan}}
+
+                            <template v-slot:[`item.kategori_menu`]="{ item }">
+                                {{item.kategori_menu.charAt(0).toUpperCase() + item.kategori_menu.slice(1)}}
+                            </template>
+                            
+                            <template v-slot:[`item.harga_menu`]="{ item }">
+                                <span v-if="item.harga_menu === 0">Free</span>
+                                <span v-else>Rp. {{item.harga_menu.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}.00</span>
+                            </template>
+                            <template v-slot:[`item.id_bahan`]="{ item }">
+                                <div v-for="item2 in bahan" :key="item2.id_bahan">
+                                    <div v-if="item.id_bahan == item2.id_bahan">
+                                        {{item2.nama_bahan}}
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-slot:[`item.gambar_menu`]="{ item }">
+                                <div style="width: 50px; height: 50px; cursor: pointer;" @click="gambarHandler(item)">
+                                    <img :src="item.gambar_menu" 
+                                        :style="{
+                                        'width': '100%', 
+                                        'height': '100%',
+                                        'display': 'table',
+                                        'background-size': 'cover', 
+                                        'border-radius': '100%',
+                                        'object-fit': 'cover',
+                                        'padding': '5px',
+                                    }"
+                                    >
+                                </div>
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
-                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id_bahan)">mdi-delete-circle-outline</v-icon>
+                                <v-icon class="red--text ml-2" @click="deleteHandler(item.id_menu)">mdi-delete-circle-outline</v-icon>
                             </template>
                         </v-data-table>
                 </v-card>
@@ -88,35 +116,65 @@
                         </v-flex>
                     </v-card-actions>
                     <v-card-title>
-                        <span class="headline">{{ inputType }} Bahan</span>
+                        <span class="headline">{{ inputType }} Menu</span>
                     </v-card-title>
                     <div style="margin: 30px;">
                         <v-flex>
                             <v-text-field
+                                label="Nama Menu"
+                                v-model="form.nama_menu"
+                                outlined
+                            ></v-text-field>
+
+                            <v-text-field
+                                label="Deskripsi Menu"
+                                v-model="form.deskripsi_menu"
+                                outlined
+                            ></v-text-field>
+
+                            <v-text-field
+                                label="Unit Menu"
+                                v-model="form.unit_menu"
+                                outlined
+                            ></v-text-field>
+
+                            <v-text-field
+                                label="Harga Menu"
+                                v-model="form.harga_menu"
+                                type="number"
+                                outlined
+                            ></v-text-field>
+
+                            <v-select
+                                v-model="form.kategori_menu"
+                                label="Kategori Menu"
+                                :items="kategori"
+                                outlined
+                                three-line
+                            >
+                                <template slot="selection" slot-scope="data">
+                                    {{ data.item.charAt(0).toUpperCase() + data.item.slice(1) }}
+                                </template>
+                                <template slot="item" slot-scope="data">
+                                    {{ data.item.charAt(0).toUpperCase() + data.item.slice(1) }}
+                                </template>
+                            </v-select>
+
+                            <v-select
+                                v-model="form.id_bahan"
                                 label="Nama Bahan"
-                                v-model="form.nama_bahan"
+                                :items="bahan"
+                                item-text="id_bahan"
                                 outlined
-                            ></v-text-field>
-
-                            <v-text-field
-                                label="Jumlah Bahan"
-                                v-model="form.jml_bahan"
-                                type="number"
-                                outlined
-                            ></v-text-field>
-
-                            <v-text-field
-                                label="Unit Bahan"
-                                v-model="form.unit_bahan"
-                                outlined
-                            ></v-text-field>
-
-                            <v-text-field
-                                label="Stok per Unit"
-                                v-model="form.stok_per_unit"
-                                type="number"
-                                outlined
-                            ></v-text-field>
+                                three-line
+                            >
+                                <template slot="selection" slot-scope="data">
+                                    {{ data.item.nama_bahan }}
+                                </template>
+                                <template slot="item" slot-scope="data">
+                                    {{ data.item.nama_bahan }}
+                                </template>
+                            </v-select>
                         </v-flex>
                     </div>
                     <v-card-actions>
@@ -152,7 +210,7 @@
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>
                 <v-card-text>
-                    Do you really want to delete this bahan?
+                    Do you really want to delete this menu?
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -161,6 +219,32 @@
                     </v-btn>
                     <v-btn color="red darken-1" text @click="deleteData"> 
                         Delete
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        
+        <v-dialog v-model="dialogImage" persistent max-width="700px" style='z-index:8000;'>
+            <v-card>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-flex class="text-right">
+                        <v-icon color="red" @click="cancel">mdi-close</v-icon>
+                    </v-flex>
+                </v-card-actions>
+                <v-card-title>
+                    <span class="headline">{{imgTitle}}'s Image</span>
+                </v-card-title>
+                <v-card-text>
+                    <img :src="gambar_menu" style="width: 100%; max-width: 650px; object-fit: cover; max-height: 400px; border-radius: 5px;">
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="white darken-1" text @click="cancel">
+                        Close
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -179,7 +263,7 @@
 import { EventBus } from './bus.js';
 
 export default{
-    name: "Bahan",
+    name: "Menu",
     data() {
         return {
             role: '',
@@ -187,24 +271,39 @@ export default{
                 { text: "ID",
                     align: "start",
                     sortable: true,
-                    value: "id_bahan" },
-                { text: "Nama Bahan",    value: "nama_bahan" },
-                { text: "Jumlah Bahan",  value: "jml_bahan" },
-                { text: "Stok per Unit", value: "stok_per_unit" },
+                    value: "id_menu" },
+                { text: "Nama Menu",      value: "nama_menu" },
+                { text: "Deskripsi Menu", value: "deskripsi_menu" },
+                { text: "Stok Menu",      value: "stok_menu" },
+                { text: "Unit Menu",      value: "unit_menu" },
+                { text: "Harga Menu",     value: "harga_menu" },
+                { text: "Kategori Menu",  value: "kategori_menu" },
+                { text: "Nama Bahan",     value: "id_bahan" },
+                { text: "Gambar",         value: "gambar_menu" },
                 { text: "Actions",
                     sortable: false,
                     value: "actions" },
             ],
+            menu: [],
             bahan: [],
             inputType: 'Add',
             dialog: false,
             dialogDelete: false,
+            dialogImage: false,
             form: {
-                nama_bahan: '',
-                jml_bahan: '',
-                unit_bahan: '',
-                stok_per_unit: '',
+                nama_menu:      '',
+                unit_menu:      '',
+                deskripsi_menu: '',
+                harga_menu:     '',
+                kategori_menu:  '',
+                id_bahan:       '',
+                gambar_bahan:   '',
             },
+            kategori: [
+                'makanan',
+                'side dish',
+                'minuman'
+            ],
             loading: false,
             search: '',
             editId: null,
@@ -214,13 +313,16 @@ export default{
             deleteId: null,
             passwordId: null,
             progressBar: false,
+            imgTitle: null,
+            gambar_menu: '',
         }
     },
     mounted() {
+        this.menu  = JSON.parse(localStorage.getItem('menu'));
         this.bahan = JSON.parse(localStorage.getItem('bahan'));
-        this.role = localStorage.getItem('role');
+        this.role  = localStorage.getItem('role');
 
-        if(localStorage.getItem('bahan') == null) {this.loadData();}
+        if(localStorage.getItem('menu') == null) {this.loadData();}
         
         if (this.role != 'Operational Manager' && this.role != 'Chef')
             this.redirectDashboard();
@@ -233,7 +335,7 @@ export default{
             this.collapsed = true;
         },
         loadData() {
-            var url = this.$api + '/bahan';
+            var url = this.$api + '/menu';
             this.loading = true;
 
             this.$http.get(url, {
@@ -241,9 +343,9 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.bahan = response.data.data;
-                localStorage.setItem('bahan', JSON.stringify(response.data.data));
-                this.emitKetersediaan();
+                this.menu = response.data.data;
+                localStorage.setItem('menu', JSON.stringify(response.data.data));
+                this.emitMenu();
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -251,12 +353,19 @@ export default{
         },
         editHandler(item) {
             this.inputType = 'Edit';
-            this.editId             = item.id_bahan;
-            this.form.nama_bahan    = item.nama_bahan;
-            this.form.jml_bahan     = item.jml_bahan;
-            this.form.unit_bahan    = item.unit_bahan;
-            this.form.stok_per_unit = item.stok_per_unit;
+            this.editId              = item.id_menu;
+            this.form.nama_menu      = item.nama_menu;
+            this.form.deskripsi_menu = item.deskripsi_menu;
+            this.form.unit_menu      = item.unit_menu;
+            this.form.harga_menu     = item.harga_menu;
+            this.form.kategori_menu  = item.kategori_menu;
+            this.form.id_bahan       = item.id_bahan;
             this.dialog = true;
+        },
+        gambarHandler(item) {
+            this.imgTitle    = item.nama_menu;
+            this.gambar_menu = item.gambar_menu;
+            this.dialogImage = true;
         },
         deleteHandler(id) {
             this.deleteId = id;
@@ -264,26 +373,32 @@ export default{
         },
         cancel() {
             this.dialogDelete = false;
+            this.dialogImage = false;
             this.dialog = false;
+            this.gambar_menu = '';
             this.resetForm();
             this.inputType = 'Add';
         },
         resetForm() {
-            this.form.nama_bahan    = '';
-            this.form.jml_bahan     = '';
-            this.form.unit_bahan    = '';
-            this.form.stok_per_unit = '';
+            this.form.nama_menu      = '';
+            this.form.deskripsi_menu = '';
+            this.form.unit_menu      = '';
+            this.form.harga_menu     = '';
+            this.form.kategori_menu  = '';
+            this.form.id_bahan       = '';
         },
         add() {
             this.progressBar = true;
             let addData = {
-                nama_bahan:    this.form.nama_bahan,
-                jml_bahan:     this.form.jml_bahan,
-                unit_bahan:    this.form.unit_bahan,
-                stok_per_unit: this.form.stok_per_unit,
+                nama_menu:      this.form.nama_menu,
+                deskripsi_menu: this.form.deskripsi_menu,
+                unit_menu:      this.form.unit_menu,
+                harga_menu:     this.form.harga_menu,
+                kategori_menu:  this.form.kategori_menu,
+                id_bahan:       this.form.id_bahan,
             }
 
-            var url = this.$api + '/bahan'
+            var url = this.$api + '/menu'
             this.$http.post(url, addData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -298,36 +413,44 @@ export default{
                 this.loadData();
             }).catch(err => {
                 this.error_message = '';
-                if(!err.response.data.message.nama_bahan 
-                && !err.response.data.message.jml_bahan
-                && !err.response.data.message.unit_bahan
-                && !err.response.data.message.stok_per_unit)
+                if(!err.response.data.message.nama_menu 
+                && !err.response.data.message.deskripsi_menu
+                && !err.response.data.message.unit_menu
+                && !err.response.data.message.harga_menu
+                && !err.response.data.message.kategori_menu
+                && !err.response.data.message.id_bahan)
                     this.error_message= err.response.data.message;
                 else {
-                    if(err.response.data.message.nama_bahan)
-                        this.error_message= err.response.data.message.nama_bahan + "";
-                    if(err.response.data.message.jml_bahan)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.jml_bahan;
-                    if(err.response.data.message.unit_bahan)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.unit_bahan;
-                    if(err.response.data.message.stok_per_unit)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.stok_per_unit;
+                    if(err.response.data.message.nama_menu)
+                        this.error_message= err.response.data.message.nama_menu + "";
+                    if(err.response.data.message.deskripsi_menu)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.deskripsi_menu;
+                    if(err.response.data.message.unit_menu)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.unit_menu;
+                    if(err.response.data.message.harga_menu)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.harga_menu;
+                    if(err.response.data.message.kategori_menu)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.kategori_menu;
+                    if(err.response.data.message.id_bahan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.id_bahan;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color = "red"
+                this.snackbar = true;
                 this.progressBar = false;
             });
         },
         update() {
             this.progressBar = true;
             let updateData = {
-                nama_bahan:    this.form.nama_bahan,
-                jml_bahan:     this.form.jml_bahan,
-                unit_bahan:    this.form.unit_bahan,
-                stok_per_unit: this.form.stok_per_unit,
+                nama_menu:      this.form.nama_menu,
+                deskripsi_menu: this.form.deskripsi_menu,
+                unit_menu:      this.form.unit_menu,
+                harga_menu:     this.form.harga_menu,
+                kategori_menu:  this.form.kategori_menu,
+                id_bahan:       this.form.id_bahan,
             }
 
-            var url = this.$api + '/bahan/' + this.editId;
+            var url = this.$api + '/menu/' + this.editId;
             this.$http.put(url, updateData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -342,30 +465,36 @@ export default{
                 this.loadData();
             }).catch(err => {
                 this.error_message = '';
-                if(!err.response.data.message.nama_bahan 
-                && !err.response.data.message.jml_bahan
-                && !err.response.data.message.unit_bahan
-                && !err.response.data.message.stok_per_unit)
+                if(!err.response.data.message.nama_menu 
+                && !err.response.data.message.deskripsi_menu
+                && !err.response.data.message.unit_menu
+                && !err.response.data.message.harga_menu
+                && !err.response.data.message.kategori_menu
+                && !err.response.data.message.id_bahan)
                     this.error_message= err.response.data.message;
                 else {
-                    if(err.response.data.message.nama_bahan)
-                        this.error_message= err.response.data.message.nama_bahan + "";
-                    if(err.response.data.message.jml_bahan)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.jml_bahan;
-                    if(err.response.data.message.unit_bahan)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.unit_bahan;
-                    if(err.response.data.message.stok_per_unit)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.stok_per_unit;
+                    if(err.response.data.message.nama_menu)
+                        this.error_message= err.response.data.message.nama_menu + "";
+                    if(err.response.data.message.deskripsi_menu)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.deskripsi_menu;
+                    if(err.response.data.message.unit_menu)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.unit_menu;
+                    if(err.response.data.message.harga_menu)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.harga_menu;
+                    if(err.response.data.message.kategori_menu)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.kategori_menu;
+                    if(err.response.data.message.id_bahan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.id_bahan;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color = "red"
+                this.snackbar = true;
                 this.progressBar = false;
             });
         },
         deleteData() {
             this.progressBar = true;
 
-            var url = this.$api + '/bahan/' + this.deleteId;
+            var url = this.$api + '/menu/' + this.deleteId;
             this.$http.delete(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -386,7 +515,7 @@ export default{
 
         },
         emitMenu() {
-            EventBus.$emit('bahan', '');
+            EventBus.$emit('menu', '');
         }
     }
 }

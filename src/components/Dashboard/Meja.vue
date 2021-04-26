@@ -178,9 +178,8 @@ export default{
             headers: [
                 { text: "ID",
                     align: "start",
-                    sortable: true,
                     value: "id_meja" },
-                { text: "Nomor Meja", value: "no_meja" },
+                { text: "Nomor Meja",  value: "no_meja" },
                 { text: "Status Meja", value: "status_meja" },
                 { text: "Actions",
                     sortable: false,

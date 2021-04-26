@@ -130,17 +130,17 @@
                         <v-form v-model="valid" ref="form">
                             <v-flex>
                                 <v-menu
-                                    ref="menu"
-                                    v-model="menu"
+                                    ref="tanggal_menu"
+                                    v-model="tanggal_menu"
                                     :close-on-content-click="false"
-                                    :return-value.sync="date"
-                                    transition="scale-transition"
+                                    :return-value.sync="form.tanggal_pesanan"
+                                    transition="slide-x-transition"
                                     offset-y
                                     min-width="290px"
                                 >
                                     <template v-slot:activator="{ on, attrs }">
                                     <v-text-field
-                                        v-model="date"
+                                        v-model="form.tanggal_pesanan"
                                         label="Tanggal Pesanan"
                                         prepend-icon="mdi-calendar"
                                         readonly
@@ -152,22 +152,22 @@
                                     ></v-text-field>
                                     </template>
                                     <v-date-picker
-                                        v-model="date"
+                                        v-model="form.tanggal_pesanan"
                                         no-title
                                         scrollable
                                     >
                                     <v-spacer></v-spacer>
                                     <v-btn
                                         text
-                                        color="primary"
-                                        @click="menu = false"
+                                        color="red"
+                                        @click="tanggal_menu = false"
                                     >
                                         Cancel
                                     </v-btn>
                                     <v-btn
                                         text
                                         color="primary"
-                                        @click="$refs.menu.save(date)"
+                                        @click="$refs.tanggal_menu.save(form.tanggal_pesanan)"
                                     >
                                         OK
                                     </v-btn>
@@ -335,16 +335,15 @@ export default{
             headers: [
                 { text: "ID",
                     align: "start",
-                    sortable: true,
                     value: "id_pesanan" },
-                { text: "Detail Pesanan", value: "detail_pesanan" },
-                { text: "Status", value: "status_item" },
-                { text: "Harga Item", value: "harga_item" },
-                { text: "Total Menu", value: "total_menu" },
-                { text: "Total Item", value: "total_item" },
+                { text: "Detail Pesanan",  value: "detail_pesanan" },
+                { text: "Status",          value: "status_item" },
+                { text: "Harga Item",      value: "harga_item" },
+                { text: "Total Menu",      value: "total_menu" },
+                { text: "Total Item",      value: "total_item" },
                 { text: "Tanggal Pesanan", value: "tanggal_pesanan" },
-                { text: "Nomor Meja", value: "id_meja" },
-                { text: "Nama Karyawan", value: "id_karyawan" },
+                { text: "Nomor Meja",      value: "id_meja" },
+                { text: "Nama Karyawan",   value: "id_karyawan" },
                 { text: "Actions",
                     sortable: false,
                     value: "actions" },
@@ -362,10 +361,6 @@ export default{
                 id_meja: '',
                 id_karyawan: '',
             },
-            status: [
-                {name: 'Empty'},
-                {name: 'In-use'}
-            ],
             loading: false,
             search: '',
             editId: null,
@@ -376,8 +371,7 @@ export default{
             deleteId: null,
             passwordId: null,
             progressBar: false,
-            date: new Date().toISOString().substr(0, 10),
-            menu: false,
+            tanggal_menu: false,
             detailtext: [],
             textfield: {
                 id: 0,
@@ -468,7 +462,7 @@ export default{
             this.inputType = 'Edit';
             this.editId = item.id_pesanan;
             this.editItem = item;
-            this.date = item.tanggal_pesanan;
+            this.form.tanggal_pesanan = item.tanggal_pesanan;
             this.form.id_meja = item.id_meja;
             this.form.id_karyawan = item.id_karyawan;
             this.dialog = true;
@@ -491,13 +485,14 @@ export default{
             this.textfield.id = 0;
             this.textfield.id_menu = '';
             this.textfield.jumlah_item = '';
+            this.$refs.form.reset()
         },
         add() {
             if (this.$refs.form.validate()) {
                 var idPesanan = null;
                 this.progressBar = true;
                 let addData = {
-                    tanggal_pesanan: this.date,
+                    tanggal_pesanan: this.form.tanggal_pesanan,
                     id_meja: this.form.id_meja,
                     id_karyawan: this.form.id_karyawan,
                 }
@@ -605,7 +600,7 @@ export default{
         update() {
             this.progressBar = true;
             let updateData = {
-                tanggal_pesanan: this.date,
+                tanggal_pesanan: this.form.tanggal_pesanan,
                 id_meja: this.form.id_meja,
                 id_karyawan: this.form.id_karyawan,
             }

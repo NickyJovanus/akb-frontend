@@ -88,6 +88,13 @@ const router = new VueRouter({
                     meta: {title: 'Manage Bahan - Atma Korean BBQ'},
                     component: importComponent('Dashboard/Bahan'),
                 },
+                //Menu
+                {
+                    path: "/manage/menu",
+                    name: "Menu",
+                    meta: {title: 'Manage Menu - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Menu'),
+                },
             ]
         },
         {

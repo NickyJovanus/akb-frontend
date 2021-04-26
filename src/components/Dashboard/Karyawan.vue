@@ -128,17 +128,17 @@
                             :value="form.jenis_kelamin_karyawan"
                         ></v-select>
                         <v-menu
-                            ref="menu"
-                            v-model="menu"
+                            ref="tanggal_menu"
+                            v-model="tanggal_menu"
                             :close-on-content-click="false"
-                            :return-value.sync="date"
-                            transition="scale-transition"
+                            :return-value.sync="form.tanggal_rekrut_karyawan"
+                            transition="slide-x-transition"
                             offset-y
                             min-width="290px"
                         >
                             <template v-slot:activator="{ on, attrs }">
                             <v-text-field
-                                v-model="date"
+                                v-model="form.tanggal_rekrut_karyawan"
                                 label="Tanggal Rekrut"
                                 prepend-icon="mdi-calendar"
                                 readonly
@@ -148,22 +148,22 @@
                             ></v-text-field>
                             </template>
                             <v-date-picker
-                                v-model="date"
+                                v-model="form.tanggal_rekrut_karyawan"
                                 no-title
                                 scrollable
                             >
                             <v-spacer></v-spacer>
                             <v-btn
                                 text
-                                color="primary"
-                                @click="menu = false"
+                                color="red"
+                                @click="tanggal_menu = false"
                             >
                                 Cancel
                             </v-btn>
                             <v-btn
                                 text
                                 color="primary"
-                                @click="$refs.menu.save(date)"
+                                @click="$refs.tanggal_menu.save(form.tanggal_rekrut_karyawan)"
                             >
                                 OK
                             </v-btn>
@@ -351,15 +351,14 @@ export default{
             headers: [
                 { text: "ID",
                     align: "start",
-                    sortable: true,
                     value: "id_karyawan" },
-                { text: "Nama", value: "nama_karyawan" },
-                { text: "Jenis Kelamin", value: "jenis_kelamin_karyawan" },
+                { text: "Nama",           value: "nama_karyawan" },
+                { text: "Jenis Kelamin",  value: "jenis_kelamin_karyawan" },
                 { text: "Tanggal Rekrut", value: "tanggal_rekrut_karyawan" },
-                { text: "No. Telpon", value: "telpon_karyawan" },
-                { text: "Peran", value: "peran_karyawan" },
-                { text: "Status", value: "status_karyawan" },
-                { text: "E-mail", value: "email_karyawan" },
+                { text: "No. Telpon",     value: "telpon_karyawan" },
+                { text: "Peran",          value: "peran_karyawan" },
+                { text: "Status",         value: "status_karyawan" },
+                { text: "E-mail",         value: "email_karyawan" },
                 { text: "Actions",
                     sortable: false,
                     value: "actions" },
@@ -400,15 +399,13 @@ export default{
                 {name: 'Cashier'},
             ],
             loading: false,
-            date: new Date().toISOString().substr(0, 10),
-            menu: false,
+            tanggal_menu: false,
             modal: false,
             search: '',
             editId: null,
             error_message: '',
             snackbar: false,
             color: '',
-            karyawandata: new FormData,
             deleteId: null,
             passwordId: null,
             passwordtype: 'password',
@@ -468,17 +465,19 @@ export default{
         },
         register() {
             this.loading = true;
-            this.karyawandata.append('nama_karyawan', this.form.nama_karyawan);
-            this.karyawandata.append('jenis_kelamin_karyawan', this.form.jenis_kelamin_karyawan);
-            this.karyawandata.append('tanggal_rekrut_karyawan', this.date);
-            this.karyawandata.append('peran_karyawan', this.form.peran_karyawan);
-            this.karyawandata.append('telpon_karyawan', this.form.telpon_karyawan);
-            this.karyawandata.append('email_karyawan', this.form.email_karyawan);
-            this.karyawandata.append('password', this.form.password);
+            let addData = {
+                nama_karyawan:           this.form.nama_karyawan,
+                jenis_kelamin_karyawan:  this.form.jenis_kelamin_karyawan,
+                tanggal_rekrut_karyawan: this.form.tanggal_rekrut_karyawan,
+                telpon_karyawan:         this.form.telpon_karyawan,
+                peran_karyawan:          this.form.peran_karyawan,
+                status_karyawan:         this.form.status_karyawan,
+                email_karyawan:          this.form.email_karyawan,
+            }
             this.error_message='';
 
             var url = this.$api + '/karyawan'
-            this.$http.post(url, this.karyawandata, {
+            this.$http.post(url, addData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
@@ -523,14 +522,14 @@ export default{
         },
         editHandler(item){
             this.inputType = 'Edit';
-            this.editId                      = item.id_karyawan;
-            this.form.nama_karyawan          = item.nama_karyawan;
-            this.form.jenis_kelamin_karyawan = item.jenis_kelamin_karyawan;
-            this.date                        = item.tanggal_rekrut_karyawan;
-            this.form.telpon_karyawan        = item.telpon_karyawan;
-            this.form.peran_karyawan         = item.peran_karyawan;
-            this.form.status_karyawan        = item.status_karyawan;
-            this.form.email_karyawan         = item.email_karyawan;
+            this.editId                       = item.id_karyawan;
+            this.form.nama_karyawan           = item.nama_karyawan;
+            this.form.jenis_kelamin_karyawan  = item.jenis_kelamin_karyawan;
+            this.form.tanggal_rekrut_karyawan = item.tanggal_rekrut_karyawan;
+            this.form.telpon_karyawan         = item.telpon_karyawan;
+            this.form.peran_karyawan          = item.peran_karyawan;
+            this.form.status_karyawan         = item.status_karyawan;
+            this.form.email_karyawan          = item.email_karyawan;
             this.dialog = true;
         },
         deleteHandler(id){
@@ -545,7 +544,7 @@ export default{
             let updateData = {
                 nama_karyawan:           this.form.nama_karyawan,
                 jenis_kelamin_karyawan:  this.form.jenis_kelamin_karyawan,
-                tanggal_rekrut_karyawan: this.date,
+                tanggal_rekrut_karyawan: this.form.tanggal_rekrut_karyawan,
                 telpon_karyawan:         this.form.telpon_karyawan,
                 peran_karyawan:          this.form.peran_karyawan,
                 status_karyawan:         this.form.status_karyawan,

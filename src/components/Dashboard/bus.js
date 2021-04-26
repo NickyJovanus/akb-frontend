@@ -11,4 +11,5 @@ Emitted data list:
 'customer' for Customers to Transaksi and Reservasi
 'pesanan' for Pesanan to Reservasi
 'bahan' for Bahan to Menu, Stok and History Stok
+'menu' for Menu to Pesanan, Reservasi and Transaksi
 */

@@ -178,11 +178,10 @@ export default{
             headers: [
                 { text: "ID",
                     align: "start",
-                    sortable: true,
                     value: "id_customer" },
-                { text: "Nama", value: "nama_customer" },
+                { text: "Nama",        value: "nama_customer" },
                 { text: "No. Telepon", value: "telpon_customer" },
-                { text: "E-mail", value: "email_customer" },
+                { text: "E-mail",      value: "email_customer" },
                 { text: "Actions",
                     sortable: false,
                     value: "actions" },
