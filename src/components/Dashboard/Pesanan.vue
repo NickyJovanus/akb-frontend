@@ -347,15 +347,16 @@ export default{
             search:          '',
             editId:        null,
             editItem:      null,
+            deleteId:      null,
+            passwordId:    null,
             error_message:   '',
             snackbar:     false,
             color:           '',
-            deleteId:      null,
-            passwordId:    null,
             progressBar:  false,
             tanggal_menu: false,
             valid:        false,
             detailtext:      [],
+            deleteIds:       [],
             textfield: {
                 id:           0,
                 id_menu:     '',
@@ -452,6 +453,7 @@ export default{
             this.form.id_meja          = '';
             this.form.id_karyawan      = '';
             this.detailtext            = [];
+            this.deleteIds             = [];
             this.textfield.id          =  0;
             this.textfield.id_menu     = '';
             this.textfield.jumlah_item = '';

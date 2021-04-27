@@ -22,7 +22,7 @@
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
-                        <v-btn dark @click="dialog = true">
+                        <v-btn dark v-if="role == 'Operational Manager' || role == 'Owner'" @click="dialog = true">
                             Add
                         </v-btn>
                         <v-text-field
@@ -212,7 +212,7 @@ export default{
 
         if(localStorage.getItem('meja') == null) {this.loadData();}
 
-        if (this.role != 'Operational Manager' && this.role != 'Cashier')
+        if (this.role != 'Operational Manager' && this.role != 'Cashier' && this.role != 'Waiter')
             this.redirectDashboard();
     },
     methods: {

@@ -429,15 +429,15 @@ export default{
             customers: null,
             dishes: [],
             loggedIn: false,
+            unloaded: true,
         }
     },
     mounted() {
-        if(localStorage.getItem('topmenu')       == null 
-        || localStorage.getItem('dishes')        == null 
-        || localStorage.getItem('customercount') == null)
-            this.loadData();
-        else
-            this.loading = false;
+        if(localStorage.getItem('topmenu')       !== null 
+        && localStorage.getItem('dishes')        !== null 
+        && localStorage.getItem('customercount') !== null)
+            this.unloaded = false
+        this.loadData();
         import('../assets/js/carouselfade.js');
         import('../assets/js/loginform.js');
         import('../assets/js/navbarfade.js');
@@ -452,7 +452,7 @@ export default{
             var url2 = this.$api + '/customercount';
             var url3 = this.$api + '/servedDishes';
 
-            this.loading = true;
+            this.loading = this.unloaded;
 
             this.$http.get(url, {
             }).then(response => {
