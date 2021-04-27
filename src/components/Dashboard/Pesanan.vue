@@ -156,21 +156,9 @@
                                         no-title
                                         scrollable
                                     >
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                        text
-                                        color="red"
-                                        @click="tanggal_menu = false"
-                                    >
-                                        Cancel
-                                    </v-btn>
-                                    <v-btn
-                                        text
-                                        color="primary"
-                                        @click="$refs.tanggal_menu.save(form.tanggal_pesanan)"
-                                    >
-                                        OK
-                                    </v-btn>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="red" @click="tanggal_menu = false"> Cancel </v-btn>
+                                        <v-btn text color="primary" @click="$refs.tanggal_menu.save(form.tanggal_pesanan)"> OK </v-btn>
                                     </v-date-picker>
                                 </v-menu>
                                 <v-select
@@ -281,10 +269,8 @@
                 </v-card>
             </v-dialog>
         </div>
-
         
-        
-        <v-dialog v-model="dialogDelete" persistent max-width="600px" style='z-index:9999;'>
+        <v-dialog v-model="dialogDelete" persistent max-width="600px" style='z-index:8000;'>
             <v-card>
                 <v-flex>
                     <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
@@ -333,73 +319,57 @@ export default{
         return {
             role: '',
             headers: [
-                { text: "ID",
-                    align: "start",
-                    value: "id_pesanan" },
-                { text: "Detail Pesanan",  value: "detail_pesanan" },
-                { text: "Status",          value: "status_item" },
-                { text: "Harga Item",      value: "harga_item" },
-                { text: "Total Menu",      value: "total_menu" },
-                { text: "Total Item",      value: "total_item" },
-                { text: "Tanggal Pesanan", value: "tanggal_pesanan" },
-                { text: "Nomor Meja",      value: "id_meja" },
-                { text: "Nama Karyawan",   value: "id_karyawan" },
-                { text: "Actions",
-                    sortable: false,
-                    value: "actions" },
+                { text: "ID", align: "start",       value: "id_pesanan"      },
+                { text: "Detail Pesanan",           value: "detail_pesanan"  },
+                { text: "Status",                   value: "status_item"     },
+                { text: "Harga Item",               value: "harga_item"      },
+                { text: "Total Menu",               value: "total_menu"      },
+                { text: "Total Item",               value: "total_item"      },
+                { text: "Tanggal Pesanan",          value: "tanggal_pesanan" },
+                { text: "Nomor Meja",               value: "id_meja"         },
+                { text: "Nama Karyawan",            value: "id_karyawan"     },
+                { text: "Actions", sortable: false, value: "actions"         },
             ],
-            pesanan: [],
-            detail_pesanan: [],
-            menus: [],
-            meja: [],
-            karyawan: [],
-            inputType: 'Add',
-            dialog: false,
+            pesanan:         [],
+            detail_pesanan:  [],
+            menus:           [],
+            meja:            [],
+            karyawan:        [],
+            inputType:    'Add',
+            dialog:       false,
             dialogDelete: false,
             form: {
                 tanggal_pesanan: '',
-                id_meja: '',
-                id_karyawan: '',
+                id_meja:         '',
+                id_karyawan:     '',
             },
-            loading: false,
-            search: '',
-            editId: null,
-            editItem: null,
-            error_message: '',
-            snackbar: false,
-            color: '',
-            deleteId: null,
-            passwordId: null,
-            progressBar: false,
+            loading:      false,
+            search:          '',
+            editId:        null,
+            editItem:      null,
+            error_message:   '',
+            snackbar:     false,
+            color:           '',
+            deleteId:      null,
+            passwordId:    null,
+            progressBar:  false,
             tanggal_menu: false,
-            detailtext: [],
+            valid:        false,
+            detailtext:      [],
             textfield: {
-                id: 0,
-                id_menu: '',
+                id:           0,
+                id_menu:     '',
                 jumlah_item: '',
                 status_item: '',
             },
             rules: {
-                tanggalRule: [
-                    (v) => !!v || 'Tanggal Pesanan field is required.',
-                ],
-                mejaRule: [
-                    (v) => !!v || 'Nomor Meja field is required.',
-                ],
-                karyawanRule: [
-                    (v) => !!v || 'Nama Karyawan field is required.',
-                ],
-                menuRule: [
-                    (v) => !!v || 'Nama Menu field is required.',
-                ],
-                jumlahRule: [
-                    (v) => !!v || 'Jumlah Item field is required.',
-                ],
-                statusRule: [
-                    (v) => !!v || 'Status Item field is required.',
-                ],
+                tanggalRule:  [ (v) => !!v || 'Tanggal Pesanan field is required.', ],
+                mejaRule:     [ (v) => !!v || 'Nomor Meja field is required.',      ],
+                karyawanRule: [ (v) => !!v || 'Nama Karyawan field is required.',   ],
+                menuRule:     [ (v) => !!v || 'Nama Menu field is required.',       ],
+                jumlahRule:   [ (v) => !!v || 'Jumlah Item field is required.',     ],
+                statusRule:   [ (v) => !!v || 'Status Item field is required.',     ],
             },
-            valid: false,
         }
     },
     mounted() {
@@ -459,31 +429,31 @@ export default{
             });
         },
         editHandler(item) {
-            this.inputType = 'Edit';
-            this.editId = item.id_pesanan;
-            this.editItem = item;
+            this.inputType            = 'Edit';
+            this.editId               = item.id_pesanan;
+            this.editItem             = item;
             this.form.tanggal_pesanan = item.tanggal_pesanan;
-            this.form.id_meja = item.id_meja;
-            this.form.id_karyawan = item.id_karyawan;
+            this.form.id_meja         = item.id_meja;
+            this.form.id_karyawan     = item.id_karyawan;
             this.dialog = true;
         },
         deleteHandler(id) {
-            this.deleteId = id;
+            this.deleteId     =   id;
             this.dialogDelete = true;
         },
         cancel() {
             this.dialogDelete = false;
-            this.dialog = false;
+            this.dialog       = false;
+            this.inputType    = 'Add';
             this.resetForm();
-            this.inputType = 'Add';
         },
         resetForm() {
-            this.form.tanggal_pesanan = '';
-            this.form.id_meja = '';
-            this.form.id_karyawan = '';
-            this.detailtext = [];
-            this.textfield.id = 0;
-            this.textfield.id_menu = '';
+            this.form.tanggal_pesanan  = '';
+            this.form.id_meja          = '';
+            this.form.id_karyawan      = '';
+            this.detailtext            = [];
+            this.textfield.id          =  0;
+            this.textfield.id_menu     = '';
             this.textfield.jumlah_item = '';
             this.$refs.form.reset()
         },
@@ -493,10 +463,10 @@ export default{
                 this.progressBar = true;
                 let addData = {
                     tanggal_pesanan: this.form.tanggal_pesanan,
-                    id_meja: this.form.id_meja,
-                    id_karyawan: this.form.id_karyawan,
+                    id_meja:         this.form.id_meja,
+                    id_karyawan:     this.form.id_karyawan,
                 }
-                var url = this.$api + '/detailpesanan'
+                var url  = this.$api + '/detailpesanan'
                 var url2 = this.$api + '/pesanan'
                 
                 this.$http.post(url2, addData, {
@@ -507,11 +477,11 @@ export default{
                     idPesanan = response.data.data.id_pesanan;
                     if(this.detailtext.length > 0) {
                         let i = 0;
-                        for(i = 0; i < this.detailtext.length; i++) {
+                        for(; i < this.detailtext.length; i++) {
                             let detail = this.detailtext[i];
                             let detailData = {
-                                id_pesanan: idPesanan,
-                                id_menu: detail.id_menu,
+                                id_pesanan:  idPesanan,
+                                id_menu:     detail.id_menu,
                                 jumlah_item: detail.jumlah_item,
                             }
                             this.$http.post(url, detailData, {

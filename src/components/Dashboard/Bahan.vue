@@ -152,7 +152,8 @@
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>
                 <v-card-text>
-                    Do you really want to delete this bahan?
+                    Do you really want to delete this bahan? <br>
+                    Deleting this data will also delete its related content
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>

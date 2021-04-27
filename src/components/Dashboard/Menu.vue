@@ -268,7 +268,7 @@
                     </div>
                 </transition>
                 <v-card-actions>
-                    <v-btn v-show="addImg == false ? true : false" @click="addImg = true" color="primary darken-1">{{gambar_menu !== null ? 'Change Image' : 'Add Image'}}</v-btn>
+                    <v-btn v-show="addImg == false ? true : false" @click="addImg = true" color="primary darken-1">{{gambar_menu !== null ? 'Change' : 'Add'}} Image</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn color="white darken-1" text @click="cancel">
                         {{ addImg == false ? 'Close' : 'Cancel' }}
@@ -299,28 +299,23 @@ export default{
         return {
             role: '',
             headers: [
-                { text: "ID",
-                    align: "start",
-                    sortable: true,
-                    value: "id_menu" },
-                { text: "Nama Menu",      value: "nama_menu" },
-                { text: "Deskripsi Menu", value: "deskripsi_menu" },
-                { text: "Stok Menu",      value: "stok_menu" },
-                { text: "Unit Menu",      value: "unit_menu" },
-                { text: "Harga Menu",     value: "harga_menu" },
-                { text: "Kategori Menu",  value: "kategori_menu" },
-                { text: "Nama Bahan",     value: "id_bahan" },
-                { text: "Gambar",         value: "gambar_menu" },
-                { text: "Actions",
-                    sortable: false,
-                    value: "actions" },
+                { text: "ID", align: "start",       value: "id_menu"        },
+                { text: "Nama Menu",                value: "nama_menu"      },
+                { text: "Deskripsi Menu",           value: "deskripsi_menu" },
+                { text: "Stok Menu",                value: "stok_menu"      },
+                { text: "Unit Menu",                value: "unit_menu"      },
+                { text: "Harga Menu",               value: "harga_menu"     },
+                { text: "Kategori Menu",            value: "kategori_menu"  },
+                { text: "Nama Bahan",               value: "id_bahan"       },
+                { text: "Gambar",                   value: "gambar_menu"    },
+                { text: "Actions", sortable: false, value: "actions"        },
             ],
-            menu: [],
-            bahan: [],
-            inputType: 'Add',
-            dialog: false,
-            dialogDelete: false,
-            dialogImage: false,
+            menu:              [],
+            bahan:             [],
+            inputType:      'Add',
+            dialog:         false,
+            dialogDelete:   false,
+            dialogImage:    false,
             form: {
                 nama_menu:      '',
                 unit_menu:      '',
@@ -364,7 +359,8 @@ export default{
             this.redirectDashboard();
         
         EventBus.$on('bahan', () => {
-            this.menu = JSON.parse(localStorage.getItem('menu'));
+            this.bahan = JSON.parse(localStorage.getItem('bahan'));
+            this.loadData();
         });
     },
 
@@ -436,6 +432,7 @@ export default{
             this.form.kategori_menu  = '';
             this.form.id_bahan       = '';
             this.form.stok_menu      = '';
+            this.form.gambar_bahan   = '';
             this.gambar_menu         = '';
         },
 
@@ -580,19 +577,19 @@ export default{
         },
 
         upload_image(evt) {
-            let img_file = evt.target.files[0];
+            let file = evt.target.files[0];
             let reader = new FileReader();
 
-            if (img_file['size'] < 2111775) {
-                reader.onloadend = (img_file) => {
-                    this.form.image = reader.result;
+            if (file['size'] < 2111775) {
+                reader.onloadend = (file) => {
+                    this.form.gambar_bahan = reader.result;
                 }
-                this.imgData.append("gambar_menu", img_file);
-                reader.readAsDataURL(img_file);
+                this.imgData.append("gambar_menu", file);
+                reader.readAsDataURL(file);
             } else {
-                this.error_message="File cannot be larger than 2MB";
-                this.color="red";
-                this.snackbar=true;
+                this.error_message = "File cannot be larger than 2MB";
+                this.color         = "red";
+                this.snackbar      = true;
             }
         },
 
@@ -604,19 +601,19 @@ export default{
                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
             }).then(response => {
-                this.error_message = '';
+                this.error_message =      '';
                 this.error_message = response.data.message;
-                this.snackbar = true;
-                this.progressBar = false;
-                this.color = "green";
+                this.snackbar      =    true;
+                this.progressBar   =   false;
+                this.color         = "green";
                 this.loadData();
                 this.cancel();
             }).catch(err => {
                 this.error_message = '';
                 this.error_message = err.response.data.message;
-                this.color = "red";
-                this.snackbar = true;
-                this.progressBar = false;
+                this.color         = "red";
+                this.snackbar      = true;
+                this.progressBar   = false;
             });
         },
 

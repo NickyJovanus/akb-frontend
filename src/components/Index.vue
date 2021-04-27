@@ -387,7 +387,10 @@
         </footer>
         <!-- end footer -->
     </div>
-        <v-snackbar v-model="snackbar" :color="color" timeout="3000" bottom>
+        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
+            <v-flex class="text-right">
+                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
+            </v-flex>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
     </main>
@@ -429,11 +432,19 @@ export default{
         }
     },
     mounted() {
-        this.loadData();
+        if(localStorage.getItem('topmenu')       == null 
+        || localStorage.getItem('dishes')        == null 
+        || localStorage.getItem('customercount') == null)
+            this.loadData();
+        else
+            this.loading = false;
         import('../assets/js/carouselfade.js');
         import('../assets/js/loginform.js');
         import('../assets/js/navbarfade.js');
         import('mapbox-gl/dist/mapbox-gl.css');
+        this.menus = JSON.parse(localStorage.getItem('topmenu'));
+        this.dishes = JSON.parse(localStorage.getItem('dishes'));
+        this.customers = JSON.parse(localStorage.getItem('customercount'));
     },
     methods: {
         loadData() {
@@ -444,39 +455,30 @@ export default{
             this.loading = true;
 
             this.$http.get(url, {
-                headers: {
-                    //
-                }
             }).then(response => {
                 this.menus = response.data.data;
-
-                this.$http.get(url2, {
-                    headers: {
-                        //
-                    }
-                }).then(response => {
-                    this.customers = response.data.data;
-
-                    this.$http.get(url3, {
-                        headers: {
-                            //
-                        }
-                    }).then(response => {
-                        this.dishes = response.data.data;
-
-                        this.loading = false;
-                    }).catch(()=> {
-                        this.loading = false;
-                    });
-
-                }).catch(()=> {
-                    this.loading = false;
-                });
-
+                localStorage.setItem('topmenu', JSON.stringify(response.data.data));
+                this.loading = false;
             }).catch(error => {
                 this.error_message= this.error_message + error.response.data.message;
                 this.color="red"
                 this.snackbar= true;
+                this.loading = false;
+            });
+
+            this.$http.get(url2, {
+            }).then(response => {
+                this.customers = response.data.data;
+                localStorage.setItem('customercount', JSON.stringify(response.data.data));
+            }).catch(()=> {
+                this.loading = false;
+            });
+            
+            this.$http.get(url3, {
+            }).then(response => {
+                this.dishes = response.data.data;
+                localStorage.setItem('dishes', JSON.stringify(response.data.data));
+            }).catch(()=> {
                 this.loading = false;
             });
             
@@ -485,6 +487,7 @@ export default{
             }
             this.clear();
         },
+
         login() {
             this.snackbar=false;
             this.error_message = '';
@@ -519,15 +522,18 @@ export default{
                 this.progressBar = false;
             });
         },
+
         clear() {
             this.email = '',
             this.password = ''
         },
+
         menuRedirect() {
             this.$router.push({
                 path: '/menu',
             })
         },
+
         redirectDashboard() {
             this.$router.push({
                 path: '/dashboard',
