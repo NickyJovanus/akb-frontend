@@ -98,6 +98,7 @@
                                 label="Nomor Meja"
                                 v-model="form.nomor_meja"
                                 outlined
+                                clearable
                             ></v-text-field>
                             
                             <v-select
@@ -107,6 +108,7 @@
                                 item-text="name"
                                 outlined
                                 three-line
+                                clearable
                                 :value="form.status_meja"
                             ></v-select>
                         </v-flex>
@@ -176,36 +178,32 @@ export default{
         return {
             role: '',
             headers: [
-                { text: "ID",
-                    align: "start",
-                    value: "id_meja" },
-                { text: "Nomor Meja",  value: "no_meja" },
-                { text: "Status Meja", value: "status_meja" },
-                { text: "Actions",
-                    sortable: false,
-                    value: "actions" },
+                { text: "ID", align: "start",       value: "id_meja"     },
+                { text: "Nomor Meja",               value: "no_meja"     },
+                { text: "Status Meja",              value: "status_meja" },
+                { text: "Actions", sortable: false, value: "actions"     },
             ],
-            meja: [],
-            inputType: 'Add',
-            dialog: false,
+            meja:            [],
+            inputType:    'Add',
+            dialog:       false,
             dialogDelete: false,
             form: {
-                nomor_meja: '',
+                nomor_meja:  '',
                 status_meja: '',
             },
             status: [
                 {name: 'Empty'},
                 {name: 'In-use'}
             ],
-            loading: false,
-            search: '',
-            editId: null,
-            error_message: '',
-            snackbar: false,
-            color: '',
-            deleteId: null,
-            passwordId: null,
+            editId:       null,
+            deleteId:     null,
+            passwordId:   null,
+            search:         '',
+            error_message:  '',
+            color:          '',
+            snackbar:    false,
             progressBar: false,
+            loading:     false,
         }
     },
     mounted() {
@@ -224,6 +222,7 @@ export default{
             });
             this.collapsed = true;
         },
+
         loadData() {
             var url = this.$api + '/meja';
             this.loading = true;
@@ -237,10 +236,11 @@ export default{
                 localStorage.setItem('meja', JSON.stringify(response.data.data));
                 this.emitKetersediaan();
                 this.loading = false;
-            }).catch(()=> {
+            }).catch(() => {
                 this.loading = false;
             });
         },
+
         editHandler(item) {
             this.inputType = 'Edit';
             this.editId           = item.id_meja;
@@ -248,24 +248,28 @@ export default{
             this.form.status_meja = item.status_meja;
             this.dialog = true;
         },
+
         deleteHandler(id) {
             this.deleteId = id;
             this.dialogDelete = true;
         },
+
         cancel() {
             this.dialogDelete = false;
             this.dialog = false;
             this.resetForm();
             this.inputType = 'Add';
         },
+
         resetForm() {
             this.form.nomor_meja  = '';
             this.form.status_meja = '';
         },
+
         add() {
             this.progressBar = true;
             let addData = {
-                no_meja: this.form.nomor_meja,
+                no_meja:     this.form.nomor_meja,
                 status_meja: this.form.status_meja,
             }
 
@@ -297,10 +301,11 @@ export default{
                 this.progressBar = false;
             });
         },
+
         update() {
             this.progressBar = true;
             let updateData = {
-                no_meja: this.form.nomor_meja,
+                no_meja:     this.form.nomor_meja,
                 status_meja: this.form.status_meja,
             }
 
@@ -332,6 +337,7 @@ export default{
                 this.progressBar = false;
             });
         },
+
         deleteData() {
             this.progressBar = true;
 
@@ -353,8 +359,8 @@ export default{
                 this.snackbar=true;
                 this.progressBar = false;
             });
-
         },
+
         emitKetersediaan() {
             EventBus.$emit('meja', 'extra data');
         }

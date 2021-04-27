@@ -184,35 +184,30 @@ export default{
         return {
             role: '',
             headers: [
-                { text: "ID",
-                    align: "start",
-                    sortable: true,
-                    value: "id_bahan" },
-                { text: "Nama Bahan",    value: "nama_bahan" },
-                { text: "Jumlah Bahan",  value: "jml_bahan" },
-                { text: "Stok per Unit", value: "stok_per_unit" },
-                { text: "Actions",
-                    sortable: false,
-                    value: "actions" },
+                { text: "ID", align: "start",       value: "id_bahan"       },
+                { text: "Nama Bahan",               value: "nama_bahan"     },
+                { text: "Jumlah Bahan",             value: "jml_bahan"      },
+                { text: "Stok per Unit",            value: "stok_per_unit"  },
+                { text: "Actions", sortable: false, value: "actions"        },
             ],
-            bahan: [],
-            inputType: 'Add',
-            dialog: false,
+            bahan:           [],
+            inputType:    'Add',
+            dialog:       false,
             dialogDelete: false,
             form: {
-                nama_bahan: '',
-                jml_bahan: '',
-                unit_bahan: '',
+                nama_bahan:    '',
+                jml_bahan:     '',
+                unit_bahan:    '',
                 stok_per_unit: '',
             },
-            loading: false,
-            search: '',
-            editId: null,
-            error_message: '',
-            snackbar: false,
-            color: '',
-            deleteId: null,
-            passwordId: null,
+            loading:     false,
+            search:         '',
+            editId:       null,
+            deleteId:     null,
+            passwordId:   null,
+            error_message:  '',
+            color:          '',
+            snackbar:    false,
             progressBar: false,
         }
     },
@@ -233,40 +228,40 @@ export default{
             this.collapsed = true;
         },
         loadData() {
-            var url = this.$api + '/bahan';
             this.loading = true;
 
+            var url = this.$api + '/bahan';
             this.$http.get(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.bahan = response.data.data;
+                this.bahan   = response.data.data;
                 localStorage.setItem('bahan', JSON.stringify(response.data.data));
-                this.emitKetersediaan();
+                this.emitMenu();
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
             });
         },
         editHandler(item) {
-            this.inputType = 'Edit';
+            this.inputType          = 'Edit';
             this.editId             = item.id_bahan;
             this.form.nama_bahan    = item.nama_bahan;
             this.form.jml_bahan     = item.jml_bahan;
             this.form.unit_bahan    = item.unit_bahan;
             this.form.stok_per_unit = item.stok_per_unit;
-            this.dialog = true;
+            this.dialog             = true;
         },
         deleteHandler(id) {
-            this.deleteId = id;
+            this.deleteId     = id;
             this.dialogDelete = true;
         },
         cancel() {
             this.dialogDelete = false;
-            this.dialog = false;
+            this.dialog       = false;
+            this.inputType    = 'Add';
             this.resetForm();
-            this.inputType = 'Add';
         },
         resetForm() {
             this.form.nama_bahan    = '';
@@ -289,11 +284,11 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message = '';
+                this.error_message =      '';
                 this.error_message = response.data.message;
-                this.color = "green"
-                this.snackbar = true;
-                this.progressBar = false;
+                this.color         = "green";
+                this.snackbar      =    true;
+                this.progressBar   =   false;
                 this.cancel();
                 this.loadData();
             }).catch(err => {
@@ -313,8 +308,8 @@ export default{
                     if(err.response.data.message.stok_per_unit)
                         this.error_message= this.error_message + '\n' + err.response.data.message.stok_per_unit;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color       = "red";
+                this.snackbar    =  true;
                 this.progressBar = false;
             });
         },
@@ -333,11 +328,11 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message = '';
+                this.error_message =      '';
                 this.error_message = response.data.message;
-                this.color = "green"
-                this.snackbar = true;
-                this.progressBar = false;
+                this.color         = "green";
+                this.snackbar      =    true;
+                this.progressBar   =   false;
                 this.cancel();
                 this.loadData();
             }).catch(err => {
@@ -357,8 +352,8 @@ export default{
                     if(err.response.data.message.stok_per_unit)
                         this.error_message= this.error_message + '\n' + err.response.data.message.stok_per_unit;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color       = "red";
+                this.snackbar    =  true;
                 this.progressBar = false;
             });
         },
@@ -372,16 +367,16 @@ export default{
                 }
             }).then(response => {
                 this.error_message = response.data.message;
-                this.color = "green"
-                this.snackbar = true;
+                this.color         = "green";
+                this.snackbar      =    true;
+                this.progressBar   =   false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
                 this.error_message = err.response.data.message;
-                this.color = "red"
-                this.snackbar = true;
-                this.progressBar = false;
+                this.color         = "red";
+                this.snackbar      =  true;
+                this.progressBar   = false;
             });
 
         },

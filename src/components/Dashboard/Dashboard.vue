@@ -6,7 +6,9 @@
                 <br>
                 <br>
             </div>
+
             <br><br>
+
             <section id="portfolio">
                 <div class="container-fluid portfolio-ct">
                     <h2>DASHBOARD</h2>
@@ -52,6 +54,7 @@
                 </div>
                 <!-- end container portfolio -->
             </section>
+
             <!-- start footer -->
             <footer id="contact">
                 <div class="container">
@@ -71,6 +74,7 @@
                 <!-- end container footer section -->
             </footer>
             <!-- end footer -->
+            
         </div>
     </v-main>
 </template>
@@ -109,6 +113,7 @@ export default{
             var ketersediaan = { title: "Ketersediaan Meja",    to: "/showMeja",             image: require("@/assets/images/dashboard/ketersediaan.jpg") };
 
             if(role === "Operational Manager") {
+
                 this.dashboardmenu.push(karyawan);
                 this.dashboardmenu.push(menu);
                 this.dashboardmenu.push(meja);
@@ -123,23 +128,31 @@ export default{
                 this.dashboardmenu.push(qrcode);
                 this.dashboardmenu.push(pengeluaran);
                 this.dashboardmenu.push(pendapatan);
+
             } else if (role === "Owner") {
+
                 this.dashboardmenu.push(karyawan);
                 this.dashboardmenu.push(pengeluaran);
                 this.dashboardmenu.push(pendapatan);
+
             } else if (role === "Chef") {
+
                 this.dashboardmenu.push(pesanan);
                 this.dashboardmenu.push(bahan);
                 this.dashboardmenu.push(stock);
                 this.dashboardmenu.push(history);
+
             } else if (role === "Waiter") {
+
                 this.dashboardmenu.push(menu);
                 this.dashboardmenu.push(meja);
                 this.dashboardmenu.push(ketersediaan);
                 this.dashboardmenu.push(pesanan);
                 this.dashboardmenu.push(reservasi);
                 this.dashboardmenu.push(qrcode);
+
             } else if (role === "Cashier") {
+
                 this.dashboardmenu.push(menu);
                 this.dashboardmenu.push(meja);
                 this.dashboardmenu.push(ketersediaan);
@@ -147,6 +160,7 @@ export default{
                 this.dashboardmenu.push(reservasi);
                 this.dashboardmenu.push(qrcode);
                 this.dashboardmenu.push(transaksi);
+                
             }
         }
     }

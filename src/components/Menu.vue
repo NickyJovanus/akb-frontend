@@ -37,7 +37,7 @@
                             <div class="col-sm-6 col-md-4 grid-portfolio"  v-for="(menu) in makanan" :key="menu.gambar_menu">
                                 <div class="portfolio-item-ct">
                                     <div class="thumbnail">
-                                        <img :src="menu.gambar_menu" class="img-responsive">
+                                        <img :src="menu.gambar_menu == null ? 'https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+1080.png' : menu.gambar_menu" class="img-responsive">
                                     </div>
                                     <div class="caption portfolio-details">
                                         <h3>{{menu.nama_menu}}</h3>
@@ -68,7 +68,7 @@
                         <div class="col-sm-6 col-md-4 grid-portfolio"  v-for="(menu) in sidedish" :key="menu.id_menu">
                             <div class="portfolio-item-ct">
                                 <div class="thumbnail">
-                                    <img :src="menu.gambar_menu" class="img-responsive">
+                                    <img :src="menu.gambar_menu == null ? 'https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+1080.png' : menu.gambar_menu" class="img-responsive">
                                 </div>
                                 <div class="caption portfolio-details">
                                     <h3>{{menu.nama_menu}}</h3>
@@ -99,7 +99,7 @@
                         <div class="col-sm-6 col-md-4 grid-portfolio"  v-for="(menu) in minuman" :key="menu.nama_menu">
                             <div class="portfolio-item-ct">
                                 <div class="thumbnail">
-                                    <img :src="menu.gambar_menu" class="img-responsive">
+                                    <img :src="menu.gambar_menu == null ? 'https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+1080.png' : menu.gambar_menu" class="img-responsive">
                                 </div>
                                 <div class="caption portfolio-details">
                                     <h3>{{menu.nama_menu}}</h3>
@@ -159,7 +159,6 @@ export default{
     mounted() {
         this.menus = JSON.parse(localStorage.getItem('menu'));
         import('../assets/js/carouselfade.js');
-        // import('../assets/js/loginform.js');
     },
     methods: {
         redirectIndex() {

@@ -132,15 +132,13 @@
                                         text
                                         color="primary"
                                         @click="menu = false"
-                                    >
-                                        Cancel
+                                    > Cancel
                                     </v-btn>
                                     <v-btn
                                         text
                                         color="primary"
                                         @click="$refs.menu.save(form.sesi_reservasi)"
-                                    >
-                                        OK
+                                    > OK
                                     </v-btn>
                                 </v-time-picker>
                             </v-menu>
@@ -208,6 +206,7 @@
                             </v-select>
                         </v-flex>
                     </div>
+
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="white darken-1" text @click="cancel">
@@ -220,6 +219,7 @@
                             Save
                         </v-btn>
                     </v-card-actions>
+
                 </v-card>
             </v-dialog>
         </div>
@@ -231,6 +231,7 @@
                 <v-flex>
                     <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
                 </v-flex>
+
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
@@ -239,12 +240,15 @@
                         <v-icon color="red" @click="cancel">mdi-close</v-icon>
                     </v-flex>
                 </v-card-actions>
+
                 <v-card-title>
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>
+
                 <v-card-text>
                     Do you really want to delete this reservasi?
                 </v-card-text>
+
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="white darken-1" text @click="cancel">
@@ -254,6 +258,7 @@
                         Delete
                     </v-btn>
                 </v-card-actions>
+
             </v-card>
         </v-dialog>
 
@@ -271,47 +276,45 @@ import { EventBus } from './bus.js';
 
 export default{
     name: "Reservasi",
+    
     data() {
         return {
             role: '',
             headers: [
-                { text: "ID",
-                    align: "start",
-                    value: "id_reservasi" },
-                { text: "Tanggal Reservasi", value: "tanggal_reservasi" },
-                { text: "Sesi Reservasi",    value: "sesi_reservasi" },
-                { text: "Nomor Meja",        value: "id_meja" },
-                { text: "ID Pesanan",        value: "id_pesanan" },
-                { text: "Actions",
-                    sortable: false,
-                    value: "actions" },
+                { text: "ID", align: "start",       value: "id_reservasi" },
+                { text: "Tanggal Reservasi",        value: "tanggal_reservasi" },
+                { text: "Sesi Reservasi",           value: "sesi_reservasi" },
+                { text: "Nomor Meja",               value: "id_meja" },
+                { text: "ID Pesanan",               value: "id_pesanan" },
+                { text: "Actions", sortable: false, value: "actions" },
             ],
-            reservasi: [],
-            pesanan: [],
-            meja: [],
-            customer: [],
-            inputType: 'Add',
-            dialog: false,
+            reservasi:       [],
+            pesanan:         [],
+            meja:            [],
+            customer:        [],
+            inputType:    'Add',
+            dialog:       false,
             dialogDelete: false,
             form: {
-                sesi_reservasi: '',
-                tanggal_reservasi: '',
-                id_pesanan: '',
-                id_meja: '',
-                id_customer: '',
+                sesi_reservasi:     '',
+                tanggal_reservasi:  '',
+                id_pesanan:         '',
+                id_meja:            '',
+                id_customer:        '',
             },
-            menu: false,
-            loading: false,
-            search: '',
-            editId: null,
-            error_message: '',
-            snackbar: false,
-            color: '',
-            deleteId: null,
-            passwordId: null,
-            progressBar: false,
+            menu:         false,
+            loading:      false,
+            search:          '',
+            editId:        null,
+            error_message:   '',
+            snackbar:     false,
+            color:           '',
+            deleteId:      null,
+            passwordId:    null,
+            progressBar:  false,
         }
     },
+
     mounted() {
         this.reservasi = JSON.parse(localStorage.getItem('reservasi'));
         this.pesanan   = JSON.parse(localStorage.getItem('pesanan'));
@@ -331,6 +334,7 @@ export default{
             this.loadData();
         });
     },
+
     methods: {
         redirectDashboard() {
             this.$router.push({
@@ -338,6 +342,7 @@ export default{
             });
             this.collapsed = true;
         },
+
         loadData() {
             var url = this.$api + '/reservasi';
             this.loading = true;
@@ -354,6 +359,7 @@ export default{
                 this.loading = false;
             });
         },
+
         editHandler(item) {
             this.inputType = 'Edit';
             this.editId                 = item.id_reservasi;
@@ -364,16 +370,19 @@ export default{
             this.form.id_customer       = item.id_customer;
             this.dialog = true;
         },
+
         deleteHandler(id) {
             this.deleteId = id;
             this.dialogDelete = true;
         },
+
         cancel() {
             this.dialogDelete = false;
             this.dialog = false;
             this.resetForm();
             this.inputType = 'Add';
         },
+
         resetForm() {
             //reset dialog form
             this.form.sesi_reservasi    = '';
@@ -382,6 +391,7 @@ export default{
             this.form.id_meja           = '';
             this.form.id_customer       = '';
         },
+
         fillForm(id) {
             //loop index array
             let index= 0;
@@ -393,6 +403,7 @@ export default{
                 }
             }
         },
+
         add() {
             this.progressBar = true;
             let addData = {
@@ -409,13 +420,13 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message = '';
+                this.error_message =      '';
                 this.error_message = response.data.message;
-                this.color = "green"
-                this.snackbar = true;
+                this.color         = "green";
+                this.snackbar      =    true;
+                this.progressBar   =   false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
                 if(!err.response.data.message.no_reservasi 
@@ -437,11 +448,12 @@ export default{
                     if(err.response.data.message.id_customer)
                         this.error_message= this.error_message + '\n' + err.response.data.message.id_customer;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color       = "red";
+                this.snackbar    =  true;
                 this.progressBar = false;
             });
         },
+
         update() {
             this.progressBar = true;
             let updateData = {
@@ -458,13 +470,13 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message = '';
+                this.error_message =      '';
                 this.error_message = response.data.message;
-                this.color = "green"
-                this.snackbar = true;
+                this.color         = "green";
+                this.snackbar      =    true;
+                this.progressBar   =   false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
                 if(!err.response.data.message.no_reservasi 
@@ -486,11 +498,12 @@ export default{
                     if(err.response.data.message.id_customer)
                         this.error_message= this.error_message + '\n' + err.response.data.message.id_customer;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color       = "red";
+                this.snackbar    =  true;
                 this.progressBar = false;
             });
         },
+
         deleteData() {
             this.progressBar = true;
 
@@ -500,20 +513,21 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color         = "green";
+                this.snackbar      =    true;
+                this.progressBar   =   false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
-                this.error_message= err.response.data.message;
-                this.color="red"
-                this.snackbar=true;
-                this.progressBar = false;
+                this.error_message = err.response.data.message;
+                this.color         = "red";
+                this.snackbar      =  true;
+                this.progressBar   = false;
             });
 
         },
+
         emitPesanan() {
             EventBus.$emit('reservasi', 'extra data');
         }

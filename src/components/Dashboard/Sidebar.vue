@@ -12,6 +12,7 @@
             </div>
         </transition>
         <!-- END PRELOADER -->
+
         <!-- navigation -->
         <!-- start Fixed navbar -->
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -38,6 +39,7 @@
             <!-- end container fluid -->
         </nav>
         <!-- end navigation -->
+
         <div id="notNav"  @click="collapsed = true">
             <transition name="slide-fade">
                 <keep-alive>
@@ -86,10 +88,10 @@
 </template>
 
 <script>
-import { EventBus } from './bus.js';
 
 export default{
     name: "Sidebar",
+
     data() {
         return {
             //snackbar
@@ -108,9 +110,11 @@ export default{
             role: '',
         }
     },
+
     created() {
         this.loadData();
     },
+    
     methods: {
         loadData() {
             setTimeout(() => this.preloadertext = "This process may take up to 10 seconds.", 4500);
@@ -133,6 +137,7 @@ export default{
                 {url: this.$api + '/customer', store: 'customer'}, 
                 {url: this.$api + '/reservasi', store: 'reservasi'}, 
                 {url: this.$api + '/bahan', store: 'bahan'}, 
+                {url: this.$api + '/menu', store: 'menu'}, 
             ];
 
             this.$http.get(urlmeja, {
@@ -161,38 +166,44 @@ export default{
             }
 
         },
+
         redirectIndex() {
             this.$router.push({
                 path: '/',
             });
             this.collapsed = true;
         },
+
         redirectDashboard() {
             this.$router.push({
                 path: '/dashboard',
             });
             this.collapsed = true;
         },
+
         redirectMenu() {
             this.$router.push({
                 path: '/menu',
             });
             this.collapsed = true;
         },
+
         logout() {
             this.progressBarLogout = true;
             var url = this.$api + '/logout'
-            //POST '/logout'
-            this.$http.post(url, {}, { //Empty Data
+
+            this.$http.post(url, {}, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(() => {
+
                 //Remove Local Token
                 localStorage.removeItem('id');
                 localStorage.removeItem('name');
                 localStorage.removeItem('role');
                 localStorage.removeItem('token');
+
                 //Delete Axios Header
                 delete this.$http.defaults.headers.common['Authorization'];
                 this.progressBarLogout = false;
@@ -204,16 +215,16 @@ export default{
                     location.href="/";
                 })
             }).catch(error => {
-                //prints error to console
-                console.log(error);
-                //Remove Local Token
                 localStorage.removeItem('id');
                 localStorage.removeItem('name');
                 localStorage.removeItem('role');
                 localStorage.removeItem('token');
+
                 //Delete Axios Header
                 delete this.$http.defaults.headers.common['Authorization'];
+
                 this.progressBarLogout = false;
+
                 this.$router.push({
                     name: 'index',
                 }).then(()=> {
@@ -221,6 +232,7 @@ export default{
                 })
             });
         },
+
     },
 }
 </script>

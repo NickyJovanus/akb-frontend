@@ -57,7 +57,7 @@
                             </template>
                             <template v-slot:[`item.gambar_menu`]="{ item }">
                                 <div style="width: 50px; height: 50px; cursor: pointer;" @click="gambarHandler(item)">
-                                    <img :src="item.gambar_menu" 
+                                    <img :src="item.gambar_menu == null ? require('@/assets/images/no-image.png') : item.gambar_menu" 
                                         :style="{
                                         'width': '100%', 
                                         'height': '100%',
@@ -124,18 +124,21 @@
                                 label="Nama Menu"
                                 v-model="form.nama_menu"
                                 outlined
+                                clearable
                             ></v-text-field>
 
                             <v-text-field
                                 label="Deskripsi Menu"
                                 v-model="form.deskripsi_menu"
                                 outlined
+                                clearable
                             ></v-text-field>
 
                             <v-text-field
                                 label="Unit Menu"
                                 v-model="form.unit_menu"
                                 outlined
+                                clearable
                             ></v-text-field>
 
                             <v-text-field
@@ -143,6 +146,7 @@
                                 v-model="form.harga_menu"
                                 type="number"
                                 outlined
+                                clearable
                             ></v-text-field>
 
                             <v-select
@@ -150,6 +154,7 @@
                                 label="Kategori Menu"
                                 :items="kategori"
                                 outlined
+                                clearable
                                 three-line
                             >
                                 <template slot="selection" slot-scope="data">
@@ -167,6 +172,8 @@
                                 item-text="id_bahan"
                                 outlined
                                 three-line
+                                clearable
+                                @input="fillStok($event)"
                             >
                                 <template slot="selection" slot-scope="data">
                                     {{ data.item.nama_bahan }}
@@ -175,6 +182,15 @@
                                     {{ data.item.nama_bahan }}
                                 </template>
                             </v-select>
+
+                            <v-text-field
+                                label="Stok Menu"
+                                v-model="form.stok_menu"
+                                type="number"
+                                outlined
+                                clearable
+                                disabled
+                            ></v-text-field>
                         </v-flex>
                     </div>
                     <v-card-actions>
@@ -264,6 +280,7 @@ import { EventBus } from './bus.js';
 
 export default{
     name: "Menu",
+    
     data() {
         return {
             role: '',
@@ -298,6 +315,7 @@ export default{
                 kategori_menu:  '',
                 id_bahan:       '',
                 gambar_bahan:   '',
+                stok_menu:      '',
             },
             kategori: [
                 'makanan',
@@ -317,6 +335,7 @@ export default{
             gambar_menu: '',
         }
     },
+
     mounted() {
         this.menu  = JSON.parse(localStorage.getItem('menu'));
         this.bahan = JSON.parse(localStorage.getItem('bahan'));
@@ -326,7 +345,12 @@ export default{
         
         if (this.role != 'Operational Manager' && this.role != 'Chef')
             this.redirectDashboard();
+        
+        EventBus.$on('bahan', () => {
+            this.menu = JSON.parse(localStorage.getItem('menu'));
+        });
     },
+
     methods: {
         redirectDashboard() {
             this.$router.push({
@@ -334,6 +358,7 @@ export default{
             });
             this.collapsed = true;
         },
+
         loadData() {
             var url = this.$api + '/menu';
             this.loading = true;
@@ -351,6 +376,7 @@ export default{
                 this.loading = false;
             });
         },
+
         editHandler(item) {
             this.inputType = 'Edit';
             this.editId              = item.id_menu;
@@ -361,24 +387,28 @@ export default{
             this.form.kategori_menu  = item.kategori_menu;
             this.form.id_bahan       = item.id_bahan;
             this.dialog = true;
+            this.fillStok(item.id_bahan);
         },
+
         gambarHandler(item) {
             this.imgTitle    = item.nama_menu;
             this.gambar_menu = item.gambar_menu;
             this.dialogImage = true;
         },
+
         deleteHandler(id) {
-            this.deleteId = id;
+            this.deleteId     = id;
             this.dialogDelete = true;
         },
+
         cancel() {
             this.dialogDelete = false;
-            this.dialogImage = false;
-            this.dialog = false;
-            this.gambar_menu = '';
+            this.dialogImage  = false;
+            this.dialog       = false;
+            this.inputType    = 'Add';
             this.resetForm();
-            this.inputType = 'Add';
         },
+
         resetForm() {
             this.form.nama_menu      = '';
             this.form.deskripsi_menu = '';
@@ -386,7 +416,20 @@ export default{
             this.form.harga_menu     = '';
             this.form.kategori_menu  = '';
             this.form.id_bahan       = '';
+            this.form.stok_menu      = '';
+            this.gambar_menu         = '';
         },
+
+        fillStok(id_bahan) {
+            let index=0;
+            for(; index<this.bahan.length;index++) {
+                if(id_bahan == this.bahan[index].id_bahan)
+                    this.form.stok_menu = 
+                        Math.floor(this.bahan[index].jml_bahan / 
+                            this.bahan[index].stok_per_unit);
+            }
+        },
+
         add() {
             this.progressBar = true;
             let addData = {
@@ -439,6 +482,7 @@ export default{
                 this.progressBar = false;
             });
         },
+
         update() {
             this.progressBar = true;
             let updateData = {
@@ -491,6 +535,7 @@ export default{
                 this.progressBar = false;
             });
         },
+
         deleteData() {
             this.progressBar = true;
 
@@ -514,6 +559,7 @@ export default{
             });
 
         },
+
         emitMenu() {
             EventBus.$emit('menu', '');
         }

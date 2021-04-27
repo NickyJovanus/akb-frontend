@@ -1,7 +1,9 @@
 <template>
     <v-main>
         <div id="container">
+
             <br><br>
+
             <div class="button-group" style="margin-left: 20px;">
                 <div class="text" @click="redirectDashboard"><i style="
                     border: solid black;
@@ -11,10 +13,13 @@
                     transform: rotate(135deg);
                     -webkit-transform: rotate(135deg);"></i> Return</div>
             </div>
+
             <br><br>
+
             <div style="text-align: center; width: 100%;">
                 <h2>Karyawan Management</h2>
             </div>
+
             <div class="mt-5 table-section">
                 <v-card class="ma-6">
                     <v-card-title>
@@ -43,8 +48,8 @@
 
                             <template v-slot:[`item.jenis_kelamin_karyawan`]="{ item }">
                                 {{item.jenis_kelamin_karyawan}}
-                                <v-icon v-if="item.jenis_kelamin_karyawan == 'Perempuan'">mdi-gender-female</v-icon>
-                                <v-icon v-else>mdi-gender-male</v-icon>
+                                <v-icon v-if="item.jenis_kelamin_karyawan == 'Perempuan'" color="pink">mdi-gender-female</v-icon>
+                                <v-icon v-else color="blue">mdi-gender-male</v-icon>
                             </template>
 
                             <template v-slot:[`item.peran_karyawan`]="{ item }">
@@ -71,8 +76,10 @@
                 </v-card>
                 <br><br>
             </div>
-        <br><br>
+
+            <br><br>
             <br>
+
             <!-- start footer -->
             <footer id="contact">
                 <div class="container">
@@ -94,241 +101,268 @@
             <!-- end footer -->
 
         
-        <!-- register and edit data -->
-        <v-dialog v-model="dialog" persistent max-width="600px" mt-10 style='z-index:8000;'>
-            <v-card>
-                <v-flex>
-                    <v-progress-linear v-show="loading" slot="progress" color="blue" indeterminate></v-progress-linear>
-                </v-flex>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-spacer></v-spacer>
-                    <v-spacer></v-spacer>
-                    <v-flex class="text-right">
-                        <v-icon color="red" @click="cancel">mdi-close</v-icon>
+            <!-- register and edit data -->
+            <v-dialog v-model="dialog" persistent max-width="600px" mt-10 style='z-index:8000;'>
+                <v-card>
+                    
+                    <v-flex>
+                        <v-progress-linear v-show="progressBar" slot="progress" :color="inputType == 'Edit' ? 'yellow' : 'blue'" indeterminate></v-progress-linear>
                     </v-flex>
-                </v-card-actions>
-                <v-card-title>
-                    <span class="headline">{{ inputType }} Karyawan</span>
-                </v-card-title>
-                <v-card-text>
-                        <v-text-field
-                            label="Nama Karyawan"
-                            v-model="form.nama_karyawan"
-                            outlined
-                        ></v-text-field>
-                        
-                        <v-select
-                            v-model="form.jenis_kelamin_karyawan"
-                            label="Jenis Kelamin"
-                            :items="jenis_kelamin"
-                            item-text="name"
-                            outlined
-                            three-line
-                            :value="form.jenis_kelamin_karyawan"
-                        ></v-select>
-                        <v-menu
-                            ref="tanggal_menu"
-                            v-model="tanggal_menu"
-                            :close-on-content-click="false"
-                            :return-value.sync="form.tanggal_rekrut_karyawan"
-                            transition="slide-x-transition"
-                            offset-y
-                            min-width="290px"
-                        >
-                            <template v-slot:activator="{ on, attrs }">
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-flex class="text-right">
+                            <v-icon color="red" @click="cancel">mdi-close</v-icon>
+                        </v-flex>
+                    </v-card-actions>
+
+                    <v-card-title>
+                        <span class="headline">{{ inputType }} Karyawan</span>
+                    </v-card-title>
+
+                    <v-card-text>
                             <v-text-field
-                                v-model="form.tanggal_rekrut_karyawan"
-                                label="Tanggal Rekrut"
-                                prepend-icon="mdi-calendar"
-                                readonly
+                                label="Nama Karyawan"
+                                v-model="form.nama_karyawan"
+                                clearable
                                 outlined
-                                v-bind="attrs"
-                                v-on="on"
                             ></v-text-field>
-                            </template>
-                            <v-date-picker
-                                v-model="form.tanggal_rekrut_karyawan"
-                                no-title
-                                scrollable
+                            
+                            <v-select
+                                v-model="form.jenis_kelamin_karyawan"
+                                label="Jenis Kelamin"
+                                :items="jenis_kelamin"
+                                item-text="name"
+                                outlined
+                                clearable
+                                three-line
+                                :value="form.jenis_kelamin_karyawan"
+                            ></v-select>
+
+                            <v-menu
+                                ref="tanggal_menu"
+                                v-model="tanggal_menu"
+                                :close-on-content-click="false"
+                                :return-value.sync="form.tanggal_rekrut_karyawan"
+                                transition="slide-x-transition"
+                                offset-y
+                                min-width="290px"
                             >
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                text
-                                color="red"
-                                @click="tanggal_menu = false"
-                            >
-                                Cancel
-                            </v-btn>
-                            <v-btn
-                                text
-                                color="primary"
-                                @click="$refs.tanggal_menu.save(form.tanggal_rekrut_karyawan)"
-                            >
-                                OK
-                            </v-btn>
-                            </v-date-picker>
-                        </v-menu>
-                        <v-text-field
-                            label="No. Telpon"
-                            v-model="form.telpon_karyawan"
-                            outlined
-                        ></v-text-field>
-                        <v-select v-if="inputType != 'Register'"
-                            v-model="form.status_karyawan"
-                            label="Status"
-                            :items="status"
-                            item-text="name"
-                            outlined
-                            three-line
-                            :value="form.status_karyawan"
-                        >
-                        </v-select>
-                        <v-select
-                            v-model="form.peran_karyawan"
-                            label="Peran"
-                            :items="peran"
-                            item-text="name"
-                            outlined
-                            three-line
-                            :value="form.peran_karyawan"
-                        >
-                        </v-select>
-                        <v-text-field
-                            label="E-mail"
-                            v-model="form.email_karyawan"
-                            autocomplete="off"
-                            onfocus="this.removeAttribute('readonly');"
-                            outlined
-                        ></v-text-field>
-                        <v-text-field
-                            v-if="inputType == 'Register'"
-                            label="Password"
-                            v-model="form.password"
-                            :type="passwordtype"
-                            outlined
-                        >
-                            <template v-slot:append v-if="inputType == 'Register'">
-                                <v-btn 
-                                    v-if="passwordtype == 'password'" 
-                                    @click="passwordtype = 'text'" 
-                                    min-width="100"
-                                    height="100%"
+                                <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="form.tanggal_rekrut_karyawan"
+                                    label="Tanggal Rekrut"
+                                    prepend-icon="mdi-calendar"
+                                    clearable
+                                    readonly
+                                    outlined
+                                    v-bind="attrs"
+                                    v-on="on"
+                                ></v-text-field>
+                                </template>
+                                <v-date-picker
+                                    v-model="form.tanggal_rekrut_karyawan"
+                                >
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    text
                                     color="red"
-                                    depressed 
-                                    tile
-                                    class="ma-0">
-                                    Reveal
+                                    @click="tanggal_menu = false"
+                                >
+                                    Cancel
                                 </v-btn>
-                                <v-btn 
-                                    v-else 
-                                    @click="passwordtype = 'password'"
-                                    min-width="100"
-                                    height="100%"
-                                    color="green"
-                                    depressed 
-                                    tile
-                                    class="ma-0">
-                                    Hide
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    @click="$refs.tanggal_menu.save(form.tanggal_rekrut_karyawan)"
+                                >
+                                    OK
                                 </v-btn>
-                            </template>
-                        </v-text-field>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="white darken-1" text @click="cancel">
-                        Cancel
-                    </v-btn>
-                    <v-btn v-if="inputType == 'Register'" color="blue darken-1" text @click="register">
-                        Save
-                    </v-btn>
-                    <v-btn v-if="inputType == 'Edit'" color="yellow darken-1" text @click="update">
-                        Save
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+                                </v-date-picker>
+                            </v-menu>
+
+                            <v-text-field
+                                label="No. Telpon"
+                                v-model="form.telpon_karyawan"
+                                clearable
+                                outlined
+                            ></v-text-field>
+
+                            <v-select v-if="inputType != 'Register'"
+                                v-model="form.status_karyawan"
+                                label="Status"
+                                :items="status"
+                                item-text="name"
+                                outlined
+                                clearable
+                                three-line
+                                :value="form.status_karyawan"
+                            >
+                            </v-select>
+
+                            <v-select
+                                v-model="form.peran_karyawan"
+                                label="Peran"
+                                :items="peran"
+                                item-text="name"
+                                outlined
+                                three-line
+                                :value="form.peran_karyawan"
+                            >
+                            </v-select>
+
+                            <v-text-field
+                                label="E-mail"
+                                v-model="form.email_karyawan"
+                                autocomplete="off"
+                                clearable
+                                onfocus="this.removeAttribute('readonly');"
+                                outlined
+                            ></v-text-field>
+
+                            <v-text-field
+                                v-if="inputType == 'Register'"
+                                label="Password"
+                                v-model="form.password"
+                                :type="passwordtype"
+                                clearable
+                                outlined
+                            >
+                                <template v-slot:append v-if="inputType == 'Register'">
+                                    <v-btn 
+                                        v-if="passwordtype == 'password'" 
+                                        @click="passwordtype = 'text'" 
+                                        min-width="100"
+                                        height="100%"
+                                        color="red"
+                                        depressed 
+                                        tile
+                                        class="ma-0">
+                                        Reveal
+                                    </v-btn>
+                                    <v-btn 
+                                        v-else 
+                                        @click="passwordtype = 'password'"
+                                        min-width="100"
+                                        height="100%"
+                                        color="green"
+                                        depressed 
+                                        tile
+                                        class="ma-0">
+                                        Hide
+                                    </v-btn>
+                                </template>
+                            </v-text-field>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="white darken-1" text @click="cancel">
+                            Cancel
+                        </v-btn>
+                        <v-btn v-if="inputType == 'Register'" color="blue darken-1" text @click="register">
+                            Save
+                        </v-btn>
+                        <v-btn v-if="inputType == 'Edit'" color="yellow darken-1" text @click="update">
+                            Save
+                        </v-btn>
+                    </v-card-actions>
+
+                </v-card>
+            </v-dialog>
 
         
-        <v-dialog v-model="dialogPassword" persistent max-width="600px" style='z-index:8000;'>
-            <v-card>
-                <v-flex>
-                    <v-progress-linear v-show="loading" slot="progress" color="green" indeterminate></v-progress-linear>
-                </v-flex>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-spacer></v-spacer>
-                    <v-spacer></v-spacer>
-                    <v-flex class="text-right">
-                        <v-icon color="red" @click="dialogPassword = false; resetForm()">mdi-close</v-icon>
+            <v-dialog v-model="dialogPassword" persistent max-width="600px" style='z-index:8000;'>
+                <v-card>
+
+                    <v-flex>
+                        <v-progress-linear v-show="progressBar" slot="progress" color="green" indeterminate></v-progress-linear>
                     </v-flex>
-                </v-card-actions>
-                <v-card-title>
-                    <span class="headline">Change Password</span>
-                </v-card-title>
-                <div style="margin: 30px;">
-                    <v-text-field
-                        label="Old Password"
-                        v-model="formpass.oldpassword"
-                        type="password"
-                        outlined
-                    ></v-text-field>
-                    <v-text-field
-                        label="New Password"
-                        v-model="formpass.newpassword"
-                        type="password"
-                        outlined
-                    ></v-text-field>
-                    <v-text-field
-                        label="Confirm New Password"
-                        v-model="formpass.confirmpassword"
-                        type="password"
-                        outlined
-                    ></v-text-field>
-                </div>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="white darken-1" text @click="dialogPassword = false; resetForm()">
-                        Cancel
-                    </v-btn>
-                    <v-btn color="green darken-1" text @click="changePass"> 
-                        Save
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-flex class="text-right">
+                            <v-icon color="red" @click="dialogPassword = false; resetForm()">mdi-close</v-icon>
+                        </v-flex>
+                    </v-card-actions>
+
+                    <v-card-title>
+                        <span class="headline">Change Password</span>
+                    </v-card-title>
+                    <div style="margin: 30px;">
+                        <v-text-field
+                            label="Old Password"
+                            v-model="formpass.oldpassword"
+                            type="password"
+                            outlined
+                        ></v-text-field>
+                        <v-text-field
+                            label="New Password"
+                            v-model="formpass.newpassword"
+                            type="password"
+                            outlined
+                        ></v-text-field>
+                        <v-text-field
+                            label="Confirm New Password"
+                            v-model="formpass.confirmpassword"
+                            type="password"
+                            outlined
+                        ></v-text-field>
+                    </div>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="white darken-1" text @click="dialogPassword = false; resetForm()">
+                            Cancel
+                        </v-btn>
+                        <v-btn color="green darken-1" text @click="changePass"> 
+                            Save
+                        </v-btn>
+                    </v-card-actions>
+
+                </v-card>
+            </v-dialog>
 
         
-        <v-dialog v-model="dialogDelete" persistent max-width="600px" style='z-index:8000;'>
-            <v-card>
-                <v-flex>
-                    <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
-                </v-flex>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-spacer></v-spacer>
-                    <v-spacer></v-spacer>
-                    <v-flex class="text-right">
-                        <v-icon color="red" @click="dialogDelete = false">mdi-close</v-icon>
+            <v-dialog v-model="dialogDelete" persistent max-width="600px" style='z-index:8000;'>
+                <v-card>
+                    <v-flex>
+                        <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
                     </v-flex>
-                </v-card-actions>
-                <v-card-title>
-                    <span class="headline">Deactivation Confirmation</span>
-                </v-card-title>
-                <v-card-text>
-                    Do you really want to deactivate this karyawan?
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="white darken-1" text @click="dialogDelete = false">
-                        Cancel
-                    </v-btn>
-                    <v-btn color="red darken-1" text @click="deleteData"> 
-                        Deactivate
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-flex class="text-right">
+                            <v-icon color="red" @click="dialogDelete = false">mdi-close</v-icon>
+                        </v-flex>
+                    </v-card-actions>
+
+                    <v-card-title>
+                        <span class="headline">Deactivation Confirmation</span>
+                    </v-card-title>
+
+                    <v-card-text>
+                        Do you really want to deactivate this karyawan?
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="white darken-1" text @click="dialogDelete = false">
+                            Cancel
+                        </v-btn>
+                        <v-btn color="red darken-1" text @click="deleteData"> 
+                            Deactivate
+                        </v-btn>
+                    </v-card-actions>
+
+                </v-card>
+            </v-dialog>
 
         </div>
 
@@ -338,6 +372,7 @@
             </v-flex>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
+
     </v-main>
 </template>
 
@@ -349,65 +384,62 @@ export default{
         return {
             role: '',
             headers: [
-                { text: "ID",
-                    align: "start",
-                    value: "id_karyawan" },
-                { text: "Nama",           value: "nama_karyawan" },
-                { text: "Jenis Kelamin",  value: "jenis_kelamin_karyawan" },
-                { text: "Tanggal Rekrut", value: "tanggal_rekrut_karyawan" },
-                { text: "No. Telpon",     value: "telpon_karyawan" },
-                { text: "Peran",          value: "peran_karyawan" },
-                { text: "Status",         value: "status_karyawan" },
-                { text: "E-mail",         value: "email_karyawan" },
-                { text: "Actions",
-                    sortable: false,
-                    value: "actions" },
+                { text: "ID", align: "start",       value: "id_karyawan" },
+                { text: "Nama",                     value: "nama_karyawan" },
+                { text: "Jenis Kelamin",            value: "jenis_kelamin_karyawan" },
+                { text: "Tanggal Rekrut",           value: "tanggal_rekrut_karyawan" },
+                { text: "No. Telpon",               value: "telpon_karyawan" },
+                { text: "Peran",                    value: "peran_karyawan" },
+                { text: "Status",                   value: "status_karyawan" },
+                { text: "E-mail",                   value: "email_karyawan" },
+                { text: "Actions", sortable: false, value: "actions" },
             ],
-            karyawan: [],
+            karyawan:          [],
             inputType: 'Register',
-            dialog: false,
-            dialogDelete: false,
+            dialog:         false,
+            dialogDelete:   false,
             dialogPassword: false,
             form: {
-                nama_karyawan: '',
-                jenis_kelamin_karyawan: '',
-                tanggal_rekrut_karyawan: '',
-                telpon_karyawan: '',
-                peran_karyawan: '',
-                status_karyawan: '',
-                email_karyawan: '',
-                password: '',
+                nama_karyawan:              '',
+                jenis_kelamin_karyawan:     '',
+                tanggal_rekrut_karyawan:    '',
+                telpon_karyawan:            '',
+                peran_karyawan:             '',
+                status_karyawan:            '',
+                email_karyawan:             '',
+                password:                   '',
             },
             formpass: {
-                oldpassword: '',
-                newpassword: '',
-                confirmpassword: '',
+                oldpassword:        '',
+                newpassword:        '',
+                confirmpassword:    '',
             },
             status: [
-                {name: 'Active'},
-                {name: 'Inactive'}
+                {name: 'Active'  },
+                {name: 'Inactive'},
             ],
             jenis_kelamin: [
                 {name: 'Laki-laki'},
-                {name: 'Perempuan'}
+                {name: 'Perempuan'},
             ],
             peran: [
-                {name: 'Owner'},
+                {name:               'Owner'},
                 {name: 'Operational Manager'},
-                {name: 'Chef'},
-                {name: 'Waiter'},
-                {name: 'Cashier'},
+                {name:                'Chef'},
+                {name:              'Waiter'},
+                {name:             'Cashier'},
             ],
-            loading: false,
-            tanggal_menu: false,
-            modal: false,
-            search: '',
-            editId: null,
-            error_message: '',
-            snackbar: false,
-            color: '',
-            deleteId: null,
-            passwordId: null,
+            loading:           false,
+            tanggal_menu:      false,
+            modal:             false,
+            search:               '',
+            editId:             null,
+            deleteId:           null,
+            passwordId:         null,
+            snackbar:          false,
+            progressBar:       false,
+            error_message:        '',
+            color:                '',
             passwordtype: 'password',
         }
     },
@@ -427,6 +459,7 @@ export default{
             });
             this.collapsed = true;
         },
+
         loadData() {
             var url = this.$api + '/karyawan';
             this.loading = true;
@@ -443,6 +476,7 @@ export default{
                 this.loading = false;
             });
         },
+
         cancel() {
             this.resetForm();
             this.dialog = false;
@@ -450,6 +484,7 @@ export default{
             this.editId = null;
             this.passwordtype = 'password';
         },
+
         resetForm() {
             this.form.nama_karyawan           = '';
             this.form.jenis_kelamin_karyawan  = '';
@@ -463,8 +498,9 @@ export default{
             this.formpass.newpassword         = '';
             this.formpass.confirmpassword     = '';
         },
+
         register() {
-            this.loading = true;
+            this.progressBar = true;
             let addData = {
                 nama_karyawan:           this.form.nama_karyawan,
                 jenis_kelamin_karyawan:  this.form.jenis_kelamin_karyawan,
@@ -474,7 +510,6 @@ export default{
                 status_karyawan:         this.form.status_karyawan,
                 email_karyawan:          this.form.email_karyawan,
             }
-            this.error_message='';
 
             var url = this.$api + '/karyawan'
             this.$http.post(url, addData, {
@@ -484,11 +519,11 @@ export default{
             }).then(response => {
                 this.error_message = '';
                 this.error_message = response.data.message;
-                this.color = "green"
-                this.snackbar = true;
+                this.color         = "green"
+                this.snackbar      = true;
+                this.progressBar   = false;
                 this.cancel();
                 this.loadData();
-                this.loading = false;
             }).catch(error => {
                 this.error_message = '';
                 if(!error.response.data.message.nama_karyawan
@@ -515,11 +550,12 @@ export default{
                     if(error.response.data.message.password)
                         this.error_message= this.error_message + '\n'  + error.response.data.message.password;
                 }
-                this.color="red"
-                this.snackbar=true;
-                this.loading = false;
+                this.color       = "red";
+                this.snackbar    =  true;
+                this.progressBar = false;
             });
         },
+
         editHandler(item){
             this.inputType = 'Edit';
             this.editId                       = item.id_karyawan;
@@ -532,15 +568,19 @@ export default{
             this.form.email_karyawan          = item.email_karyawan;
             this.dialog = true;
         },
+
         deleteHandler(id){
             this.deleteId = id;
             this.dialogDelete = true;
         },
+
         changePasswordHandler(id) {
             this.passwordId = id;
             this.dialogPassword = true;
         },
+
         update() {
+            this.progressBar = true;
             let updateData = {
                 nama_karyawan:           this.form.nama_karyawan,
                 jenis_kelamin_karyawan:  this.form.jenis_kelamin_karyawan,
@@ -558,12 +598,12 @@ export default{
                 }
             }).then(response => {
                 this.error_message = '';
-                this.error_message=response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color         = "green"
+                this.snackbar      = true;
+                this.progressBar   = false;
                 this.cancel();
                 this.loadData();
-                this.loading = false;
             }).catch(error => {
                 this.error_message = '';
                 if(!error.response.data.message.nama_karyawan
@@ -576,86 +616,92 @@ export default{
                     this.error_message= error.response.data.message;
                 else {
                     if(error.response.data.message.nama_karyawan)
-                        this.error_message= this.error_message + error.response.data.message.nama_karyawan + "";
+                        this.error_message = this.error_message + error.response.data.message.nama_karyawan + "";
                     if(error.response.data.message.jenis_kelamin_karyawan)
-                        this.error_message= this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
+                        this.error_message = this.error_message + '\n'  + error.response.data.message.jenis_kelamin_karyawan;
                     if(error.response.data.message.tanggal_rekrut_karyawan)
-                        this.error_message= this.error_message + '\n'  + error.response.data.message.tanggal_rekrut_karyawan;
+                        this.error_message = this.error_message + '\n'  + error.response.data.message.tanggal_rekrut_karyawan;
                     if(error.response.data.message.telpon_karyawan)
-                        this.error_message= this.error_message + '\n'  + error.response.data.message.telpon_karyawan;
+                        this.error_message = this.error_message + '\n'  + error.response.data.message.telpon_karyawan;
                     if(error.response.data.message.peran_karyawan)
-                        this.error_message= this.error_message + '\n'  + error.response.data.message.peran_karyawan;
+                        this.error_message = this.error_message + '\n'  + error.response.data.message.peran_karyawan;
                     if(error.response.data.message.email_karyawan)
-                        this.error_message= this.error_message + '\n'  + error.response.data.message.email_karyawan;
+                        this.error_message = this.error_message + '\n'  + error.response.data.message.email_karyawan;
                     if(error.response.data.message.password)
-                        this.error_message= this.error_message + '\n'  + error.response.data.message.password;
+                        this.error_message = this.error_message + '\n'  + error.response.data.message.password;
                 }
-                this.color="red"
-                this.snackbar=true;
-                this.loading = false;
+                this.color       = "red";
+                this.snackbar    =  true;
+                this.progressBar = false;
             })
         },
+
         deleteData() {
-            this.loading = true;
+            this.progressBar = true;
             var url = this.$api + '/karyawan/' + this.deleteId;
             this.$http.delete(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message=response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = '';
+                this.error_message = response.data.message;
+                this.color         = "green"
+                this.snackbar      = true;
+                this.progressBar   = false;
+                this.inputType     = 'Register';
                 this.close();
                 this.loadData();
                 this.resetForm();
-                this.loading = false;
-                this.inputType = 'Register';
             }).catch(error => {
-                this.error_message=error.response.data.message;
-                this.color="red"
-                this.snackbar=true;
-                this.loading = false;
+                this.error_message =    '';
+                this.error_message = error.response.data.message;
+                this.color         = "red";
+                this.snackbar      =  true;
+                this.progressBar   = false;
             })
         },
+
         changePass() {
+            this.progressBar = true;
             let passwordData = {
                 old_password: this.formpass.oldpassword,
                 new_password: this.formpass.newpassword,
                 confirm_password: this.formpass.confirmpassword,
             }
 
-            this.loading = true;
             var url = this.$api + '/karyawan/cp/' + this.passwordId;
             this.$http.put(url, passwordData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
+                this.error_message='';
                 this.error_message=response.data.message;
-                
-                this.error_message=response.data.message; 
+
                 if(this.error_message === "Data was successfully updated") {
-                    this.color = "green"
-                    this.loading = false;
+                    this.color          = "green";
+                    this.progressBar    =   false;
+                    this.dialogPassword =   false;
                     this.loadData();
-                    this.dialogPassword = false;
                 } else {
-                    this.color="red"
-                    this.loading = false;
+                    this.color          = "red";
+                    this.progressBar    = false;
                 }
-                this.snackbar=true;
+
+                this.snackbar  =       true;
+                this.inputType = 'Register';
                 this.close();
                 this.resetForm();
-                this.inputType = 'Register';
             }).catch(error => {
                 this.error_message = error.response.data.message;
-                this.color = "red"
-                this.snackbar = true;
-                this.loading = false;
+                this.color       = "red";
+                this.snackbar    =  true;
+                this.progressBar = false;
                 this.resetForm();
             })
         },
+
         filterbg(role) {
             if(role == 'Owner') {return 'green'}
             else if(role == 'Operational Manager') {return '#185fff'}

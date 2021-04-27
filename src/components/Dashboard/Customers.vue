@@ -116,10 +116,10 @@
                         <v-btn color="white darken-1" text @click="cancel">
                             Cancel
                         </v-btn>
-                        <v-btn v-if="inputType == 'Add'" color="blue darken-1" text @click="add">
+                        <v-btn v-if="inputType === 'Add'" color="blue darken-1" text @click="add">
                             Save
                         </v-btn>
-                        <v-btn v-if="inputType == 'Edit'" color="yellow darken-1" text @click="update">
+                        <v-btn v-if="inputType === 'Edit'" color="yellow darken-1" text @click="update">
                             Save
                         </v-btn>
                     </v-card-actions>
@@ -176,33 +176,29 @@ export default{
         return {
             role: '',
             headers: [
-                { text: "ID",
-                    align: "start",
-                    value: "id_customer" },
-                { text: "Nama",        value: "nama_customer" },
-                { text: "No. Telepon", value: "telpon_customer" },
-                { text: "E-mail",      value: "email_customer" },
-                { text: "Actions",
-                    sortable: false,
-                    value: "actions" },
+                { text: "ID", align: "start",       value: "id_customer"     },
+                { text: "Nama",                     value: "nama_customer"   },
+                { text: "No. Telepon",              value: "telpon_customer" },
+                { text: "E-mail",                   value: "email_customer"  },
+                { text: "Actions", sortable: false, value: "actions"         },
             ],
-            customers: [],
-            inputType: 'Add',
-            dialog: false,
+            customers:       [],
+            inputType:    'Add',
+            dialog:       false,
             dialogDelete: false,
             form: {
-                nama_customer: '',
+                nama_customer:   '',
                 telpon_customer: '',
-                email_customer: '',
+                email_customer:  '',
             },
-            loading: false,
-            search: '',
-            editId: null,
-            error_message: '',
-            snackbar: false,
-            color: '',
-            deleteId: null,
-            passwordId: null,
+            loading:     false,
+            search:         '',
+            editId:       null,
+            deleteId:     null,
+            passwordId:   null,
+            error_message:  '',
+            color:          '',
+            snackbar:    false,
             progressBar: false,
         }
     },
@@ -222,11 +218,11 @@ export default{
             });
             this.collapsed = true;
         },
+        
         loadData() {
-            var url = this.$api + '/customer';
             this.loading = true;
-            this.role = localStorage.getItem('role');
 
+            var url = this.$api + '/customer';
             this.$http.get(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -234,41 +230,46 @@ export default{
             }).then(response => {
                 this.customers = response.data.data;
                 localStorage.setItem('customer', JSON.stringify(response.data.data));
-                this.emitCustomer();
                 this.loading = false;
+                this.emitCustomer();
             }).catch(()=> {
                 this.loading = false;
             });
         },
+
         editHandler(item) {
-            this.inputType = 'Edit';
-            this.editId = item.id_customer;
-            this.form.nama_customer = item.nama_customer;
-            this.form.telpon_customer = item.telpon_customer;
-            this.form.email_customer = item.email_customer;
-            this.dialog = true;
+            this.inputType              = 'Edit';
+            this.editId                 = item.id_customer;
+            this.form.nama_customer     = item.nama_customer;
+            this.form.telpon_customer   = item.telpon_customer;
+            this.form.email_customer    = item.email_customer;
+            this.dialog                 = true;
         },
+
         deleteHandler(id) {
-            this.deleteId = id;
+            this.deleteId     =   id;
             this.dialogDelete = true;
         },
+
         cancel() {
-            this.dialogDelete = false;
-            this.dialog = false;
+            this.dialogDelete   = false;
+            this.dialog         = false;
+            this.inputType      = 'Add';
             this.resetForm();
-            this.inputType = 'Add';
         },
+
         resetForm() {
-            this.form.nama_customer = '';
-            this.form.telpon_customer = '';
-            this.form.email_customer = '';
+            this.form.nama_customer     = '';
+            this.form.telpon_customer   = '';
+            this.form.email_customer    = '';
         },
+
         add() {
             this.progressBar = true;
             let addData = {
-                nama_customer: this.form.nama_customer,
-                telpon_customer: this.form.telpon_customer,
-                email_customer: this.form.email_customer,
+                nama_customer:      this.form.nama_customer,
+                telpon_customer:    this.form.telpon_customer,
+                email_customer:     this.form.email_customer,
             }
 
             var url = this.$api + '/customer'
@@ -277,18 +278,18 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message = '';
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message  =      '';
+                this.error_message  = response.data.message;
+                this.color          = "green";
+                this.snackbar       =    true;
+                this.progressBar    =   false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
                 if(!err.response.data.message.nama_customer
-                    && !err.response.data.message.telpon_customer
-                    && !err.response.data.message.email_customer)
+                && !err.response.data.message.telpon_customer
+                && !err.response.data.message.email_customer)
                     this.error_message= err.response.data.message;
                 else {
                     if(err.response.data.message.nama_customer)
@@ -298,11 +299,12 @@ export default{
                     if(err.response.data.message.email_customer)
                         this.error_message= this.error_message + '\n' + err.response.data.message.email_customer;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color       = "red";
+                this.snackbar    =  true;
                 this.progressBar = false;
             });
         },
+
         update() {
             this.progressBar = true;
             let updateData = {
@@ -317,18 +319,18 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message = '';
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message  =      '';
+                this.error_message  = response.data.message;
+                this.color          = "green";
+                this.snackbar       =    true;
+                this.progressBar    =   false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
                 this.error_message = '';
                 if(!err.response.data.message.nama_customer
-                    && !err.response.data.message.telpon_customer
-                    && !err.response.data.message.email_customer)
+                && !err.response.data.message.telpon_customer
+                && !err.response.data.message.email_customer)
                     this.error_message= err.response.data.message;
                 else {
                     if(err.response.data.message.nama_customer)
@@ -338,11 +340,12 @@ export default{
                     if(err.response.data.message.email_customer)
                         this.error_message= this.error_message + '\n' + err.response.data.message.email_customer;
                 }
-                this.color="red"
-                this.snackbar=true;
+                this.color       = "red";
+                this.snackbar    =  true;
                 this.progressBar = false;
             });
         },
+
         deleteData() {
             this.progressBar = true;
 
@@ -352,20 +355,21 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.error_message = response.data.message;
+                this.color         = "green";
+                this.snackbar      =    true;
+                this.progressBar   =   false;
                 this.cancel();
                 this.loadData();
-                this.progressBar = false;
             }).catch(err => {
-                this.error_message= err.response.data.message;
-                this.color="red"
-                this.snackbar=true;
-                this.progressBar = false;
+                this.error_message = err.response.data.message;
+                this.color         = "red";
+                this.snackbar      =  true;
+                this.progressBar   = false;
             });
 
         },
+
         // Send update signal through event bus (reload data for <keep-alive>)
         emitCustomer() {
             EventBus.$emit('customer', 'extra data');

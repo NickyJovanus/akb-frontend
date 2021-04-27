@@ -8,9 +8,6 @@ var pageURLCheckTimer = setInterval (
         }
 }, 100);
 
-window.onhashchange = locationHashChanged;
-locationHashChanged();
-
 function locationHashChanged() {
     var content;
     var title;

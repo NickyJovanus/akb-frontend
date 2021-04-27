@@ -9,7 +9,9 @@
                     display: inline-block;
                     padding: 3px;
                     transform: rotate(135deg);
-                    -webkit-transform: rotate(135deg);"></i> Return</div>
+                    -webkit-transform: rotate(135deg);"></i> 
+                    Return
+                </div>
             </div>
             <br><br>
             <div style="text-align: center; width: 100%;">
@@ -19,7 +21,7 @@
                     <v-col
                         v-for="(item) in meja"
                         :key="item.id_meja"
-                        :cols="(12/itemsPerRow)"
+                        :cols="(12/cardsPerRow)"
                         class="py-2 ma-5"
                         :style="{
                             overflow: 'hidden'
@@ -55,13 +57,14 @@ export default{
     name: "Ketersediaan",
     data() {
         return {
-            meja: [],
-            role: '',
-            empty: {status_meja: "Loading..."},
+            empty: {status_meja: "Loading..."               },
             error: {status_meja: "An Unknown Error Occured."},
-            loading: true,
-            cards: true,
+            meja:              [],
+            role:              '',
+            loading:         true,
+            cards:           true,
             renderComponent: true,
+            rows:               0,
         }
     },
     mounted() {
@@ -82,7 +85,7 @@ export default{
         reload() {
             this.meja = [];
             let i = 0;
-            for(i = 0; i<8; i++)
+            for(; i<8; i++)
                 this.meja.push(this.empty);
         },
         loadData() {
@@ -114,31 +117,14 @@ export default{
         },
         calcRowsPerPage() {
             let container = document.getElementById('container')
-            let minItemHeight = 170
+            let minItemHeight = 20;
             if (container) {
                 let containerHeight = parseInt(container.clientHeight, 0)
-                this.rpp = Math.floor(containerHeight/minItemHeight)
+                this.rows = Math.floor(containerHeight / minItemHeight)
+            } else {
+                this.rows = 4;
             }
-            else {
-                this.rpp = 4
-            }
         },
-        randomColor(id) {
-            const r = () => Math.floor(256 * Math.random());
-            return this.colorCache[id] || (this.colorCache[id] = `rgb(${r()}, ${r()}, ${r()})`);
-        },
-        shadeBox(color) {
-            return '0 0 0px 1px '+color;
-        },
-        forceRerender() {
-            // Remove my-component from the DOM
-            this.renderComponent = false;
-
-            this.$nextTick(() => {
-                // Add the component back in
-                this.renderComponent = true;
-            });
-        }
     },
 
     activated: function() {
@@ -150,9 +136,9 @@ export default{
             return Math.ceil(this.meja.length / this.ipp);
         },
         rowsPerPage () {
-            return this.rpp;
+            return this.rows;
         },
-        itemsPerRow () {
+        cardsPerRow () {
             switch (this.$vuetify.breakpoint.name) {
                 case 'xs': return 1;
                 case 'sm': return 2;
@@ -163,7 +149,7 @@ export default{
             return 1;
         },
         ipp () {
-            return Math.ceil(this.rowsPerPage * this.itemsPerRow);
+            return Math.ceil(this.rowsPerPage * this.cardsPerRow);
         },
     },
 
