@@ -39,6 +39,9 @@
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
+                            <template v-slot:[`item.tipe_reservasi`]="{ item }">
+                                {{new Date(item.tanggal_reservasi + 'T' + item.sesi_reservasi + 'Z').getHours() >= 17 ? 'Lunch' : 'Dinner'}}
+                            </template>
                             <template v-slot:[`item.id_meja`]="{ item }">
                                 <div v-for="item2 in meja" :key="item2.id_meja">
                                     <div v-if="item.id_meja == item2.id_meja">
@@ -284,6 +287,7 @@ export default{
                 { text: "ID", align: "start",       value: "id_reservasi" },
                 { text: "Tanggal Reservasi",        value: "tanggal_reservasi" },
                 { text: "Sesi Reservasi",           value: "sesi_reservasi" },
+                { text: "Tipe Reservasi",           value: "tipe_reservasi" },
                 { text: "Nomor Meja",               value: "id_meja" },
                 { text: "ID Pesanan",               value: "id_pesanan" },
                 { text: "Actions", sortable: false, value: "actions" },
