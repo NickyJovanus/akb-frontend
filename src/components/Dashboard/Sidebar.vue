@@ -114,7 +114,7 @@ export default{
     created() {
         this.loadData();
     },
-    
+
     methods: {
         loadData() {
             setTimeout(() => this.preloadertext = "This process may take up to 10 seconds.", 4500);
@@ -262,5 +262,9 @@ export default{
 .navbar-fixed-top {
     background: black !important;
     box-shadow: 0px 5px 20px #000000a1;
+}
+
+.v-application .headline, .v-application .title {
+    font-family: ReemKufi !important;
 }
 </style>

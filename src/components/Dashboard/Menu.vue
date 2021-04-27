@@ -243,6 +243,9 @@
         
         <v-dialog v-model="dialogImage" persistent max-width="700px" style='z-index:8000;'>
             <v-card>
+                <v-flex>
+                    <v-progress-linear v-show="progressBar" slot="progress" color="primary" indeterminate></v-progress-linear>
+                </v-flex>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
@@ -255,12 +258,23 @@
                     <span class="headline">{{imgTitle}}'s Image</span>
                 </v-card-title>
                 <v-card-text>
-                    <img :src="gambar_menu" style="width: 100%; max-width: 650px; object-fit: cover; max-height: 400px; border-radius: 5px;">
+                    <img v-if="gambar_menu !== null" :src="gambar_menu" 
+                        style="width: 100%; max-width: 650px; object-fit: cover; max-height: 400px; border-radius: 5px;">
+                    <h5 v-else><br>No Image Found</h5>
                 </v-card-text>
+                <transition name="slide-fade">
+                    <div class="ml-10 mr-10" v-show="addImg === true">
+                        <input class="ma-5" type="file" label="File" placeholder="Select file here..." @change='upload_image'>
+                    </div>
+                </transition>
                 <v-card-actions>
+                    <v-btn v-show="addImg == false ? true : false" @click="addImg = true" color="primary darken-1">{{gambar_menu !== null ? 'Change Image' : 'Add Image'}}</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn color="white darken-1" text @click="cancel">
-                        Close
+                        {{ addImg == false ? 'Close' : 'Cancel' }}
+                    </v-btn>
+                    <v-btn v-if="addImg== true" color="primary darken-1" text @click="save_image">
+                        Save
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -280,7 +294,7 @@ import { EventBus } from './bus.js';
 
 export default{
     name: "Menu",
-    
+
     data() {
         return {
             role: '',
@@ -322,17 +336,20 @@ export default{
                 'side dish',
                 'minuman'
             ],
-            loading: false,
-            search: '',
-            editId: null,
-            error_message: '',
-            snackbar: false,
-            color: '',
-            deleteId: null,
-            passwordId: null,
+            editId:       null,
+            deleteId:     null,
+            passwordId:   null,
+            gambarId:     null,
+            imgTitle:     null,
+            search:         '',
+            gambar_menu:    '',
+            error_message:  '',
+            color:          '',
+            snackbar:    false,
             progressBar: false,
-            imgTitle: null,
-            gambar_menu: '',
+            addImg:      false,
+            loading:     false,
+            imgData: new FormData,
         }
     },
 
@@ -386,13 +403,14 @@ export default{
             this.form.harga_menu     = item.harga_menu;
             this.form.kategori_menu  = item.kategori_menu;
             this.form.id_bahan       = item.id_bahan;
-            this.dialog = true;
+            this.dialog              = true;
             this.fillStok(item.id_bahan);
         },
 
         gambarHandler(item) {
             this.imgTitle    = item.nama_menu;
             this.gambar_menu = item.gambar_menu;
+            this.gambarId    = item.id_menu;
             this.dialogImage = true;
         },
 
@@ -406,6 +424,7 @@ export default{
             this.dialogImage  = false;
             this.dialog       = false;
             this.inputType    = 'Add';
+            this.addImg       = false;
             this.resetForm();
         },
 
@@ -560,9 +579,56 @@ export default{
 
         },
 
+        upload_image(evt) {
+            let img_file = evt.target.files[0];
+            let reader = new FileReader();
+
+            if (img_file['size'] < 2111775) {
+                reader.onloadend = (img_file) => {
+                    this.form.image = reader.result;
+                }
+                this.imgData.append("gambar_menu", img_file);
+                reader.readAsDataURL(img_file);
+            } else {
+                this.error_message="File cannot be larger than 2MB";
+                this.color="red";
+                this.snackbar=true;
+            }
+        },
+
+        save_image() {
+            this.progressBar = true;
+            this.$http.post(this.$api + '/menu/img/' + this.gambarId, this.imgData,
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            }).then(response => {
+                this.error_message = '';
+                this.error_message = response.data.message;
+                this.snackbar = true;
+                this.progressBar = false;
+                this.color = "green";
+                this.loadData();
+                this.cancel();
+            }).catch(err => {
+                this.error_message = '';
+                this.error_message = err.response.data.message;
+                this.color = "red";
+                this.snackbar = true;
+                this.progressBar = false;
+            });
+        },
+
         emitMenu() {
             EventBus.$emit('menu', '');
         }
     }
 }
 </script>
+<style scoped>
+
+button, input, select, textarea {
+    color: gray;
+}
+</style>

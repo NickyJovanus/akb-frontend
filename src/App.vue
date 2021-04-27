@@ -33,13 +33,15 @@ html, body {
 .v-application {
 	font-family: ReemKufi !important;
 }
-.v-application .title, .v-application .headline {
+
+.theme--dark.v-application .title, .theme--dark.v-application .headline {
   font-family: ReemKufi !important;
 }
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }
+
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
 }

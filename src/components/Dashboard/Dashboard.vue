@@ -74,7 +74,7 @@
                 <!-- end container footer section -->
             </footer>
             <!-- end footer -->
-            
+
         </div>
     </v-main>
 </template>
@@ -210,6 +210,10 @@ export default{
 
   a:hover {
       text-decoration: none !important;
+  }
+
+  .headline {
+      font-family: ReemKufi !important;
   }
 
 </style>
