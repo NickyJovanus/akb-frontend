@@ -321,8 +321,8 @@
                       </label>
                       <label>
                         <div class="fa fa-key"></div>
-                        <input class="password" type="password"  v-model="password" autocomplete="off" onfocus="this.removeAttribute('readonly');" placeholder="Password" name="password"/>
-                        <button class="password-button">Reveal</button>
+                        <input class="password" :type="passType"  v-model="password" autocomplete="off" onfocus="this.removeAttribute('readonly');" placeholder="Password" name="password"/>
+                        <button @click="passType = 'text'" class="password-button">Reveal</button>
                       </label>
                       <button class="login-button" @click="login" :disabled="load==true">Login</button>
                     </div>
@@ -401,12 +401,14 @@ import { MglMap, MglPopup, MglMarker } from "vue-mapbox";
 
 export default{
     name: "Index",
+
     components: {
         // Mapbox components
         MglMap,
         MglMarker,
         MglPopup
     },
+
     data() {
         return {
             //Mapbox data
@@ -414,38 +416,43 @@ export default{
             mapStyle: 'mapbox://styles/mapbox/streets-v11',
             coordinates: [110.416169, -7.779292],
             //Snackbar
-            error_message: '',
-            color: '',
-            snackbar: false,
+            error_message:    '',
+            color:            '',
+            snackbar:      false,
             //Login
-            email: '',
-            password: '',
-            valid: false,
-            collapsed: true,
-            load: false,
-            progressBar: false,
-            loading: true,
-            menus: [],
-            customers: null,
-            dishes: [],
-            loggedIn: false,
-            unloaded: true,
+            email:            '',
+            password:         '',
+            valid:         false,
+            collapsed:      true,
+            load:          false,
+            progressBar:   false,
+            loading:        true,
+            menus:            [],
+            customers:      null,
+            dishes:           [],
+            loggedIn:      false,
+            unloaded:       true,
+            passType: 'password',
         }
     },
+
     mounted() {
         if(localStorage.getItem('topmenu')       !== null 
         && localStorage.getItem('dishes')        !== null 
         && localStorage.getItem('customercount') !== null)
             this.unloaded = false
         this.loadData();
+
         import('../assets/js/carouselfade.js');
         import('../assets/js/loginform.js');
         import('../assets/js/navbarfade.js');
         import('mapbox-gl/dist/mapbox-gl.css');
-        this.menus = JSON.parse(localStorage.getItem('topmenu'));
-        this.dishes = JSON.parse(localStorage.getItem('dishes'));
+
+        this.menus     = JSON.parse(localStorage.getItem('topmenu'));
+        this.dishes    = JSON.parse(localStorage.getItem('dishes'));
         this.customers = JSON.parse(localStorage.getItem('customercount'));
     },
+
     methods: {
         loadData() {
             var url  = this.$api + '/menu/top';
@@ -489,24 +496,29 @@ export default{
         },
 
         login() {
-            this.snackbar=false;
-            this.error_message = '';
-            this.load = true;
-            this.progressBar = true;
+            this.snackbar      = false;
+            this.error_message =    '';
+            this.load          =  true;
+            this.progressBar   =  true;
             this.$http.post(this.$api + '/login', {
+
                 email_karyawan: this.email,
                 password: this.password,
+
             }).then(response => {
-                localStorage.setItem('id', response.data.karyawan.id_karyawan); //menyimpan id user yang sedang login
-                localStorage.setItem('role', response.data.karyawan.peran_karyawan); //menyimpan id user yang sedang login
-                localStorage.setItem('name', response.data.karyawan.nama_karyawan); //menyimpan id user yang sedang login
-                localStorage.setItem('token', response.data.access_token); //menyimpan auth token
+                localStorage.setItem('id',    response.data.karyawan.id_karyawan);    // menyimpan id user yang sedang login
+                localStorage.setItem('role',  response.data.karyawan.peran_karyawan); // menyimpan id user yang sedang login
+                localStorage.setItem('name',  response.data.karyawan.nama_karyawan);  // menyimpan id user yang sedang login
+                localStorage.setItem('token', response.data.access_token);            // menyimpan auth token
+                localStorage.setItem('loginload', true);                              // menyimpan login untuk reload dashboard(read data)
+
                 this.error_message='Logged in as ' + localStorage.getItem('name'); 
                 this.color="green"
                 this.snackbar=true;
                 this.load = false;
                 this.progressBar = false;
                 this.clear();
+
                 location.href="/dashboard";
             }).catch(error => {
                 if (error.response.data.message.email_karyawan)

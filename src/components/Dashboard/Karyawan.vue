@@ -225,7 +225,7 @@
                             <v-text-field
                                 v-if="inputType == 'Register'"
                                 label="Password"
-                                v-model="form.password"
+                                v-model="form.password_karyawan"
                                 :type="passwordtype"
                                 clearable
                                 outlined
@@ -407,7 +407,7 @@ export default{
                 peran_karyawan:             '',
                 status_karyawan:            '',
                 email_karyawan:             '',
-                password:                   '',
+                password_karyawan:          '',
             },
             formpass: {
                 oldpassword:        '',
@@ -478,11 +478,12 @@ export default{
         },
 
         cancel() {
-            this.resetForm();
-            this.dialog = false;
-            this.inputType = 'Register';
-            this.editId = null;
+            this.dialog       =      false;
+            this.dialogDelete =      false;
+            this.inputType    = 'Register';
+            this.editId       =       null;
             this.passwordtype = 'password';
+            this.resetForm();
         },
 
         resetForm() {
@@ -493,7 +494,7 @@ export default{
             this.form.peran_karyawan          = '';
             this.form.status_karyawan         = '';
             this.form.email_karyawan          = '';
-            this.form.password                = '';
+            this.form.password_karyawan       = '';
             this.formpass.oldpassword         = '';
             this.formpass.newpassword         = '';
             this.formpass.confirmpassword     = '';
@@ -509,6 +510,7 @@ export default{
                 peran_karyawan:          this.form.peran_karyawan,
                 status_karyawan:         this.form.status_karyawan,
                 email_karyawan:          this.form.email_karyawan,
+                password:                this.form.password_karyawan,
             }
 
             var url = this.$api + '/karyawan'
@@ -517,14 +519,17 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message = '';
+
+                this.error_message =      '';
                 this.error_message = response.data.message;
-                this.color         = "green"
-                this.snackbar      = true;
-                this.progressBar   = false;
+                this.color         = "green";
+                this.snackbar      =    true;
+                this.progressBar   =   false;
                 this.cancel();
                 this.loadData();
+
             }).catch(error => {
+
                 this.error_message = '';
                 if(!error.response.data.message.nama_karyawan
                 && !error.response.data.message.jenis_kelamin_karyawan
@@ -534,6 +539,7 @@ export default{
                 && !error.response.data.message.email_karyawan
                 && !error.response.data.message.password)
                     this.error_message= error.response.data.message;
+
                 else {
                     if(error.response.data.message.nama_karyawan)
                         this.error_message= this.error_message + error.response.data.message.nama_karyawan + "";
@@ -550,6 +556,7 @@ export default{
                     if(error.response.data.message.password)
                         this.error_message= this.error_message + '\n'  + error.response.data.message.password;
                 }
+
                 this.color       = "red";
                 this.snackbar    =  true;
                 this.progressBar = false;
@@ -557,7 +564,7 @@ export default{
         },
 
         editHandler(item){
-            this.inputType = 'Edit';
+            this.inputType                    = 'Edit';
             this.editId                       = item.id_karyawan;
             this.form.nama_karyawan           = item.nama_karyawan;
             this.form.jenis_kelamin_karyawan  = item.jenis_kelamin_karyawan;
@@ -605,6 +612,7 @@ export default{
                 this.cancel();
                 this.loadData();
             }).catch(error => {
+
                 this.error_message = '';
                 if(!error.response.data.message.nama_karyawan
                 && !error.response.data.message.jenis_kelamin_karyawan
@@ -614,6 +622,7 @@ export default{
                 && !error.response.data.message.email_karyawan
                 && !error.response.data.message.password)
                     this.error_message= error.response.data.message;
+
                 else {
                     if(error.response.data.message.nama_karyawan)
                         this.error_message = this.error_message + error.response.data.message.nama_karyawan + "";
@@ -630,9 +639,11 @@ export default{
                     if(error.response.data.message.password)
                         this.error_message = this.error_message + '\n'  + error.response.data.message.password;
                 }
+
                 this.color       = "red";
                 this.snackbar    =  true;
                 this.progressBar = false;
+
             })
         },
 
@@ -644,21 +655,24 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message = '';
+
+                this.error_message =         '';
                 this.error_message = response.data.message;
-                this.color         = "green"
-                this.snackbar      = true;
-                this.progressBar   = false;
+                this.color         =    "green";
+                this.snackbar      =       true;
+                this.progressBar   =      false;
                 this.inputType     = 'Register';
-                this.close();
+                this.cancel();
                 this.loadData();
-                this.resetForm();
+
             }).catch(error => {
+
                 this.error_message =    '';
                 this.error_message = error.response.data.message;
                 this.color         = "red";
                 this.snackbar      =  true;
                 this.progressBar   = false;
+
             })
         },
 
@@ -676,8 +690,9 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
-                this.error_message='';
-                this.error_message=response.data.message;
+
+                this.error_message = '';
+                this.error_message = response.data.message;
 
                 if(this.error_message === "Data was successfully updated") {
                     this.color          = "green";
@@ -695,19 +710,22 @@ export default{
                 this.resetForm();
             }).catch(error => {
                 this.error_message = error.response.data.message;
-                this.color       = "red";
-                this.snackbar    =  true;
-                this.progressBar = false;
+                this.color         = "red";
+                this.snackbar      =  true;
+                this.progressBar   = false;
                 this.resetForm();
             })
         },
 
         filterbg(role) {
-            if(role == 'Owner') {return 'green'}
-            else if(role == 'Operational Manager') {return '#185fff'}
-            else if(role == 'Chef') {return 'rgb(255 58 58)'}
-            else if(role == 'Waiter') {return '#ff7600'}
-            else {return 'purple'}
+            switch(role) {
+                case 'Owner':               return 'green';
+                case 'Operational Manager': return '#185fff';
+                case 'Chef':                return 'rgb(255 58 58)';
+                case 'Waiter':              return '#ff7600';
+                case 'Cashier':             return 'purple';
+                default:                    return 'purple';
+            }
         }
     }
 }

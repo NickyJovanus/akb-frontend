@@ -129,6 +129,11 @@ export default{
                 });
             }
 
+            if(localStorage.getItem('loginload') != null) {
+                localStorage.removeItem('loginload');
+                location.reload();
+            }
+
             var urlmeja = this.$api + '/meja';
             var urls = [
                 {url: this.$api + '/karyawan', store: 'karyawan'}, 

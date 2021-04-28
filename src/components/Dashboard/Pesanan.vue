@@ -463,6 +463,7 @@ export default{
                 localStorage.setItem('menu', JSON.stringify(response.data.data));
             });
         },
+        
         editHandler(item) {
             this.inputType            = 'Edit';
             this.editId               = item.id_pesanan;
@@ -471,6 +472,7 @@ export default{
             this.form.id_meja         = item.id_meja;
             this.form.id_karyawan     = item.id_karyawan;
             this.dialog               = true;
+
             let i = 0;
             for(; i<this.detail_pesanan.length; i++) {
                 if(this.detail_pesanan[i].id_pesanan == item.id_pesanan) {     
@@ -485,11 +487,14 @@ export default{
                     this.revertUpdate.push(data);
                 }
             }
+
         },
+
         deleteHandler(id) {
             this.deleteId     =   id;
             this.dialogDelete = true;
         },
+
         cancel() {
             this.dialogDelete = false;
             this.dialog       = false;
@@ -497,6 +502,7 @@ export default{
             this.isRevert     = false;
             this.resetForm();
         },
+
         resetForm() {
             this.form.tanggal_pesanan  = '';
             this.form.id_meja          = '';
@@ -510,6 +516,7 @@ export default{
             this.textfield.jumlah_item = '';
             this.$refs.form.reset()
         },
+
         add() {
             if (this.$refs.form.validate()) {
                 var idPesanan = null;
@@ -528,16 +535,20 @@ export default{
                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                     }
                 }).then(response => {
+
                     idPesanan = response.data.data.id_pesanan;
                     if(this.detailtext.length > 0) {
+
                         let i = 0;
                         for(; i < this.detailtext.length; i++) {
+
                             let detail = this.detailtext[i];
                             let detailData = {
                                 id_pesanan:  idPesanan,
                                 id_menu:     detail.id_menu,
                                 jumlah_item: detail.jumlah_item,
                             }
+
                             this.$http.post(url2, detailData, {
                                 headers: {
                                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -551,8 +562,9 @@ export default{
                                 this.cancel();
                                 this.loadData();
                             }).catch(err => {
-                                console.log('error');
+                                
                                 this.error_message = '';
+
                                 if(!err.response.data.message.id_menu 
                                 && !err.response.data.message.jumlah_item
                                 && !err.response.data.message.id_pesanan) {
@@ -574,30 +586,38 @@ export default{
                                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                                     }
                                 }).then(() => {
+
                                     this.progressBar   = false;
                                     this.loadData();
+
                                 }).catch(err => {
+
                                     this.error_message = err.response.data.message;
                                     this.color         = "red";
                                     this.snackbar      =  true;
                                     this.progressBar   = false;
+
                                 });
 
                                 this.color       = "red";
                                 this.snackbar    =  true;
                                 this.progressBar = false;
+
                             });
                     }
                 } else {
+
                     this.error_message = response.data.message;
                     this.color         = "green";
                     this.snackbar      =    true;
                     this.progressBar   =   false;
                     this.cancel();
                     this.loadData();
+
                 }
                 }).catch(err => {
                     this.error_message = '';
+
                     if(!err.response.data.message.tanggal_pesanan 
                         && !err.response.data.message.id_meja 
                         && !err.response.data.message.id_karyawan)
@@ -610,6 +630,7 @@ export default{
                         if(err.response.data.message.id_karyawan)
                             this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
                     }
+
                     this.color       = "red";
                     this.snackbar    =  true;
                     this.progressBar = false;
@@ -617,6 +638,7 @@ export default{
                 
             }
         },
+
         update() {
             this.progressBar = true;
             var url  = this.$api + '/pesanan/' + this.editId, url2, urldel;
@@ -640,6 +662,7 @@ export default{
                     }).then(() => {
                         
                     }).catch(err => {
+
                         this.error_message = '';
                         if(err.response.data.message === 'Detail Pesanan Not Found') {
 
@@ -663,17 +686,20 @@ export default{
                                     this.loadData();
                                 });
 
-                            })
+                            });
 
                         } else if(!err.response.data.message.id_menu 
                             && !err.response.data.message.jumlah_item
                             && !err.response.data.message.id_pesanan) {
+
                             this.error_message = err.response.data.message;
                             this.isRevert      =  true;
                             this.color         = "red";
                             this.snackbar      =  true;
                             this.progressBar   = false;
+
                         } else {
+
                             if(err.response.data.message.id_menu) 
                                 this.error_message = this.error_message + err.response.data.message.id_menu;
                             if(err.response.data.message == "Jumlah item exceeds available stock") 
@@ -686,9 +712,11 @@ export default{
                             this.color       = "red";
                             this.snackbar    =  true;
                             this.progressBar = false;
+
                         }
                     });
                 }
+
             } finally {
 
                 try {
@@ -752,8 +780,9 @@ export default{
                         } else {
 
                             for(var x =  0; x < this.revertUpdate.length; x++) {
+
                                 let currentRev = this.revertUpdate[x];
-                                console.log(tempArray);
+                                
                                 var urlrev = this.$api + '/detailpesanan/' + this.revertUpdate[x].id_detail;
                                 let updateDetailData = {
                                     id_pesanan:  this.editId,
@@ -761,25 +790,32 @@ export default{
                                     status_item: tempArray[x].status_item,
                                     jumlah_item: tempArray[x].jumlah_item,
                                 };
+
                                 this.$http.put(urlrev, updateDetailData, {
                                     headers: {
                                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                                     }
                                 }).then(() => {
+
                                     this.loadData();
                                     this.cancel();
+
                                 }).catch(() => {
+
                                     this.$http.post(this.$api + '/detailpesanan', updateDetailData, {
                                         headers: {
                                             'Authorization': 'Bearer ' + localStorage.getItem('token')
                                         }
                                     }).then(response => {
+                                        
                                         this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
                                             headers: {
                                                 'Authorization': 'Bearer ' + localStorage.getItem('token')
                                             }
                                         }).then(() => {
+
                                             this.loadData();
+
                                         });
                                     }).catch(() => {});
                                 });
@@ -789,10 +825,11 @@ export default{
 
                     }, 4000);
                 }
+
             }
             
-
         },
+
         deleteData() {
             this.progressBar = true;
 
@@ -816,6 +853,7 @@ export default{
             });
 
         },
+
         addDetail() {
             this.detailtext.push({
                 id: this.textfield.id ++,
@@ -823,15 +861,18 @@ export default{
                 jumlah_item: '',
             });
         },
+
         removeDetail(item) {
-            if(this.inputType == 'Edit') {
+            if(this.inputType == 'Edit') 
                 this.deleteIds.push(item.id_detail);
-            }
+            
             this.detailtext.splice(this.detailtext.indexOf(item), 1);
         },
+
         emitPesanan() {
             EventBus.$emit('pesanan', null);
         }
+
     },
 }
 </script>
