@@ -30,6 +30,7 @@
                             append-icon="mdi-magnify"
                             label="Search"
                             single-line
+                            clearable
                             width="0px"
                             class="ml-5 mr-3"
                         ></v-text-field>
@@ -40,43 +41,62 @@
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
                             <template v-slot:[`item.detail_pesanan`]="{ item }">
-                                <div v-for="item2 in detail_pesanan" :key="item2.id_detail_pesanan">
-                                    <div v-if="item.id_pesanan == item2.id_pesanan">
-                                        <div v-for="item3 in menus" :key="item3.id_menu">
+                                <span v-for="item2 in detail_pesanan" :key="item2.id_detail_pesanan">
+                                    <span v-if="item.id_pesanan == item2.id_pesanan">
+                                        <span v-for="item3 in menus" :key="item3.id_menu">
                                             <div v-if="item2.id_menu == item3.id_menu">
                                                 - {{item3.nama_menu}} x{{item2.jumlah_item}}
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        </span>
+                                    </span>
+                                </span>
                             </template>
                             <template v-slot:[`item.status_item`]="{ item }">
-                                <div v-for="item2 in detail_pesanan" :key="item2.id_detail_pesanan">
+                                <span v-for="item2 in detail_pesanan" :key="item2.id_detail_pesanan">
                                     <div v-if="item.id_pesanan == item2.id_pesanan">
-                                        [{{item2.status_item}}]
+                                        <v-btn v-if="item2.status_item != 'Served'" 
+                                            class="ma-1"
+                                            :style="item2.status_item == 'Preparing' ? {'background': '#ffa722 !important'} : {'background': '#31bb31 !important'}"
+                                            style="color: white !important;"
+                                            disabled>
+                                            {{item2.status_item}}
+                                        </v-btn>
+                                        <v-btn v-else
+                                            class="ma-1"
+                                            style="background: #33529a !important; color: white !important;"
+                                            disabled>
+                                            {{item2.status_item}}
+                                        </v-btn>
                                     </div>
-                                </div>
+                                </span>
                             </template>
                             <template v-slot:[`item.harga_item`]="{ item }">
-                                <div v-for="item2 in detail_pesanan" :key="item2.id_detail_pesanan">
+                                <span v-for="item2 in detail_pesanan" :key="item2.id_detail_pesanan">
                                     <div v-if="item.id_pesanan == item2.id_pesanan">
-                                        Rp. {{item2.harga_item.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}.00
+                                        {{item2.harga_item == 0 ? 'Free' : 'Rp. ' + item2.harga_item.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '.00'}}
                                     </div>
-                                </div>
+                                </span>
                             </template>
                             <template v-slot:[`item.id_meja`]="{ item }">
-                                <div v-for="item2 in meja" :key="item2.id_meja">
+                                <span v-for="item2 in meja" :key="item2.id_meja">
                                     <div v-if="item.id_meja == item2.id_meja">
                                         No. {{item2.no_meja}}
                                     </div>
-                                </div>
+                                </span>
+                            </template>
+                            <template v-slot:[`item.id_reservasi`]="{ item }">
+                                <span v-for="item2 in reservasi" :key="item2.id_reservasi">
+                                    <div v-if="item.id_pesanan == item2.id_pesanan">
+                                        {{item2.id_reservasi}}
+                                    </div>
+                                </span>
                             </template>
                             <template v-slot:[`item.id_karyawan`]="{ item }">
-                                <div v-for="item2 in karyawan" :key="item2.id_karyawan">
+                                <span v-for="item2 in karyawan" :key="item2.id_karyawan">
                                     <div v-if="item.id_karyawan == item2.id_karyawan">
                                         {{item2.nama_karyawan}}
                                     </div>
-                                </div>
+                                </span>
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
@@ -145,6 +165,7 @@
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         outlined
+                                        clearable
                                         v-bind="attrs"
                                         v-on="on"
                                         :rules="rules.tanggalRule"
@@ -167,6 +188,7 @@
                                     :items="meja"
                                     item-text="id_meja"
                                     outlined
+                                    clearable
                                     three-line
                                     :rules="rules.mejaRule"
                                     required
@@ -185,6 +207,7 @@
                                     :items="karyawan"
                                     item-text="id_karyawan"
                                     outlined
+                                    clearable
                                     three-line
                                     :rules="rules.karyawanRule"
                                     required
@@ -237,7 +260,7 @@
                                             outlined
                                             label="Status Item"
                                             :rules="rules.statusRule"
-                                            :items="['Preparing', 'Ready to Serve', 'Served']"
+                                            :items="['Preparing', 'Ready to serve', 'Served']"
                                             required
                                         >
                                         </v-select>
@@ -327,6 +350,7 @@ export default{
                 { text: "Total Item",               value: "total_item"      },
                 { text: "Tanggal Pesanan",          value: "tanggal_pesanan" },
                 { text: "Nomor Meja",               value: "id_meja"         },
+                { text: "ID Reservasi",             value: "id_reservasi"    },
                 { text: "Nama Karyawan",            value: "id_karyawan"     },
                 { text: "Actions", sortable: false, value: "actions"         },
             ],
@@ -335,6 +359,7 @@ export default{
             menus:           [],
             meja:            [],
             karyawan:        [],
+            reservasi:       [],
             inputType:    'Add',
             dialog:       false,
             dialogDelete: false,
@@ -343,22 +368,25 @@ export default{
                 id_meja:         '',
                 id_karyawan:     '',
             },
-            loading:      false,
             search:          '',
             editId:        null,
             editItem:      null,
             deleteId:      null,
             passwordId:    null,
             error_message:   '',
-            snackbar:     false,
             color:           '',
+            loading:      false,
+            snackbar:     false,
             progressBar:  false,
             tanggal_menu: false,
             valid:        false,
+            isRevert:     false,
             detailtext:      [],
             deleteIds:       [],
+            revertUpdate:    [],
             textfield: {
                 id:           0,
+                id_detail:   '',
                 id_menu:     '',
                 jumlah_item: '',
                 status_item: '',
@@ -378,6 +406,7 @@ export default{
         this.meja           = JSON.parse(localStorage.getItem('meja'));
         this.karyawan       = JSON.parse(localStorage.getItem('karyawan'));
         this.detail_pesanan = JSON.parse(localStorage.getItem('detailpesanan'));
+        this.reservasi      = JSON.parse(localStorage.getItem('reservasi'));
         this.menus          = JSON.parse(localStorage.getItem('menu'));
         this.role           = localStorage.getItem('role');
 
@@ -385,6 +414,12 @@ export default{
 
         EventBus.$on('load', data => {
             this.meja = JSON.parse(localStorage.getItem('meja'));
+            this.loadData();
+        });
+
+        EventBus.$on('reservasi', data => {
+            this.reservasi = JSON.parse(localStorage.getItem('reservasi'));
+            this.loadData();
         });
 
         if (this.role == 'Owner')
@@ -436,7 +471,21 @@ export default{
             this.form.tanggal_pesanan = item.tanggal_pesanan;
             this.form.id_meja         = item.id_meja;
             this.form.id_karyawan     = item.id_karyawan;
-            this.dialog = true;
+            this.dialog               = true;
+            let i = 0;
+            for(; i<this.detail_pesanan.length; i++) {
+                if(this.detail_pesanan[i].id_pesanan == item.id_pesanan) {     
+                    let data = {
+                        id:          this.textfield.id ++,
+                        id_menu:     this.detail_pesanan[i].id_menu,
+                        id_detail:   this.detail_pesanan[i].id_detail_pesanan,
+                        status_item: this.detail_pesanan[i].status_item,
+                        jumlah_item: this.detail_pesanan[i].jumlah_item,
+                    }
+                    this.detailtext.push(data);
+                    this.revertUpdate.push(data);
+                }
+            }
         },
         deleteHandler(id) {
             this.deleteId     =   id;
@@ -446,6 +495,7 @@ export default{
             this.dialogDelete = false;
             this.dialog       = false;
             this.inputType    = 'Add';
+            this.isRevert     = false;
             this.resetForm();
         },
         resetForm() {
@@ -454,7 +504,9 @@ export default{
             this.form.id_karyawan      = '';
             this.detailtext            = [];
             this.deleteIds             = [];
+            this.revertUpdate          = [];
             this.textfield.id          =  0;
+            this.textfield.id_detail   =  0;
             this.textfield.id_menu     = '';
             this.textfield.jumlah_item = '';
             this.$refs.form.reset()
@@ -468,10 +520,11 @@ export default{
                     id_meja:         this.form.id_meja,
                     id_karyawan:     this.form.id_karyawan,
                 }
-                var url  = this.$api + '/detailpesanan'
-                var url2 = this.$api + '/pesanan'
+
+                var url = this.$api + '/pesanan'
+                var url2  = this.$api + '/detailpesanan'
                 
-                this.$http.post(url2, addData, {
+                this.$http.post(url, addData, {
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                     }
@@ -486,16 +539,16 @@ export default{
                                 id_menu:     detail.id_menu,
                                 jumlah_item: detail.jumlah_item,
                             }
-                            this.$http.post(url, detailData, {
+                            this.$http.post(url2, detailData, {
                                 headers: {
                                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                                 }
                             }).then(() => {
-                                this.error_message = '';
+                                this.error_message =      '';
                                 this.error_message = 'Add Pesanan Success';
-                                this.color = "green";
-                                this.snackbar = true;
-                                this.progressBar = false;
+                                this.color         = "green";
+                                this.snackbar      =    true;
+                                this.progressBar   =   false;
                                 this.cancel();
                                 this.loadData();
                             }).catch(err => {
@@ -506,45 +559,41 @@ export default{
                                 && !err.response.data.message.id_pesanan) {
                                     this.error_message= err.response.data.message;
                                 } else {
-                                    if(err.response.data.message.id_menu) {
+                                    if(err.response.data.message.id_menu) 
                                         this.error_message= this.error_message + err.response.data.message.id_menu;
-                                    }
-                                    if(err.response.data.message == "Jumlah item exceeds available stock") {
+                                    if(err.response.data.message == "Jumlah item exceeds available stock") 
                                         this.error_message= this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                    }
-                                    if(err.response.data.message.jumlah_item) {
+                                    if(err.response.data.message.jumlah_item) 
                                         this.error_message= this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                    }
-                                    if(err.response.data.message.id_pesanan) {
+                                    if(err.response.data.message.id_pesanan) 
                                         this.error_message= this.error_message + '\n' + err.response.data.message.id_pesanan;
-                                    }
                                 }
                                 
-                                var url = this.$api + '/pesanan/cancel/' + idPesanan;
-                                this.$http.delete(url, {
+                                var url3 = this.$api + '/pesanan/cancel/' + idPesanan;
+                                this.$http.delete(url3, {
                                     headers: {
                                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                                     }
                                 }).then(() => {
-                                    this.progressBar = false;
+                                    this.progressBar   = false;
                                     this.loadData();
                                 }).catch(err => {
-                                    this.error_message= err.response.data.message;
-                                    this.color="red"
-                                    this.snackbar=true;
-                                    this.progressBar = false;
+                                    this.error_message = err.response.data.message;
+                                    this.color         = "red";
+                                    this.snackbar      =  true;
+                                    this.progressBar   = false;
                                 });
 
-                                this.color="red"
-                                this.snackbar=true;
+                                this.color       = "red";
+                                this.snackbar    =  true;
                                 this.progressBar = false;
                             });
                     }
                 } else {
                     this.error_message = response.data.message;
-                    this.color = "green";
-                    this.snackbar = true;
-                    this.progressBar = false;
+                    this.color         = "green";
+                    this.snackbar      =    true;
+                    this.progressBar   =   false;
                     this.cancel();
                     this.loadData();
                 }
@@ -562,8 +611,8 @@ export default{
                         if(err.response.data.message.id_karyawan)
                             this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
                     }
-                    this.color="red"
-                    this.snackbar=true;
+                    this.color       = "red";
+                    this.snackbar    =  true;
                     this.progressBar = false;
                 });
                 
@@ -571,39 +620,179 @@ export default{
         },
         update() {
             this.progressBar = true;
-            let updateData = {
-                tanggal_pesanan: this.form.tanggal_pesanan,
-                id_meja: this.form.id_meja,
-                id_karyawan: this.form.id_karyawan,
-            }
+            var url  = this.$api + '/pesanan/' + this.editId, url2, urldel;
 
-            var url = this.$api + '/pesanan/' + this.editId;
-            this.$http.put(url, updateData, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+            try {
+                let index = 0;
+                for(; index < this.detailtext.length; index++) {
+                    let currentDetail = this.detailtext[index];
+                    let updateDetailData = {
+                        id_pesanan:  this.editId,
+                        id_menu:     currentDetail.id_menu,
+                        status_item: currentDetail.status_item,
+                        jumlah_item: currentDetail.jumlah_item,
+                    }
+
+                    url2 = this.$api + '/detailpesanan/' + currentDetail.id_detail;
+                    this.$http.put(url2, updateDetailData, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        }
+                    }).then(() => {
+                        
+                    }).catch(err => {
+                        this.error_message = '';
+                        if(err.response.data.message === 'Detail Pesanan Not Found') {
+
+                            let postDetailData = {
+                                id_pesanan:  this.editId,
+                                id_menu:     currentDetail.id_menu,
+                                jumlah_item: currentDetail.jumlah_item,
+                            }
+                            
+                            this.$http.post(this.$api + '/detailpesanan', postDetailData, {
+                                headers: {
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                }
+                            }).then(response => {
+                                
+                                this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
+                                    headers: {
+                                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                    }
+                                }).then(() => {
+                                    this.loadData();
+                                });
+
+                            })
+
+                        } else if(!err.response.data.message.id_menu 
+                            && !err.response.data.message.jumlah_item
+                            && !err.response.data.message.id_pesanan) {
+                            this.error_message = err.response.data.message;
+                            this.isRevert      =  true;
+                            this.color         = "red";
+                            this.snackbar      =  true;
+                            this.progressBar   = false;
+                        } else {
+                            if(err.response.data.message.id_menu) 
+                                this.error_message = this.error_message + err.response.data.message.id_menu;
+                            if(err.response.data.message == "Jumlah item exceeds available stock") 
+                                this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
+                            if(err.response.data.message.jumlah_item) 
+                                this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
+                            if(err.response.data.message.id_pesanan) 
+                                this.error_message = this.error_message + '\n' + err.response.data.message.id_pesanan;
+                            this.isRevert    =  true;
+                            this.color       = "red";
+                            this.snackbar    =  true;
+                            this.progressBar = false;
+                        }
+                    });
                 }
-            }).then(response => {
-                this.error_message = '';
-                this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
-                this.cancel();
-                this.loadData();
-                this.progressBar = false;
-            }).catch(err => {
-                this.error_message = '';
-                if(!err.response.data.message.no_pesanan && !err.response.data.message.status_pesanan)
-                    this.error_message= err.response.data.message;
-                else {
-                    if(err.response.data.message.no_pesanan)
-                        this.error_message= err.response.data.message.no_pesanan;
-                    if(err.response.data.message.status_pesanan)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.status_pesanan;
+            } finally {
+
+                try {
+
+                    setTimeout(()=>{
+                        if(!this.isRevert) {
+                            for(var index =  0; index < this.deleteIds.length; index++) {
+                                urldel = this.$api + '/detailpesanan/' + this.deleteIds[index];
+                                this.$http.delete(urldel, {
+                                    headers: {
+                                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                    }
+                                });
+                            }
+                        }
+                    }, 500);
+
+                } finally {
+                    var tempArray = this.revertUpdate;
+
+                    setTimeout(()=>{
+                        console.log(this.isRevert)
+                        if(this.isRevert == false) {
+
+                            let updateData = {
+                                tanggal_pesanan: this.form.tanggal_pesanan,
+                                id_meja:         this.form.id_meja,
+                                id_karyawan:     this.form.id_karyawan,
+                            }
+                            this.$http.put(url, updateData, {
+                                headers: {
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                }
+                            }).then(response => {
+                                this.error_message =      '';
+                                this.error_message = response.data.message;
+                                this.color         = "green";
+                                this.snackbar      =    true;
+                                this.progressBar   =   false;
+                                this.cancel();
+                                this.loadData();
+                            }).catch(err => {
+                                this.error_message = '';
+                                if(!err.response.data.message.tanggal_pesanan 
+                                    && !err.response.data.message.id_meja 
+                                    && !err.response.data.message.id_karyawan)
+                                    this.error_message= err.response.data.message;
+                                else {
+                                    if(err.response.data.message.tanggal_pesanan)
+                                        this.error_message= err.response.data.message.tanggal_pesanan;
+                                    if(err.response.data.message.id_meja)
+                                        this.error_message= this.error_message + '\n' + err.response.data.message.id_meja;
+                                    if(err.response.data.message.id_karyawan)
+                                        this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
+                                }
+                                this.color       = "red";
+                                this.snackbar    =  true;
+                                this.progressBar = false;
+                            });
+
+                        } else {
+
+                            for(var x =  0; x < this.revertUpdate.length; x++) {
+                                let currentRev = this.revertUpdate[x];
+                                console.log(tempArray);
+                                var urlrev = this.$api + '/detailpesanan/' + this.revertUpdate[x].id_detail;
+                                let updateDetailData = {
+                                    id_pesanan:  this.editId,
+                                    id_menu:     tempArray[x].id_menu,
+                                    status_item: tempArray[x].status_item,
+                                    jumlah_item: tempArray[x].jumlah_item,
+                                };
+                                this.$http.put(urlrev, updateDetailData, {
+                                    headers: {
+                                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                    }
+                                }).then(() => {
+                                    this.loadData();
+                                    this.cancel();
+                                }).catch(() => {
+                                    this.$http.post(this.$api + '/detailpesanan', updateDetailData, {
+                                        headers: {
+                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                        }
+                                    }).then(response => {
+                                        this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
+                                            headers: {
+                                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                            }
+                                        }).then(() => {
+                                            this.loadData();
+                                        });
+                                    }).catch(() => {});
+                                });
+                            }
+
+                        }
+
+                    }, 4000);
                 }
-                this.color="red"
-                this.snackbar=true;
-                this.progressBar = false;
-            });
+            }
+            
+
         },
         deleteData() {
             this.progressBar = true;
@@ -634,9 +823,11 @@ export default{
                 id_menu: '',
                 jumlah_item: '',
             });
-            console.log(this.detailtext[0].id_menu);
         },
         removeDetail(item) {
+            if(this.inputType == 'Edit') {
+                this.deleteIds.push(item.id_detail);
+            }
             this.detailtext.splice(this.detailtext.indexOf(item), 1);
         },
         emitPesanan() {

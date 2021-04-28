@@ -30,6 +30,7 @@
                             append-icon="mdi-magnify"
                             label="Search"
                             single-line
+                            clearable
                             width="0px"
                             class="ml-5 mr-3"
                         ></v-text-field>
@@ -262,11 +263,11 @@
                         style="width: 100%; max-width: 650px; object-fit: cover; max-height: 400px; border-radius: 5px;">
                     <h5 v-else><br>No Image Found</h5>
                 </v-card-text>
-                <transition name="slide-fade">
+                <v-expand-transition>
                     <div class="ml-10 mr-10" v-show="addImg === true">
                         <input class="ma-5" type="file" label="File" placeholder="Select file here..." @change='upload_image'>
                     </div>
-                </transition>
+                </v-expand-transition>
                 <v-card-actions>
                     <v-btn v-show="addImg == false ? true : false" @click="addImg = true" color="primary darken-1">{{gambar_menu !== null ? 'Change' : 'Add'}} Image</v-btn>
                     <v-spacer></v-spacer>
@@ -360,6 +361,10 @@ export default{
         
         EventBus.$on('bahan', () => {
             this.bahan = JSON.parse(localStorage.getItem('bahan'));
+            this.loadData();
+        });
+        
+        EventBus.$on('pesanan', () => {
             this.loadData();
         });
     },

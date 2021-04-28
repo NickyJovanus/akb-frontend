@@ -358,6 +358,7 @@ export default{
             }).then(response => {
                 this.reservasi = response.data.data;
                 localStorage.setItem('reservasi', JSON.stringify(response.data.data));
+                this.emitPesanan();
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;

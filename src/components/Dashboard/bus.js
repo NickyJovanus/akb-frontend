@@ -9,7 +9,7 @@ export const EventBus = new Vue();
 Emitted data list:
 'load' for Meja to Ketersediaan
 'customer' for Customers to Transaksi and Reservasi
-'pesanan' for Pesanan to Reservasi
+'pesanan' for Pesanan to Reservasi and Menu
 'bahan' for Bahan to Menu, Stok and History Stok
 'menu' for Menu to Pesanan, Reservasi and Transaksi
 */

@@ -21,8 +21,7 @@
                     <v-col
                         v-for="(item) in meja"
                         :key="item.id_meja"
-                        :cols="(12/cardsPerRow)"
-                        class="py-2 ma-5"
+                        :class="'py-2 ma-5 ' + 'col-md-' + winSize"
                         :style="{
                             overflow: 'hidden'
                         }"
@@ -75,6 +74,10 @@ export default{
 
         if (this.role != 'Operational Manager' && this.role != 'Waiter' && this.role != 'Cashier')
             this.redirectDashboard();
+
+        EventBus.$on('meja', () => {
+            this.meja = JSON.parse(localStorage.getItem('meja'));
+        });
     },
     methods: {
         redirectDashboard() {
@@ -82,12 +85,14 @@ export default{
                 path: '/dashboard',
             });
         },
+
         reload() {
             this.meja = [];
             let i = 0;
             for(; i<8; i++)
                 this.meja.push(this.empty);
         },
+
         loadData() {
             var url = this.$api + '/meja';
             this.loading = true;
@@ -108,6 +113,7 @@ export default{
                 this.loading = false;
             });
         },
+
         colorCard(status) {
             switch(status) {
                 case 'Empty': return 'green'; 
@@ -115,51 +121,20 @@ export default{
                 default:  return 'grey';
             }
         },
-        calcRowsPerPage() {
-            let container = document.getElementById('container')
-            let minItemHeight = 20;
-            if (container) {
-                let containerHeight = parseInt(container.clientHeight, 0)
-                this.rows = Math.floor(containerHeight / minItemHeight)
-            } else {
-                this.rows = 4;
-            }
-        },
-    },
 
-    activated: function() {
-        this.forceRerender();
     },
 
     computed: {
-        numberOfPages () {
-            return Math.ceil(this.meja.length / this.ipp);
-        },
-        rowsPerPage () {
-            return this.rows;
-        },
-        cardsPerRow () {
+        winSize () {
             switch (this.$vuetify.breakpoint.name) {
-                case 'xs': return 1;
-                case 'sm': return 2;
+                case 'xs': return 6;
+                case 'sm': return 3;
                 case 'md': return 3;
-                case 'lg': return 4;
-                case 'xl': return 6;
+                case 'lg': return 2;
+                case 'xl': return 2;
             }
             return 1;
         },
-        ipp () {
-            return Math.ceil(this.rowsPerPage * this.cardsPerRow);
-        },
-    },
-
-    created () {
-        window.addEventListener('resize', () => {
-            this.calcRowsPerPage()
-        });
-        EventBus.$on('meja', () => {
-            this.meja = JSON.parse(localStorage.getItem('meja'));
-        });
     },
 }
 
