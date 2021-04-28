@@ -97,6 +97,7 @@
                             <v-text-field
                                 label="Nomor Meja"
                                 v-model="form.nomor_meja"
+                                type="number"
                                 outlined
                                 clearable
                             ></v-text-field>

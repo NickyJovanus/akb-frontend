@@ -419,7 +419,6 @@ export default{
 
         EventBus.$on('reservasi', data => {
             this.reservasi = JSON.parse(localStorage.getItem('reservasi'));
-            this.loadData();
         });
 
         if (this.role == 'Owner')
@@ -521,7 +520,7 @@ export default{
                     id_karyawan:     this.form.id_karyawan,
                 }
 
-                var url = this.$api + '/pesanan'
+                var url   = this.$api + '/pesanan'
                 var url2  = this.$api + '/detailpesanan'
                 
                 this.$http.post(url, addData, {
