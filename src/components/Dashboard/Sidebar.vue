@@ -155,7 +155,7 @@ export default{
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
-                this.error_message = 'The server '+ this.$http +' is currently offline. Please try again later.'
+                this.error_message = 'The server '+ this.$public +' is currently offline. Please try again later.'
                 this.snackbar = true;
                 this.color = 'red';
             });
@@ -268,7 +268,7 @@ export default{
 }
 .navbar-fixed-top {
     background: black !important;
-    box-shadow: 0px 5px 20px #000000a1;
+    box-shadow: 0px 5px 20px #000000a1 !important;
 }
 
 .v-application .headline, .v-application .title {

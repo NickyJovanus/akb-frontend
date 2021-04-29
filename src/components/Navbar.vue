@@ -31,6 +31,7 @@
                         <li v-if="!loggedIn"><a href="#login" class="page-scroll" @click="redirectIndex">SIGN IN</a></li>
                         <li v-if="loggedIn"><a class="page-scroll" @click="redirectDashboard">DASHBOARD</a></li>
                         <li><a class="page-scroll" @click="redirectMenu">MENU</a></li>
+                        <li><a href="#history" class="page-scroll" @click="redirectIndex">HISTORY</a></li>
                         <li><a href="#contact" class="page-scroll" @click="redirectIndex">CONTACT</a></li>
                         <li v-if="loggedIn"><a class="page-scroll" @click="logoutdialog = true; collapsed = true;">LOGOUT</a></li>
                     </ul>

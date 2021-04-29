@@ -170,7 +170,7 @@
         <!-- end about AKB -->
 
         <!-- start work history -->
-        <section id="experience">
+        <section id="history">
             <div class="container">
                 <h2>HISTORY</h2>
                 <div class="experience-ct">
@@ -185,10 +185,8 @@
                                 :zoom="14"
                               >
                                 <MglMarker :coordinates="coordinates" color="orange">
-                                  <MglPopup :style="{'background': '#00000000'}">
-                                    <VCard>
-                                      <div class="ma-2" light>Atma Korean BBQ</div>
-                                    </VCard>
+                                  <MglPopup :style="{'background': '#191919 !important', 'color': 'rgb(21 13 13)'}" class="ma-2 black">
+                                      <span style="color: rgb(21 13 13)" class="orange--text darken-4" light>Atma Korean BBQ</span>
                                   </MglPopup>
                                 </MglMarker>
                               </MglMap>
@@ -442,13 +440,14 @@ export default{
         if(localStorage.getItem('topmenu')       !== null 
         && localStorage.getItem('dishes')        !== null 
         && localStorage.getItem('customercount') !== null)
-            this.unloaded = false
+        this.unloaded = false
         this.loadData();
 
         import('../assets/js/carouselfade.js');
-        import('../assets/js/loginform.js');
         import('../assets/js/navbarfade.js');
         import('mapbox-gl/dist/mapbox-gl.css');
+        if(!this.loggedIn)
+            import('../assets/js/loginform.js');
         
         if(localStorage.getItem('logout')       !== null) {
             this.error_message = localStorage.getItem('logout'); 
@@ -477,8 +476,8 @@ export default{
                 this.menus = response.data.data;
                 localStorage.setItem('topmenu', JSON.stringify(response.data.data));
                 this.loading = false;
-            }).catch(error => {
-                this.error_message= this.error_message + error.response.data.message;
+            }).catch(() => {
+                this.error_message = 'The server '+ this.$public +' is currently offline. Please try again later.'
                 this.color="red"
                 this.snackbar= true;
                 this.loading = false;
@@ -596,7 +595,7 @@ export default{
     background: #1b1b1b;
 }
 
-.mapboxgl-popup-close-button {
+button.mapboxgl-popup-close-button {
     color: red !important;
 }
 </style>
