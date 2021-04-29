@@ -646,74 +646,54 @@ export default{
             var tempArray = this.revertUpdate;
             var url  = this.$api + '/pesanan/' + this.editId, url2, urldel;
             
+            let updateAll = new Promise((resolve) => {
+                var index = 0;
+                if(this.detailtext.length == 0)
+                    return resolve(1);
+                else
+                for(; index < this.detailtext.length; index++) {
+                    let currentDetail = this.detailtext[index];
+                    let updateDetailData = {
+                        id_pesanan:  this.editId,
+                        id_menu:     currentDetail.id_menu,
+                        status_item: currentDetail.status_item,
+                        jumlah_item: currentDetail.jumlah_item,
+                    }
 
-            let execute = async () => {
-                
-                let updateAll = new Promise((resolve) => {
-                    var index = 0;
-                    if(this.detailtext.length == 0)
-                        return resolve(1);
-                    else
-                    for(; index < this.detailtext.length; index++) {
-                        let currentDetail = this.detailtext[index];
-                        let updateDetailData = {
-                            id_pesanan:  this.editId,
-                            id_menu:     currentDetail.id_menu,
-                            status_item: currentDetail.status_item,
-                            jumlah_item: currentDetail.jumlah_item,
+                    url2 = this.$api + '/detailpesanan/' + currentDetail.id_detail;
+                    this.$http.put(url2, updateDetailData, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
                         }
+                    }).then(() => {
+                        if(this.detailtext.length > 1 && index == this.detailtext.length - 2) //still wrong
+                            return resolve(1);
+                        else
+                            return resolve(1);
+                        
+                    }).catch(err => {
 
-                        url2 = this.$api + '/detailpesanan/' + currentDetail.id_detail;
-                        this.$http.put(url2, updateDetailData, {
-                            headers: {
-                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        this.error_message = '';
+                        if(err.response.data.message === 'Detail Pesanan Not Found') {
+
+                            let postDetailData = {
+                                id_pesanan:  this.editId,
+                                id_menu:     currentDetail.id_menu,
+                                jumlah_item: currentDetail.jumlah_item,
                             }
-                        }).then(() => {
-                            if(this.detailtext.length > 1 && index == this.detailtext.length - 2) //still wrong
-                                return resolve(1);
-                            else
-                                return resolve(1);
                             
-                        }).catch(err => {
-
-                            this.error_message = '';
-                            if(err.response.data.message === 'Detail Pesanan Not Found') {
-
-                                let postDetailData = {
-                                    id_pesanan:  this.editId,
-                                    id_menu:     currentDetail.id_menu,
-                                    jumlah_item: currentDetail.jumlah_item,
+                            this.$http.post(this.$api + '/detailpesanan', postDetailData, {
+                                headers: {
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                                 }
+                            }).then(response => {
                                 
-                                this.$http.post(this.$api + '/detailpesanan', postDetailData, {
+                                this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
                                     headers: {
                                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                                     }
-                                }).then(response => {
-                                    
-                                    this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
-                                        headers: {
-                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                        }
-                                    }).then(() => {
-                                        this.loadData();
-                                    }).catch(err => {
-                                        
-                                        if(err.response.data.message.id_menu) 
-                                            this.error_message = this.error_message + err.response.data.message.id_menu + '';
-                                        if(err.response.data.message == "Jumlah item exceeds available stock") 
-                                            this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                        if(err.response.data.message.jumlah_item) 
-                                            this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                        if(err.response.data.message.id_pesanan) 
-                                            this.error_message = this.error_message + '\n' + err.response.data.message.id_pesanan;
-                                        this.isRevert    =  true;
-                                        this.color       = "red";
-                                        this.snackbar    =  true;
-                                        return resolve(1);
-
-                                    });
-
+                                }).then(() => {
+                                    this.loadData();
                                 }).catch(err => {
                                     
                                     if(err.response.data.message.id_menu) 
@@ -731,17 +711,8 @@ export default{
 
                                 });
 
-                            } else if(!err.response.data.message.id_menu 
-                                && !err.response.data.message.jumlah_item
-                                && !err.response.data.message.id_pesanan) {
-
-                                this.error_message = err.response.data.message;
-                                this.isRevert      =  true;
-                                this.color         = "red";
-                                this.snackbar      =  true;
-
-                            } else {
-
+                            }).catch(err => {
+                                
                                 if(err.response.data.message.id_menu) 
                                     this.error_message = this.error_message + err.response.data.message.id_menu + '';
                                 if(err.response.data.message == "Jumlah item exceeds available stock") 
@@ -753,31 +724,59 @@ export default{
                                 this.isRevert    =  true;
                                 this.color       = "red";
                                 this.snackbar    =  true;
+                                return resolve(1);
 
+                            });
+
+                        } else if(!err.response.data.message.id_menu 
+                            && !err.response.data.message.jumlah_item
+                            && !err.response.data.message.id_pesanan) {
+
+                            this.error_message = err.response.data.message;
+                            this.isRevert      =  true;
+                            this.color         = "red";
+                            this.snackbar      =  true;
+
+                        } else {
+
+                            if(err.response.data.message.id_menu) 
+                                this.error_message = this.error_message + err.response.data.message.id_menu + '';
+                            if(err.response.data.message == "Jumlah item exceeds available stock") 
+                                this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
+                            if(err.response.data.message.jumlah_item) 
+                                this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
+                            if(err.response.data.message.id_pesanan) 
+                                this.error_message = this.error_message + '\n' + err.response.data.message.id_pesanan;
+                            this.isRevert    =  true;
+                            this.color       = "red";
+                            this.snackbar    =  true;
+
+                        }
+                        return resolve(1);
+                        
+                    });
+                }
+            })
+            let deleteAll = new Promise((resolve) => {
+                if(!this.isRevert) {
+                    for(var index =  0; index < this.deleteIds.length; index++) {
+                        urldel = this.$api + '/detailpesanan/' + this.deleteIds[index];
+                        this.$http.delete(urldel, {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
                             }
-                            return resolve(1);
-                            
+                        }).then(()=> {
+                            if(index == this.deleteIds.length - 1)
+                                return resolve(1);
                         });
                     }
-                })
-                let deleteAll = new Promise((resolve) => {
-                    if(!this.isRevert) {
-                        for(var index =  0; index < this.deleteIds.length; index++) {
-                            urldel = this.$api + '/detailpesanan/' + this.deleteIds[index];
-                            this.$http.delete(urldel, {
-                                headers: {
-                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                }
-                            }).then(()=> {
-                                if(index == this.deleteIds.length - 1)
-                                    return resolve(1);
-                            });
-                        }
-                        if(this.deleteIds.length == 0)
-                            return resolve(1);
-                    }
-                });
+                    if(this.deleteIds.length == 0)
+                        return resolve(1);
+                }
+            });
 
+            let execute = async () => {
+                
                 if(await updateAll && await deleteAll) {
                     if(this.isRevert == false) {
 
