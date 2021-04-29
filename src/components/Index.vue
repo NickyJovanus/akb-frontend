@@ -387,12 +387,14 @@
         </footer>
         <!-- end footer -->
     </div>
-        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
-            <v-flex class="text-right">
-                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
-            </v-flex>
+        <!-- snackbar -->
+        <v-snackbar v-model="snackbar" v-bind:color="color" timeout="10000" bottom style='z-index:10000;' rounded="pill">
+            <template v-slot:action="{ btn }">
+                <v-btn text v-bind="btn" @click="snackbar = false;"><v-icon color="white">mdi-close</v-icon></v-btn>
+            </template>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
+        <!-- end snackbar -->
     </main>
 </template>
 
@@ -447,6 +449,15 @@ export default{
         import('../assets/js/loginform.js');
         import('../assets/js/navbarfade.js');
         import('mapbox-gl/dist/mapbox-gl.css');
+        
+        if(localStorage.getItem('logout')       !== null) {
+            this.error_message = localStorage.getItem('logout'); 
+            this.color         = "green";
+            this.snackbar      =    true;
+            this.load          =   false;
+            this.progressBar   =   false;
+            localStorage.removeItem('logout');
+        }
 
         this.menus     = JSON.parse(localStorage.getItem('topmenu'));
         this.dishes    = JSON.parse(localStorage.getItem('dishes'));
@@ -513,10 +524,10 @@ export default{
                 localStorage.setItem('loginload', true);                              // menyimpan login untuk reload dashboard(read data)
 
                 this.error_message='Logged in as ' + localStorage.getItem('name'); 
-                this.color="green"
-                this.snackbar=true;
-                this.load = false;
-                this.progressBar = false;
+                this.color       = "green";
+                this.snackbar    =    true;
+                this.load        =   false;
+                this.progressBar =   false;
                 this.clear();
 
                 location.href="/dashboard";
@@ -527,10 +538,10 @@ export default{
                     this.error_message= this.error_message + '\n' + error.response.data.message.password;
                 if(!error.response.data.message.password && !error.response.data.message.email_karyawan)
                     this.error_message= this.error_message + error.response.data.message;
-                this.color="red"
-                this.snackbar=true;
                 localStorage.removeItem('token');
-                this.load = false;
+                this.color       = "red";
+                this.snackbar    =  true;
+                this.load        = false;
                 this.progressBar = false;
             });
         },

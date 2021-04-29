@@ -128,6 +128,7 @@ export default{
                     path: '/',
                 });
             }
+            localStorage.removeItem('logout');
 
             if(localStorage.getItem('loginload') != null) {
                 localStorage.removeItem('loginload');
@@ -201,7 +202,7 @@ export default{
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
-            }).then(() => {
+            }).then(response => {
 
                 //Remove Local Token
                 localStorage.removeItem('id');
@@ -214,12 +215,13 @@ export default{
                 this.progressBarLogout = false;
 
                 //Push index after logout
+                localStorage.setItem('logout', response.data.message);
                 this.$router.push({
                     name: 'Index',
                 }).then(()=> {
-                    location.href="/";
+                    location.href="/#login";
                 })
-            }).catch(error => {
+            }).catch(() => {
                 localStorage.removeItem('id');
                 localStorage.removeItem('name');
                 localStorage.removeItem('role');

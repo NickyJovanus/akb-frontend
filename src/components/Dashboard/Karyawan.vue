@@ -136,7 +136,6 @@
                                 :items="jenis_kelamin"
                                 item-text="name"
                                 outlined
-                                clearable
                                 three-line
                                 :value="form.jenis_kelamin_karyawan"
                             ></v-select>
@@ -196,7 +195,6 @@
                                 :items="status"
                                 item-text="name"
                                 outlined
-                                clearable
                                 three-line
                                 :value="form.status_karyawan"
                             >
@@ -262,10 +260,10 @@
                         <v-btn color="white darken-1" text @click="cancel">
                             Cancel
                         </v-btn>
-                        <v-btn v-if="inputType == 'Register'" color="blue darken-1" text @click="register">
+                        <v-btn v-if="inputType == 'Register'" :disabled="progressBar" color="blue darken-1" text @click="register">
                             Save
                         </v-btn>
-                        <v-btn v-if="inputType == 'Edit'" color="yellow darken-1" text @click="update">
+                        <v-btn v-if="inputType == 'Edit'" :disabled="progressBar" color="yellow darken-1" text @click="update">
                             Save
                         </v-btn>
                     </v-card-actions>
@@ -319,7 +317,7 @@
                         <v-btn color="white darken-1" text @click="dialogPassword = false; resetForm()">
                             Cancel
                         </v-btn>
-                        <v-btn color="green darken-1" text @click="changePass"> 
+                        <v-btn color="green darken-1" :disabled="progressBar" text @click="changePass"> 
                             Save
                         </v-btn>
                     </v-card-actions>
@@ -356,7 +354,7 @@
                         <v-btn color="white darken-1" text @click="dialogDelete = false">
                             Cancel
                         </v-btn>
-                        <v-btn color="red darken-1" text @click="deleteData"> 
+                        <v-btn color="red darken-1" :disabled="progressBar" text @click="deleteData"> 
                             Deactivate
                         </v-btn>
                     </v-card-actions>
@@ -366,12 +364,14 @@
 
         </div>
 
-        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
-            <v-flex class="text-right">
-                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
-            </v-flex>
+        <!-- snackbar -->
+        <v-snackbar v-model="snackbar" v-bind:color="color" timeout="10000" bottom style='z-index:10000;'>
+            <template v-slot:action="{ btn }">
+                <v-btn text v-bind="btn" @click="snackbar = false;"><v-icon color="white">mdi-close</v-icon></v-btn>
+            </template>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
+        <!-- end snackbar -->
 
     </v-main>
 </template>

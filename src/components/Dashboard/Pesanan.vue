@@ -282,10 +282,10 @@
                         <v-btn color="white darken-1" text @click="cancel">
                             Cancel
                         </v-btn>
-                        <v-btn v-if="inputType == 'Add'" color="blue darken-1" text @click="add">
+                        <v-btn v-if="inputType == 'Add'" :disabled="progressBar" color="blue darken-1" text @click="add">
                             Save
                         </v-btn>
-                        <v-btn v-if="inputType == 'Edit'" color="yellow darken-1" text @click="update">
+                        <v-btn v-if="inputType == 'Edit'" :disabled="progressBar" color="yellow darken-1" text @click="update">
                             Save
                         </v-btn>
                     </v-card-actions>
@@ -317,19 +317,21 @@
                     <v-btn color="white darken-1" text @click="cancel">
                         Cancel
                     </v-btn>
-                    <v-btn color="red darken-1" text @click="deleteData"> 
+                    <v-btn color="red darken-1" :disabled="progressBar" text @click="deleteData"> 
                         Delete
                     </v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
 
-        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
-            <v-flex class="text-right">
-                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
-            </v-flex>
+        <!-- snackbar -->
+        <v-snackbar v-model="snackbar" v-bind:color="color" timeout="10000" bottom style='z-index:10000;'>
+            <template v-slot:action="{ btn }">
+                <v-btn text v-bind="btn" @click="snackbar = false;"><v-icon color="white">mdi-close</v-icon></v-btn>
+            </template>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
+        <!-- end snackbar -->
     </v-main>
 </template>
 
@@ -484,7 +486,7 @@ export default{
                         jumlah_item: this.detail_pesanan[i].jumlah_item,
                     }
                     this.detailtext.push(data);
-                    this.revertUpdate.push(data);
+                    this.revertUpdate.push(JSON.parse(JSON.stringify(data)));
                 }
             }
 
@@ -641,6 +643,7 @@ export default{
 
         update() {
             this.progressBar = true;
+            var tempArray = this.revertUpdate;
             var url  = this.$api + '/pesanan/' + this.editId, url2, urldel;
 
             try {
@@ -696,7 +699,6 @@ export default{
                             this.isRevert      =  true;
                             this.color         = "red";
                             this.snackbar      =  true;
-                            this.progressBar   = false;
 
                         } else {
 
@@ -735,9 +737,8 @@ export default{
                     }, 500);
 
                 } finally {
-                    var tempArray = this.revertUpdate;
 
-                    setTimeout(()=>{
+                    setTimeout(()=> {
                         console.log(this.isRevert)
                         if(this.isRevert == false) {
 
@@ -779,6 +780,7 @@ export default{
 
                         } else {
 
+                            this.progressBar   = true;
                             for(var x =  0; x < this.revertUpdate.length; x++) {
 
                                 let currentRev = this.revertUpdate[x];
@@ -798,6 +800,7 @@ export default{
                                 }).then(() => {
 
                                     this.loadData();
+                                    this.progressBar = false;
                                     this.cancel();
 
                                 }).catch(() => {
@@ -839,17 +842,21 @@ export default{
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(response => {
+
                 this.error_message= response.data.message;
                 this.color="green"
                 this.snackbar=true;
                 this.cancel();
                 this.loadData();
                 this.progressBar = false;
+
             }).catch(err => {
+
                 this.error_message= err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;
+
             });
 
         },

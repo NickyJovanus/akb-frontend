@@ -85,24 +85,23 @@ export default{
         return {
             //snackbar
             error_message: '',
-            color: '',
-            valid: false,
-            snackbar: false,
+            color:         '',
+            valid:      false,
+            snackbar:   false,
             //navbar
-            collapsed: true,
-            load: false,
+            collapsed:          true,
+            load:              false,
             progressBarLogout: false,
-            loading: true,
-            menu: [],
-            customers: null,
-            dishes: [],
+            loading:            true,
+            menu:                 [],
+            dishes:               [],
             items: [
                 { title: "Menu", to: "/menu" },
             ],
-            name: 'My Account',
-            loggedIn : false,
-            logoutdialog: false,
-            preloadertext: '',
+            name:       'My Account',
+            loggedIn :         false,
+            logoutdialog:      false,
+            preloadertext:        '',
         }
     },
     created() {
@@ -159,7 +158,7 @@ export default{
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
-            }).then(() => {
+            }).then(response => {
                 //Remove Local Token
                 localStorage.removeItem('id');
                 localStorage.removeItem('name');
@@ -170,10 +169,11 @@ export default{
                 this.progressBarLogout = false;
 
                 //Push index after logout
+                localStorage.setItem('logout', response.data.message);
                 this.$router.push({
                     name: 'index',
                 }).then(()=> {
-                    location.href="/index#login";
+                    location.href="/#login";
                 })
             }).catch(error => {
                 //prints error to console

@@ -124,10 +124,10 @@
                         <v-btn color="white darken-1" text @click="cancel">
                             Cancel
                         </v-btn>
-                        <v-btn v-if="inputType == 'Add'" color="blue darken-1" text @click="add">
+                        <v-btn v-if="inputType == 'Add'" :disabled="progressBar" color="blue darken-1" text @click="add">
                             Save
                         </v-btn>
-                        <v-btn v-if="inputType == 'Edit'" color="yellow darken-1" text @click="update">
+                        <v-btn v-if="inputType == 'Edit'" :disabled="progressBar" color="yellow darken-1" text @click="update">
                             Save
                         </v-btn>
                     </v-card-actions>
@@ -160,19 +160,21 @@
                     <v-btn color="white darken-1" text @click="cancel">
                         Cancel
                     </v-btn>
-                    <v-btn color="red darken-1" text @click="deleteData"> 
+                    <v-btn color="red darken-1" :disabled="progressBar" text @click="deleteData"> 
                         Delete
                     </v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
 
-        <v-snackbar v-model="snackbar" :color="color" timeout="5000" bottom style='z-index:10000;'>
-            <v-flex class="text-right">
-                <v-icon color="white" @click="snackbar = false;">mdi-close</v-icon>
-            </v-flex>
+        <!-- snackbar -->
+        <v-snackbar v-model="snackbar" v-bind:color="color" timeout="10000" bottom style='z-index:10000;' rounded="pill">
+            <template v-slot:action="{ btn }">
+                <v-btn text v-bind="btn" @click="snackbar = false;"><v-icon color="white">mdi-close</v-icon></v-btn>
+            </template>
             <pre style="overflow-y: hidden; text-align: center;">{{error_message}}</pre>
         </v-snackbar>
+        <!-- end snackbar -->
     </v-main>
 </template>
 
