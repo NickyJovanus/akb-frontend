@@ -22,7 +22,7 @@
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
-                        <v-btn dark @click="dialog = true">
+                        <v-btn dark @click="dialog = true" v-if="role !== 'Chef'">
                             Add
                         </v-btn>
                         <v-text-field
@@ -169,6 +169,7 @@
                                         v-bind="attrs"
                                         v-on="on"
                                         :rules="rules.tanggalRule"
+                                        :disabled="role == 'Chef'"
                                         required
                                     ></v-text-field>
                                     </template>
@@ -191,6 +192,7 @@
                                     clearable
                                     three-line
                                     :rules="rules.mejaRule"
+                                    :disabled="role == 'Chef'"
                                     required
                                     :value="form.id_meja"
                                 >
@@ -210,6 +212,7 @@
                                     clearable
                                     three-line
                                     :rules="rules.karyawanRule"
+                                    :disabled="role == 'Chef'"
                                     required
                                     :value="form.id_karyawan"
                                 >
@@ -229,6 +232,7 @@
                                             label="Nama Menu"
                                             :items="menus"
                                             item-text="id_menu"
+                                            :disabled="role == 'Chef'"
                                             three-line
                                             :rules="rules.menuRule"
                                             required
@@ -247,6 +251,7 @@
                                             v-model="detail.jumlah_item"
                                             outlined
                                             label="Jumlah Item"
+                                            :disabled="role == 'Chef'"
                                             :rules="rules.jumlahRule"
                                             type="number"
                                             required
@@ -266,12 +271,14 @@
                                         </v-select>
                                     </v-col>
                                     <v-col cols="2">
-                                        <v-btn color="red" @click="removeDetail(detail)">
+                                        <v-btn color="red" @click="removeDetail(detail)" 
+                                            :disabled="role == 'Chef'">
                                             X
                                         </v-btn>
                                     </v-col>
                                 </v-row>
-                                <v-btn @click="addDetail">
+                                <v-btn @click="addDetail"
+                                    :disabled="role == 'Chef'">
                                     Add Item
                                 </v-btn>
                             </v-flex>

@@ -19,7 +19,7 @@
                         <div class="ma-15 d-none d-lg-block">
                             <div class="col-md-4 grid-portfolio"  v-for="(menu) in dashboardmenu" :key="menu.image">
                                 <div style="height: 300px; margin-bottom: 10px;">
-                                    <v-card width="600" :to="menu.to">
+                                    <v-card width="600" :to="menu.path">
                                         <v-img
                                             height="300px"
                                             :src="menu.image"
@@ -94,73 +94,70 @@ export default{
     },
     methods: {
         filtermenu() {
-            let role = localStorage.getItem('role');
-            this.role = role;
+            let role     = localStorage.getItem('role');
+            let dashmenu = this.dashboardmenu;
+            this.role    = role;
             
-            var karyawan =     { title: "Manage Karyawan",      to: "/manage/karyawan",      image: require("@/assets/images/dashboard/karyawan.jpg")     };
-            var menu =         { title: "Manage Menu",          to: "/manage/menu",          image: require("@/assets/images/dashboard/menu.jpg")         };
-            var meja =         { title: "Manage Meja",          to: "/manage/meja",          image: require("@/assets/images/dashboard/meja.jpg")         };
-            var pesanan =      { title: "Manage Pesanan",       to: "/manage/pesanan",       image: require("@/assets/images/dashboard/pesanan.jpg")      };
-            var reservasi =    { title: "Manage Reservasi",     to: "/manage/reservasi",     image: require("@/assets/images/dashboard/reservasi.jpg")    };
-            var transaksi =    { title: "Manage Transaksi",     to: "/manage/transaksi",     image: require("@/assets/images/dashboard/transaksi.jpg")    };
-            var customers =    { title: "Manage Customers",     to: "/manage/customers",     image: require("@/assets/images/dashboard/customers.jpg")    };
-            var bahan =        { title: "Manage Bahan",         to: "/manage/bahan",         image: require("@/assets/images/dashboard/bahan.jpg")        };
-            var stock =        { title: "Manage Stock",         to: "/manage/stock",         image: require("@/assets/images/dashboard/stock.jpg")        };
-            var history =      { title: "Manage History Stock", to: "/manage/history-stock", image: require("@/assets/images/dashboard/history.jpg")      };
-            var qrcode =       { title: "Print QR Code",        to: "/print-qr",             image: require("@/assets/images/dashboard/qrcode.jpg")       };
-            var pengeluaran =  { title: "Laporan Pengeluaran",  to: "/laporan/expenses",     image: require("@/assets/images/dashboard/pengeluaran.jpg")  };
-            var pendapatan =   { title: "Laporan Pendapatan",   to: "/laporan/income",       image: require("@/assets/images/dashboard/pendapatan.jpg")   };
-            var ketersediaan = { title: "Ketersediaan Meja",    to: "/showMeja",             image: require("@/assets/images/dashboard/ketersediaan.jpg") };
+            let karyawan     = { title: "Manage Karyawan",      path: "/manage/karyawan",      image: require("@/assets/images/dashboard/karyawan.jpg")     };
+            let menu         = { title: "Manage Menu",          path: "/manage/menu",          image: require("@/assets/images/dashboard/menu.jpg")         };
+            let meja         = { title: "Manage Meja",          path: "/manage/meja",          image: require("@/assets/images/dashboard/meja.jpg")         };
+            let pesanan      = { title: "Manage Pesanan",       path: "/manage/pesanan",       image: require("@/assets/images/dashboard/pesanan.jpg")      };
+            let reservasi    = { title: "Manage Reservasi",     path: "/manage/reservasi",     image: require("@/assets/images/dashboard/reservasi.jpg")    };
+            let transaksi    = { title: "Manage Transaksi",     path: "/manage/transaksi",     image: require("@/assets/images/dashboard/transaksi.jpg")    };
+            let customers    = { title: "Manage Customers",     path: "/manage/customers",     image: require("@/assets/images/dashboard/customers.jpg")    };
+            let bahan        = { title: "Manage Bahan",         path: "/manage/bahan",         image: require("@/assets/images/dashboard/bahan.jpg")        };
+            let stock        = { title: "Manage Stock",         path: "/manage/stock",         image: require("@/assets/images/dashboard/stock.jpg")        };
+            let history      = { title: "Manage History Stock", path: "/manage/history-stock", image: require("@/assets/images/dashboard/history.jpg")      };
+            let qrcode       = { title: "Print QR Code",        path: "/print-qr",             image: require("@/assets/images/dashboard/qrcode.jpg")       };
+            let pengeluaran  = { title: "Laporan Pengeluaran",  path: "/laporan/expenses",     image: require("@/assets/images/dashboard/pengeluaran.jpg")  };
+            let pendapatan   = { title: "Laporan Pendapatan",   path: "/laporan/income",       image: require("@/assets/images/dashboard/pendapatan.jpg")   };
+            let ketersediaan = { title: "Ketersediaan Meja",    path: "/showMeja",             image: require("@/assets/images/dashboard/ketersediaan.jpg") };
 
-            if(role === "Operational Manager") {
+            switch(role) {
+                case "Operational Manager":     dashmenu.push(karyawan);
+                                                dashmenu.push(menu);
+                                                dashmenu.push(meja);
+                                                dashmenu.push(ketersediaan);
+                                                dashmenu.push(pesanan);
+                                                dashmenu.push(reservasi);
+                                                dashmenu.push(transaksi);
+                                                dashmenu.push(customers);
+                                                dashmenu.push(bahan);
+                                                dashmenu.push(stock);
+                                                dashmenu.push(history);
+                                                dashmenu.push(qrcode);
+                                                dashmenu.push(pengeluaran);
+                                                dashmenu.push(pendapatan);
+                                                break;
 
-                this.dashboardmenu.push(karyawan);
-                this.dashboardmenu.push(menu);
-                this.dashboardmenu.push(meja);
-                this.dashboardmenu.push(ketersediaan);
-                this.dashboardmenu.push(pesanan);
-                this.dashboardmenu.push(reservasi);
-                this.dashboardmenu.push(transaksi);
-                this.dashboardmenu.push(customers);
-                this.dashboardmenu.push(bahan);
-                this.dashboardmenu.push(stock);
-                this.dashboardmenu.push(history);
-                this.dashboardmenu.push(qrcode);
-                this.dashboardmenu.push(pengeluaran);
-                this.dashboardmenu.push(pendapatan);
+                case "Owner":                   dashmenu.push(karyawan);
+                                                dashmenu.push(pengeluaran);
+                                                dashmenu.push(pendapatan);
+                                                break;
 
-            } else if (role === "Owner") {
+                case "Chef":                    dashmenu.push(pesanan);
+                                                dashmenu.push(bahan);
+                                                dashmenu.push(stock);
+                                                dashmenu.push(history);
+                                                break;
 
-                this.dashboardmenu.push(karyawan);
-                this.dashboardmenu.push(pengeluaran);
-                this.dashboardmenu.push(pendapatan);
+                case "Waiter":                  dashmenu.push(menu);
+                                                dashmenu.push(meja);
+                                                dashmenu.push(ketersediaan);
+                                                dashmenu.push(pesanan);
+                                                dashmenu.push(reservasi);
+                                                dashmenu.push(qrcode);
+                                                break;
 
-            } else if (role === "Chef") {
-
-                this.dashboardmenu.push(pesanan);
-                this.dashboardmenu.push(bahan);
-                this.dashboardmenu.push(stock);
-                this.dashboardmenu.push(history);
-
-            } else if (role === "Waiter") {
-
-                this.dashboardmenu.push(menu);
-                this.dashboardmenu.push(meja);
-                this.dashboardmenu.push(ketersediaan);
-                this.dashboardmenu.push(pesanan);
-                this.dashboardmenu.push(reservasi);
-                this.dashboardmenu.push(qrcode);
-
-            } else if (role === "Cashier") {
-
-                this.dashboardmenu.push(menu);
-                this.dashboardmenu.push(meja);
-                this.dashboardmenu.push(ketersediaan);
-                this.dashboardmenu.push(pesanan);
-                this.dashboardmenu.push(reservasi);
-                this.dashboardmenu.push(qrcode);
-                this.dashboardmenu.push(transaksi);
-                
+                case "Cashier":                 dashmenu.push(menu);
+                                                dashmenu.push(meja);
+                                                dashmenu.push(ketersediaan);
+                                                dashmenu.push(pesanan);
+                                                dashmenu.push(reservasi);
+                                                dashmenu.push(qrcode);
+                                                dashmenu.push(transaksi);
+                                                break;
+                    
             }
         }
     }

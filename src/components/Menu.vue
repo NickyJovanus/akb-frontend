@@ -150,10 +150,10 @@ export default{
     name: "Menu",
     data() {
         return {
-            menus: [],
+            menus:       [],
+            dishes:      [],
             customers: null,
-            dishes: [],
-            loading: false,
+            loading:  false,
         }
     },
     mounted() {

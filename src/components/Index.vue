@@ -252,7 +252,7 @@
             <br><br>
             <div class="container">
                 <h2>STAFF LOGIN</h2>
-                <div class="center">
+                <div class="center" :onfocus="import('../assets/js/loginform.js')">
                     <div class="ear ear--left"></div>
                     <div class="ear ear--right"></div>
                     <div class="face">
@@ -315,12 +315,24 @@
                     <div class="login">
                       <label>
                         <div class="fa fa-envelope"></div>
-                        <input class="email" type="text" v-model="email" autocomplete="on" placeholder="E-mail address" name="email"/>
+                        <input class="email" 
+                            type="text" 
+                            v-model="email" 
+                            autocomplete="on" 
+                            placeholder="E-mail address" 
+                            :onfocus="import('../assets/js/loginform.js')"
+                            name="email"/>
                       </label>
                       <label>
                         <div class="fa fa-key"></div>
-                        <input class="password" :type="passType"  v-model="password" autocomplete="off" onfocus="this.removeAttribute('readonly');" placeholder="Password" name="password"/>
-                        <button @click="passType = 'text'" class="password-button">Reveal</button>
+                        <input class="password" 
+                            :type="passType"  
+                            v-model="password" 
+                            autocomplete="off" 
+                            onfocus="this.removeAttribute('readonly');"
+                            placeholder="Password" 
+                            name="password"/>
+                        <button class="password-button">Reveal</button>
                       </label>
                       <button class="login-button" @click="login" :disabled="load==true">Login</button>
                     </div>
@@ -415,23 +427,23 @@ export default{
             accessToken: 'pk.eyJ1Ijoibmlja3lqb3ZhbnVzIiwiYSI6ImNrZnFqc2Z6cTBqamUyeXBiaGNidzljOHEifQ.EmKNctj3vwr2nPn0beNhAQ',
             mapStyle: 'mapbox://styles/mapbox/streets-v11',
             coordinates: [110.416169, -7.779292],
+            //Login
+            email:            '',
+            password:         '',
             //Snackbar
             error_message:    '',
             color:            '',
             snackbar:      false,
-            //Login
-            email:            '',
-            password:         '',
             valid:         false,
-            collapsed:      true,
             load:          false,
             progressBar:   false,
-            loading:        true,
-            menus:            [],
-            customers:      null,
-            dishes:           [],
             loggedIn:      false,
+            loading:        true,
+            collapsed:      true,
             unloaded:       true,
+            customers:      null,
+            menus:            [],
+            dishes:           [],
             passType: 'password',
         }
     },
