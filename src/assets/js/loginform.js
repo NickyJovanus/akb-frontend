@@ -9,7 +9,7 @@ var pageURLCheckTimer = setInterval (
         if (this.lastPathStr !== location.pathname) {
             form();
         }
-}, 100);
+}, 111);
 
 setTimeout(function(){
   document.querySelector('.password').removeAttribute('readonly');}, 

@@ -1,13 +1,15 @@
-var fireOnHashChangesToo = true;
+var fireOnHashChangesToo = true, 
+    index  = 0;
 var $ = require('jquery');
 var pageURLCheckTimer = setInterval (
     function () {
         if (this.lastPathStr !== location.pathname
             || this.lastQueryStr !== location.search
             || (fireOnHashChangesToo && this.lastHashStr !== location.hash)) {
+                index = 0;
                 locationHashChanged();
         }
-}, 100);
+}, 111);
 
 function imglink(imagename) {
     return require("@/assets/images/" + imagename);
@@ -24,7 +26,6 @@ function locationHashChanged() {
         title.style.opacity = "0";
         // var cycle = 0;
         var images = ['carousel1.jpg', 'carousel1.jpg', 'carousel2.jpg', 'carousel3.jpg'],
-            index  = 0,
             $intro = $('.intro');
 
         setTimeout(function(){
