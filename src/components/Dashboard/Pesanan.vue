@@ -649,109 +649,68 @@ export default{
         },
 
         update() {
-            this.progressBar = true;
-            var tempArray = this.revertUpdate;
-            var url2, urldel, url  = this.$api + '/pesanan/' + this.editId;
-            
-            let updateAll = new Promise((resolve, reject) => {
-                var index = 0;
-                if(this.detailtext.length == 0)
-                    return resolve(1);
-                else
-                    for(; index < this.detailtext.length; index++) {
-                        let currentDetail = this.detailtext[index];
-                        let updateDetailData = {
-                            id_pesanan:  this.editId,
-                            id_menu:     currentDetail.id_menu,
-                            status_item: currentDetail.status_item,
-                            jumlah_item: currentDetail.jumlah_item,
-                        }
-
-                        if(tempArray.length > 0) {
-
-                            let detailBeforeData = {
-                                id_pesanan:  this.editId,
-                                id_menu:     tempArray[index].id_menu,
-                                status_item: tempArray[index].status_item,
-                                jumlah_item: tempArray[index].jumlah_item,
-                            }
-                            if(updateDetailData !== detailBeforeData) {
-
-                            url2 = this.$api + '/detailpesanan/' + currentDetail.id_detail;
-                            this.$http.put(url2, updateDetailData, {
-                                headers: {
-                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                }
-                            }).then(() => {
-                                if(this.detailtext.length > 1) {
-                                    if(index === this.detailtext.length && !this.isRevert) {
-                                        return resolve(1);
-                                    }
-                                } else {
-                                    return resolve(1);
-                                }
-                                
-                            }).catch(err => {
-
-                                this.error_message = '';
-                                if(!err.response.data.message.id_menu 
-                                && !err.response.data.message.jumlah_item
-                                && !err.response.data.message.id_pesanan) {
-
-                                this.error_message = err.response.data.message;
-                                this.isRevert      =  true;
-                                this.color         = "red";
-                                this.snackbar      =  true;
-                                
-                                } else {
-
-                                    if(err.response.data.message.id_menu) 
-                                        this.error_message = this.error_message + err.response.data.message.id_menu + '';
-                                    if(err.response.data.message == "Jumlah item exceeds available stock") 
-                                        this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                    if(err.response.data.message.jumlah_item) 
-                                        this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                    if(err.response.data.message.id_pesanan) 
-                                        this.error_message = this.error_message + '\n' + err.response.data.message.id_pesanan;
-                                    this.isRevert    =  true;
-                                    this.color       = "red";
-                                    this.snackbar    =  true;
-
-                                }
-                                reject();
-                                throw new Error(err.response.data.message);
-                            
-                            });
-                            } else if(updateDetailData === detailBeforeData && index === this.detailtext.length) {
-                                return resolve(1);
-                            }
-                        }
-
-                        if(currentDetail.id_detail === undefined) {
-                            let postDetailData = {
+            if (this.$refs.form.validate()) {
+                this.progressBar = true;
+                var tempArray = this.revertUpdate;
+                var url2, urldel, url  = this.$api + '/pesanan/' + this.editId;
+                
+                let updateAll = new Promise((resolve, reject) => {
+                    var index = 0;
+                    if(this.detailtext.length == 0)
+                        return resolve(1);
+                    else
+                        for(; index < this.detailtext.length; index++) {
+                            let currentDetail = this.detailtext[index];
+                            let updateDetailData = {
                                 id_pesanan:  this.editId,
                                 id_menu:     currentDetail.id_menu,
+                                status_item: currentDetail.status_item,
                                 jumlah_item: currentDetail.jumlah_item,
                             }
-                            
-                            this.$http.post(this.$api + '/detailpesanan', postDetailData, {
-                                headers: {
-                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+
+                            if(currentDetail.id_detail === undefined) {
+                                let postDetailData = {
+                                    id_pesanan:  this.editId,
+                                    id_menu:     currentDetail.id_menu,
+                                    jumlah_item: currentDetail.jumlah_item,
                                 }
-                            }).then(response => {
                                 
-                                this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
+                                this.$http.post(this.$api + '/detailpesanan', postDetailData, {
                                     headers: {
                                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                                     }
-                                }).then(() => {
-                                    if(this.detailtext.length > 1) {
-                                        if(index === this.detailtext.length && !this.isRevert) {
-                                            return resolve(1);
+                                }).then(response => {
+                                    
+                                    this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
+                                        headers: {
+                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
                                         }
-                                    } else {
-                                        return resolve(1);
-                                    }
+                                    }).then(() => {
+                                        if(this.detailtext.length > 1) {
+                                            if(index === this.detailtext.length && !this.isRevert) {
+                                                return resolve(true);
+                                            }
+                                        } else {
+                                            return resolve(true);
+                                        }
+                                    }).catch(err => {
+                                        
+                                        if(err.response.data.message.id_menu) 
+                                            this.error_message = this.error_message + err.response.data.message.id_menu + '';
+                                        if(err.response.data.message == "Jumlah item exceeds available stock") 
+                                            this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
+                                        if(err.response.data.message.jumlah_item) 
+                                            this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
+                                        if(err.response.data.message.id_pesanan) 
+                                            this.error_message = this.error_message + '\n' + err.response.data.message.id_pesanan;
+                                        this.isRevert    =  true;
+                                        this.color       = "red";
+                                        this.snackbar    =  true;
+                                        reject();
+                                        throw new Error(err.response.data.message);
+
+                                    });
+
                                 }).catch(err => {
                                     
                                     if(err.response.data.message.id_menu) 
@@ -769,96 +728,146 @@ export default{
                                     throw new Error(err.response.data.message);
 
                                 });
+                            } else if(tempArray.length > 0 && tempArray[index]) {
 
-                            }).catch(err => {
-                                
-                                if(err.response.data.message.id_menu) 
-                                    this.error_message = this.error_message + err.response.data.message.id_menu + '';
-                                if(err.response.data.message == "Jumlah item exceeds available stock") 
-                                    this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                if(err.response.data.message.jumlah_item) 
-                                    this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
-                                if(err.response.data.message.id_pesanan) 
-                                    this.error_message = this.error_message + '\n' + err.response.data.message.id_pesanan;
-                                this.isRevert    =  true;
-                                this.color       = "red";
-                                this.snackbar    =  true;
-                                reject();
-                                throw new Error(err.response.data.message);
+                                console.log(tempArray[index]);
 
-                            });
+                                let detailBeforeData = {
+                                    id_pesanan:  this.editId,
+                                    id_menu:     tempArray[index].id_menu,
+                                    status_item: tempArray[index].status_item,
+                                    jumlah_item: tempArray[index].jumlah_item,
+                                }
+
+                                if(updateDetailData !== detailBeforeData) {
+
+                                    url2 = this.$api + '/detailpesanan/' + currentDetail.id_detail;
+                                    this.$http.put(url2, updateDetailData, {
+                                        headers: {
+                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                        }
+                                    }).then(() => {
+                                        if(this.detailtext.length > 1) {
+                                            if(index === this.detailtext.length && !this.isRevert) {
+                                                return resolve(1);
+                                            }
+                                        } else {
+                                            return resolve(1);
+                                        }
+                                        
+                                    }).catch(err => {
+
+                                        this.error_message = '';
+                                        if(!err.response.data.message.id_menu 
+                                        && !err.response.data.message.jumlah_item
+                                        && !err.response.data.message.id_pesanan) {
+
+                                        this.error_message = err.response.data.message;
+                                        this.isRevert      =  true;
+                                        this.color         = "red";
+                                        this.snackbar      =  true;
+                                        
+                                        } else {
+
+                                            if(err.response.data.message.id_menu) 
+                                                this.error_message = this.error_message + err.response.data.message.id_menu + '';
+                                            if(err.response.data.message == "Jumlah item exceeds available stock") 
+                                                this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
+                                            if(err.response.data.message.jumlah_item) 
+                                                this.error_message = this.error_message + '\n' + err.response.data.message.jumlah_item;
+                                            if(err.response.data.message.id_pesanan) 
+                                                this.error_message = this.error_message + '\n' + err.response.data.message.id_pesanan;
+                                            this.isRevert    =  true;
+                                            this.color       = "red";
+                                            this.snackbar    =  true;
+
+                                        }
+                                        reject();
+                                        throw new Error(err.response.data.message);
+                                    
+                                    });
+                                } else if(updateDetailData === detailBeforeData && index === this.detailtext.length) {
+                                    return resolve(true);
+                                }
+                            }
                         }
-                    }
-            });
-            let deleteAll = new Promise((resolve, reject) => {
-                for(var index =  0; index < this.deleteIds.length; index++) {
-                    urldel = this.$api + '/detailpesanan/' + this.deleteIds[index];
-                    this.$http.delete(urldel, {
-                        headers: {
-                            'Authorization': 'Bearer ' + localStorage.getItem('token')
-                        }
-                    }).then(()=> {
-                        if(index == this.deleteIds.length - 1)
-                            return resolve(true);
-                    }).catch(()=> {
-                        this.error_message = 'An error occured.';
-                        this.isRevert      =  true;
-                        this.color         = "red";
-                        this.snackbar      =  true;
-                        this.loadData();
-                        throw('error')
-                    });
-                }
-                if(this.deleteIds.length == 0)
-                    return resolve(true);
-            });
+                });
 
-            let execute = async () => {
-
-                try {
-                    let awaitUpdate = await updateAll;
-                    let awaitDelete = await deleteAll;
-                    if(this.isRevert == false && awaitUpdate == 1 && awaitDelete == 1) {
-                        let updateData = {
-                            tanggal_pesanan: this.form.tanggal_pesanan,
-                            id_meja:         this.form.id_meja,
-                            id_karyawan:     this.form.id_karyawan,
-                        }
-                        this.$http.put(url, updateData, {
+                let deleteAll = new Promise((resolve, reject) => {
+                    for(var index =  0; index < this.deleteIds.length; index++) {
+                        urldel = this.$api + '/detailpesanan/' + this.deleteIds[index];
+                        this.$http.delete(urldel, {
                             headers: {
                                 'Authorization': 'Bearer ' + localStorage.getItem('token')
                             }
-                        }).then(response => {
-                            this.error_message =      '';
-                            this.error_message = response.data.message;
-                            this.color         = "green";
-                            this.snackbar      =    true;
-                            this.progressBar   =   false;
-                            this.cancel();
+                        }).then(()=> {
+                            if(index == this.deleteIds.length)
+                                return resolve(true);
+                        }).catch(()=> {
+                            this.error_message = 'An error occured.';
+                            this.isRevert      =  true;
+                            this.color         = "red";
+                            this.snackbar      =  true;
                             this.loadData();
-                        }).catch(err => {
-                            this.error_message = '';
-                            if(!err.response.data.message.tanggal_pesanan 
-                                && !err.response.data.message.id_meja 
-                                && !err.response.data.message.id_karyawan)
-                                this.error_message= err.response.data.message;
-                            else {
-                                if(err.response.data.message.tanggal_pesanan)
-                                    this.error_message= err.response.data.message.tanggal_pesanan + '';
-                                if(err.response.data.message.id_meja)
-                                    this.error_message= this.error_message + '\n' + err.response.data.message.id_meja;
-                                if(err.response.data.message.id_karyawan)
-                                    this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
-                            }
-                            this.color       = "red";
-                            this.snackbar    =  true;
-                            this.progressBar = false;
+                            throw('error')
                         });
+                    }
+                    if(this.deleteIds.length == 0)
+                        return resolve(true);
+                });
 
-                    } else {
+                let execute = async () => {
+
+                    try {
+                        let awaitUpdate = await updateAll;
+                        let awaitDelete = await deleteAll;
+                            
+                        if(this.isRevert == false && awaitUpdate && awaitDelete) {
+                            let updateData = {
+                                tanggal_pesanan: this.form.tanggal_pesanan,
+                                id_meja:         this.form.id_meja,
+                                id_karyawan:     this.form.id_karyawan,
+                            }
+                            this.$http.put(url, updateData, {
+                                headers: {
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                }
+                            }).then(response => {
+                                this.error_message =      '';
+                                this.error_message = response.data.message;
+                                this.color         = "green";
+                                this.snackbar      =    true;
+                                this.progressBar   =   false;
+                                this.cancel();
+                                this.loadData();
+                            }).catch(err => {
+                                this.error_message = '';
+                                if(!err.response.data.message.tanggal_pesanan 
+                                    && !err.response.data.message.id_meja 
+                                    && !err.response.data.message.id_karyawan)
+                                    this.error_message= err.response.data.message;
+                                else {
+                                    if(err.response.data.message.tanggal_pesanan)
+                                        this.error_message= err.response.data.message.tanggal_pesanan + '';
+                                    if(err.response.data.message.id_meja)
+                                        this.error_message= this.error_message + '\n' + err.response.data.message.id_meja;
+                                    if(err.response.data.message.id_karyawan)
+                                        this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
+                                }
+                                this.color       = "red";
+                                this.snackbar    =  true;
+                                this.progressBar = false;
+                                throw 'error';
+                            });
+
+                        } else {
+                            throw 'error';
+                        }
+                        
+                    } catch(error) {
                         if(this.revertUpdate.length > 1) {
-                            this.progressBar   = true;
-                            let x =  0
+                            this.progressBar = true;
+                            let x = 0;
                             for(; x < this.revertUpdate.length; x++) {
                                 
                                 let urlrev = this.$api + '/detailpesanan/' + this.revertUpdate[x].id_detail;
@@ -875,28 +884,52 @@ export default{
                                     }
                                 }).then(() => {
 
-                                    this.loadData();
-                                    this.progressBar = false;
-                                    this.cancel();
+                                    if(x === this.revertUpdate.length) {
+                                        this.loadData();
+                                        this.progressBar = false;
+                                        this.cancel();
+                                    }
 
-                                }).catch(() => {
+                                }).catch(err => {
 
-                                    this.$http.post(this.$api + '/detailpesanan', updateDetailData, {
-                                        headers: {
-                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                    if(err.response.data.message == "Detail Pesanan Not Found") {
+                                        let postDetailData = {
+                                            id_pesanan:  this.editId,
+                                            id_menu:     updateDetailData.id_menu,
+                                            jumlah_item: updateDetailData.jumlah_item,
                                         }
-                                    }).then(response => {
-                                        
-                                        this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
+
+                                        this.$http.post(this.$api + '/detailpesanan', postDetailData, {
                                             headers: {
                                                 'Authorization': 'Bearer ' + localStorage.getItem('token')
                                             }
-                                        }).then(() => {
+                                        }).then(response => {
 
-                                            this.loadData();
+                                            if(updateDetailData.status_item === 'Preparing') {
+                                                this.loadData();
+                                                this.progressBar = false;
+                                                this.cancel();
+                                            } else {
+                                                this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
+                                                    headers: {
+                                                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                                    }
+                                                }).then(response => {
+                                                    this.loadData();
 
-                                        });
-                                    }).catch(() => {});
+                                                    if(x === this.revertUpdate.length && response.data.message.indexOf('Update') === -1) {
+                                                        setTimeout(()=>{
+                                                            this.loadData();
+                                                            this.progressBar = false;
+                                                            this.cancel();
+                                                        }, 1000);
+                                                    }
+
+                                                });
+                                            }
+                                        }).catch(err => { console.log(err.response.data.message); });
+                                    }
+
                                 });
                             }
                         } else {
@@ -905,67 +938,10 @@ export default{
                             this.cancel();
                         }
                     }
-                } catch(error) {
-                    if(this.revertUpdate.length > 1) {
-                        this.progressBar = true;
-                        let x = 0;
-                        for(; x < this.revertUpdate.length; x++) {
-                            
-                            let urlrev = this.$api + '/detailpesanan/' + this.revertUpdate[x].id_detail;
-                            let updateDetailData = {
-                                id_pesanan:  this.editId,
-                                id_menu:     tempArray[x].id_menu,
-                                status_item: tempArray[x].status_item,
-                                jumlah_item: tempArray[x].jumlah_item,
-                            };
 
-                            this.$http.put(urlrev, updateDetailData, {
-                                headers: {
-                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                }
-                            }).then(() => {
-
-                                if(x === this.revertUpdate.length) {
-                                    this.loadData();
-                                    this.progressBar = false;
-                                    this.cancel();
-                                }
-
-                            }).catch(() => {
-
-                                this.$http.post(this.$api + '/detailpesanan', updateDetailData, {
-                                    headers: {
-                                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                    }
-                                }).then(response => {
-                                    
-                                    this.$http.put(this.$api + '/detailpesanan/' + response.data.data.id_detail_pesanan, updateDetailData, {
-                                        headers: {
-                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                        }
-                                    }).then(() => {
-
-                                        if(x === this.revertUpdate.length) {
-                                            this.loadData();
-                                            this.progressBar = false;
-                                            this.cancel();
-                                        }
-
-                                    });
-                                }).catch(() => {});
-
-                            });
-                        }
-                    } else {
-                        this.loadData();
-                        this.progressBar = false;
-                        this.cancel();
-                    }
                 }
-
+                execute();
             }
-
-            execute();
         },
 
         deleteData() {
@@ -1016,5 +992,15 @@ export default{
         }
 
     },
+
+    created() {
+        if (localStorage.getItem('reloaded')) {
+            this.loadData();
+            localStorage.removeItem('reloaded');
+        } else {
+            this.loadData();
+            localStorage.setItem('reloaded', false);
+        }
+    }
 }
 </script>

@@ -25,12 +25,11 @@ function locationHashChanged() {
         // var cycle = 0;
         var images = ['carousel1.jpg', 'carousel1.jpg', 'carousel2.jpg', 'carousel3.jpg'],
             index  = 0,
-            $intro = $('.intro'),
-            $title = $('.intro-text');
+            $intro = $('.intro');
 
         setTimeout(function(){
-            $title.style.transition = "3s";
-            $title.style.opacity    = "1";
+            title.style.transition = "3s";
+            title.style.opacity    = "1";
             content.style = `transition: 2s`;
         }, 100);
 
