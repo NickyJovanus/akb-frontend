@@ -38,7 +38,7 @@
                         <div class="d-block d-sm-block d-lg-none ma-5">
                             <div class="col-md-4 grid-portfolio"  v-for="(menu) in dashboardmenu" :key="menu.image">
                                 <div style="width: 100vw; height: 100px; margin-bottom: 0px;">
-                                    <v-card width="100%" :to="menu.to">
+                                    <v-card width="100%" :to="menu.path">
                                         <div style="text-align-last: center;">{{menu.title}}</div>
                                         <v-img
                                             height="100px"
