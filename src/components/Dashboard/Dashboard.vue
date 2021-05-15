@@ -19,7 +19,20 @@
                         <div class="ma-15 d-none d-lg-block">
                             <div class="col-md-4 grid-portfolio"  v-for="(menu) in dashboardmenu" :key="menu.image">
                                 <div style="height: 300px; margin-bottom: 10px;">
-                                    <v-card width="600" :to="menu.path">
+                                    <v-card v-if="menu.title != 'Print QR Code'" width="600" :to="menu.path">
+                                        <v-img
+                                            height="300px"
+                                            :src="menu.image"
+                                            class="dashboard-card">
+                                            <div class="testimonials-bg-opacity">
+                                            <h2 class="white--text card-title">
+                                                <br><br>
+                                                <div style="top: 50%;">{{menu.title}}</div>
+                                                <br>
+                                            </h2></div>
+                                        </v-img>
+                                    </v-card>
+                                    <v-card v-else width="600" @click="dialogQR = true;">
                                         <v-img
                                             height="300px"
                                             :src="menu.image"
@@ -75,23 +88,60 @@
             </footer>
             <!-- end footer -->
 
+            <!-- start QR dialog -->
+            <v-dialog v-model="dialogQR" persistent max-width="600px" style='z-index:8000;'>
+                <v-card>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-flex class="text-right">
+                            <v-icon color="red" @click="dialogQR = false;">mdi-close</v-icon>
+                        </v-flex>
+                    </v-card-actions>
+                    <v-card-title>
+                        <span class="headline">Scan this QR Code with the Mobile App!</span>
+                    </v-card-title>
+                    <v-card-text class="text-center">
+                        <vue-qr :text="qrdata" :size="400"></vue-qr>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="white darken-1" text @click="dialogQR = false;">
+                            Close
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <!-- end QR dialog -->
+
         </div>
     </v-main>
 </template>
 
 
 <script>
+import VueQr from 'vue-qr/src/packages/vue-qr.vue'
+
 export default{
     name: "Dashboard",
+
+    components: {VueQr},
+
     data() {
         return {
             role: '',
             dashboardmenu: [],
+            dialogQR: false,
+            src: 'https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+white.png',
+            qrdata: 'Customer Accepted, Welcome to Atma Korean BBQ!',
         }
     },
+
     mounted() {
         this.filtermenu();
     },
+
     methods: {
         filtermenu() {
             let role     = localStorage.getItem('role');
@@ -108,7 +158,7 @@ export default{
             let bahan        = { title: "Manage Bahan",         path: "/manage/bahan",         image: require("@/assets/images/dashboard/bahan.jpg")        };
             let stock        = { title: "Manage Stock",         path: "/manage/stock",         image: require("@/assets/images/dashboard/stock.jpg")        };
             let history      = { title: "Manage History Stock", path: "/manage/history-stock", image: require("@/assets/images/dashboard/history.jpg")      };
-            let qrcode       = { title: "Print QR Code",        path: "/print-qr",             image: require("@/assets/images/dashboard/qrcode.jpg")       };
+            let qrcode       = { title: "Print QR Code",        path: "",                      image: require("@/assets/images/dashboard/qrcode.jpg")       };
             let pengeluaran  = { title: "Laporan Pengeluaran",  path: "/laporan/expenses",     image: require("@/assets/images/dashboard/pengeluaran.jpg")  };
             let pendapatan   = { title: "Laporan Pendapatan",   path: "/laporan/income",       image: require("@/assets/images/dashboard/pendapatan.jpg")   };
             let ketersediaan = { title: "Ketersediaan Meja",    path: "/showMeja",             image: require("@/assets/images/dashboard/ketersediaan.jpg") };

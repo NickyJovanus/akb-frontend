@@ -228,8 +228,8 @@ export default{
             this.$router.push({
                 path: '/dashboard',
             });
-            this.collapsed = true;
         },
+
         loadData() {
             this.loading = true;
 
@@ -247,6 +247,7 @@ export default{
                 this.loading = false;
             });
         },
+
         editHandler(item) {
             this.inputType          = 'Edit';
             this.editId             = item.id_bahan;
@@ -256,22 +257,26 @@ export default{
             this.form.stok_per_unit = item.stok_per_unit;
             this.dialog             = true;
         },
+
         deleteHandler(id) {
             this.deleteId     = id;
             this.dialogDelete = true;
         },
+
         cancel() {
             this.dialogDelete = false;
             this.dialog       = false;
             this.inputType    = 'Add';
             this.resetForm();
         },
+
         resetForm() {
             this.form.nama_bahan    = '';
             this.form.jml_bahan     = '';
             this.form.unit_bahan    = '';
             this.form.stok_per_unit = '';
         },
+
         add() {
             this.progressBar = true;
             let addData = {
@@ -316,6 +321,7 @@ export default{
                 this.progressBar = false;
             });
         },
+
         update() {
             this.progressBar = true;
             let updateData = {
@@ -360,6 +366,7 @@ export default{
                 this.progressBar = false;
             });
         },
+
         deleteData() {
             this.progressBar = true;
 
@@ -383,6 +390,7 @@ export default{
             });
 
         },
+        
         emitMenu() {
             EventBus.$emit('bahan', '');
         }

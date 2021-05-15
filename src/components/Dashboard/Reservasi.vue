@@ -40,7 +40,12 @@
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
                             <template v-slot:[`item.tipe_reservasi`]="{ item }">
-                                {{new Date(item.tanggal_reservasi + 'T' + item.sesi_reservasi + 'Z').getHours() >= 17 ? 'Lunch' : 'Dinner'}}
+                                <v-btn 
+                                    :disabled="true" 
+                                    style="color: white !important;"
+                                    :style="{'background-color':`${new Date(item.tanggal_reservasi + 'T' + item.sesi_reservasi + 'Z').getHours() >= 17 ? '#ff692f' : '#4343ff'} !important`}">
+                                    {{new Date(item.tanggal_reservasi + 'T' + item.sesi_reservasi + 'Z').getHours() >= 17 ? 'Lunch' : 'Dinner'}}
+                                </v-btn>
                             </template>
                             <template v-slot:[`item.id_meja`]="{ item }">
                                 <div v-for="item2 in meja" :key="item2.id_meja">
@@ -291,6 +296,7 @@ export default{
                 { text: "Sesi Reservasi",           value: "sesi_reservasi" },
                 { text: "Tipe Reservasi",           value: "tipe_reservasi" },
                 { text: "Nomor Meja",               value: "id_meja" },
+                { text: "Nama Customer",            value: "nama_customer" },
                 { text: "ID Pesanan",               value: "id_pesanan" },
                 { text: "Actions", sortable: false, value: "actions" },
             ],
@@ -346,7 +352,6 @@ export default{
             this.$router.push({
                 path: '/dashboard',
             });
-            this.collapsed = true;
         },
 
         loadData() {

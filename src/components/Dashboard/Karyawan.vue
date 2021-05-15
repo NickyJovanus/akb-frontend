@@ -145,7 +145,7 @@
                                 v-model="tanggal_menu"
                                 :close-on-content-click="false"
                                 :return-value.sync="form.tanggal_rekrut_karyawan"
-                                transition="slide-x-transition"
+                                transition="scale-transition"
                                 offset-y
                                 min-width="290px"
                             >
@@ -378,6 +378,8 @@
 
 
 <script>
+import { EventBus } from './bus.js';
+
 export default{
     name: "Karyawan",
     data() {
@@ -443,6 +445,7 @@ export default{
             passwordtype: 'password',
         }
     },
+
     mounted() {
         this.karyawan = JSON.parse(localStorage.getItem('karyawan'));
         this.role     = localStorage.getItem('role');
@@ -452,6 +455,7 @@ export default{
         if (this.role != 'Operational Manager' && this.role != 'Owner')
             this.redirectDashboard();
     },
+
     methods: {
         redirectDashboard() {
             this.$router.push({
@@ -471,6 +475,7 @@ export default{
             }).then(response => {
                 this.karyawan = response.data.data;
                 localStorage.setItem('karyawan', JSON.stringify(response.data.data));
+                this.EmitKaryawan();
                 this.loading = false;
             }).catch(()=> {
                 this.loading = false;
@@ -726,7 +731,11 @@ export default{
                 case 'Cashier':             return 'purple';
                 default:                    return 'purple';
             }
-        }
+        },
+
+        EmitKaryawan() {
+            EventBus.$emit('karyawan', null);
+        },
     }
 }
 </script>

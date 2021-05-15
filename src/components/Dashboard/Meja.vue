@@ -209,6 +209,7 @@ export default{
             loading:     false,
         }
     },
+
     mounted() {
         this.meja = JSON.parse(localStorage.getItem('meja'));
         this.role = localStorage.getItem('role');
@@ -218,12 +219,12 @@ export default{
         if (this.role != 'Operational Manager' && this.role != 'Cashier' && this.role != 'Waiter')
             this.redirectDashboard();
     },
+    
     methods: {
         redirectDashboard() {
             this.$router.push({
                 path: '/dashboard',
             });
-            this.collapsed = true;
         },
 
         loadData() {

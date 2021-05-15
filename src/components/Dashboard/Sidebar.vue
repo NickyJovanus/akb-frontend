@@ -110,6 +110,7 @@ export default{
             role: '',
         }
     },
+
     created() {
         this.loadData();
     },
@@ -143,6 +144,8 @@ export default{
                 {url: this.$api + '/reservasi', store: 'reservasi'}, 
                 {url: this.$api + '/bahan', store: 'bahan'}, 
                 {url: this.$api + '/menu', store: 'menu'}, 
+                {url: this.$api + '/stok', store: 'stok'}, 
+                {url: this.$api + '/historystok', store: 'historystok'}, 
             ];
 
             this.$http.get(urlmeja, {

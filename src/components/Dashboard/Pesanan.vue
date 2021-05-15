@@ -77,26 +77,8 @@
                                     </div>
                                 </span>
                             </template>
-                            <template v-slot:[`item.id_meja`]="{ item }">
-                                <span v-for="item2 in meja" :key="item2.id_meja">
-                                    <div v-if="item.id_meja == item2.id_meja">
-                                        No. {{item2.no_meja}}
-                                    </div>
-                                </span>
-                            </template>
-                            <template v-slot:[`item.id_reservasi`]="{ item }">
-                                <span v-for="item2 in reservasi" :key="item2.id_reservasi">
-                                    <div v-if="item.id_pesanan == item2.id_pesanan">
-                                        {{item2.id_reservasi}}
-                                    </div>
-                                </span>
-                            </template>
-                            <template v-slot:[`item.id_karyawan`]="{ item }">
-                                <span v-for="item2 in karyawan" :key="item2.id_karyawan">
-                                    <div v-if="item.id_karyawan == item2.id_karyawan">
-                                        {{item2.nama_karyawan}}
-                                    </div>
-                                </span>
+                            <template v-slot:[`item.no_meja`]="{ item }">
+                                    No. {{item.no_meja}}
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="yellow--text mr-2 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
@@ -149,12 +131,13 @@
                     <div style="margin: 30px;">
                         <v-form v-model="valid" ref="form">
                             <v-flex>
+
                                 <v-menu
                                     ref="tanggal_menu"
                                     v-model="tanggal_menu"
                                     :close-on-content-click="false"
                                     :return-value.sync="form.tanggal_pesanan"
-                                    transition="slide-x-transition"
+                                    transition="scale-transition"
                                     offset-y
                                     min-width="290px"
                                 >
@@ -183,6 +166,7 @@
                                         <v-btn text color="primary" @click="$refs.tanggal_menu.save(form.tanggal_pesanan)"> OK </v-btn>
                                     </v-date-picker>
                                 </v-menu>
+
                                 <v-select
                                     v-model="form.id_meja"
                                     label="Nomor Meja"
@@ -203,6 +187,7 @@
                                         No. {{ data.item.no_meja }}
                                     </template>
                                 </v-select>
+
                                 <v-select
                                     v-model="form.id_karyawan"
                                     label="Nama Karyawan"
@@ -223,6 +208,7 @@
                                         {{ data.item.nama_karyawan }}
                                     </template>
                                 </v-select>
+
                                 <v-row v-for="(detail) in detailtext" 
                                     :key="detail.id">
                                     <v-col cols="5">
@@ -270,12 +256,14 @@
                                         >
                                         </v-select>
                                     </v-col>
+
                                     <v-col cols="2">
                                         <v-btn color="red" @click="removeDetail(detail)" 
                                             :disabled="role == 'Chef'">
                                             X
                                         </v-btn>
                                     </v-col>
+
                                 </v-row>
                                 <v-btn @click="addDetail"
                                     :disabled="role == 'Chef'">
@@ -358,9 +346,9 @@ export default{
                 { text: "Total Menu",               value: "total_menu"      },
                 { text: "Total Item",               value: "total_item"      },
                 { text: "Tanggal Pesanan",          value: "tanggal_pesanan" },
-                { text: "Nomor Meja",               value: "id_meja"         },
+                { text: "Nomor Meja",               value: "no_meja"         },
                 { text: "ID Reservasi",             value: "id_reservasi"    },
-                { text: "Nama Karyawan",            value: "id_karyawan"     },
+                { text: "Nama Karyawan",            value: "nama_karyawan"   },
                 { text: "Actions", sortable: false, value: "actions"         },
             ],
             pesanan:         [],
@@ -438,8 +426,8 @@ export default{
             this.$router.push({
                 path: '/dashboard',
             });
-            this.collapsed = true;
         },
+
         loadData() {
             this.loading = true;
 

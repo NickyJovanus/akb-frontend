@@ -12,7 +12,7 @@
                     -webkit-transform: rotate(135deg);"></i> Return</div>
             </div>
             <div class="button-group" style="right: 20px; position:absolute;">
-                <div class="text" @click="redirectHistory"> Stock History
+                <div class="text" @click="redirectStock"> Stock
                     <i style="
                     border: solid black;
                     border-width: 0 3px 3px 0;
@@ -23,7 +23,7 @@
             </div>
             <br><br>
             <div style="text-align: center; width: 100%;">
-                <h2>Stock Management</h2>
+                <h2>History Stock Management</h2>
             </div>
             <div class="mt-5 table-section">
                 <v-card class="ma-6">
@@ -32,9 +32,6 @@
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
-                        <v-btn dark v-if="role == 'Operational Manager' || role == 'Owner'" @click="dialog = true">
-                            Add
-                        </v-btn>
                         <v-text-field
                             v-model="search"
                             append-icon="mdi-magnify"
@@ -45,7 +42,7 @@
                         ></v-text-field>
                     </v-card-title>
                         <v-data-table :headers="headers" 
-                            :items="stok"
+                            :items="historystok"
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
@@ -267,7 +264,7 @@
                 </v-card-title>
                 <v-card-text>
                     Confirm this stock data?
-                    (confirmed data will be moved to stock and you won't be able to make any changes.)
+                    (confirmed data will be moved to stock history and you won't be able to make any changes.)
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -296,22 +293,21 @@
 import { EventBus } from './bus.js';
 
 export default{
-    name: "Stok",
+    name: "HistoryStock",
     data() {
         return {
             role: '',
             headers: [
-                { text: "ID", align: "start",       value: "id_stok"       },
-                { text: "Nama Bahan",               value: "nama_bahan"    },
-                { text: "Stok Masuk",               value: "stok_masuk"    },
-                { text: "Stok Tersisa",             value: "stok_tersisa"  },
-                { text: "Stok Terbuang",            value: "stok_terbuang" },
-                { text: "Unit Stok",                value: "unit_stok"     },
-                { text: "Tanggal Stok",             value: "tanggal_stok"  },
-                { text: "Nama Karyawan",            value: "nama_karyawan" },
-                { text: "Actions", sortable: false, value: "actions"       },
+                { text: "ID", align: "start",       value: "id_history_stok" },
+                { text: "Nama Bahan",               value: "nama_bahan"      },
+                { text: "Stok Masuk",               value: "stok_masuk"      },
+                { text: "Stok Tersisa",             value: "stok_tersisa"    },
+                { text: "Stok Terbuang",            value: "stok_terbuang"   },
+                { text: "Unit Stok",                value: "unit_stok"       },
+                { text: "Tanggal Stok",             value: "tanggal_stok"    },
+                { text: "Nama Karyawan",            value: "nama_karyawan"   },
             ],
-            stok:             [],
+            historystok:      [],
             bahan:            [],
             karyawan:         [],
             inputType:     'Add',
@@ -353,12 +349,12 @@ export default{
     },
 
     mounted() {
-        this.stok     = JSON.parse(localStorage.getItem('stok'));
-        this.bahan    = JSON.parse(localStorage.getItem('bahan'));
-        this.karyawan = JSON.parse(localStorage.getItem('karyawan'));
-        this.role     = localStorage.getItem('role');
+        this.historystok = JSON.parse(localStorage.getItem('historystok'));
+        this.bahan       = JSON.parse(localStorage.getItem('bahan'));
+        this.karyawan    = JSON.parse(localStorage.getItem('karyawan'));
+        this.role        = localStorage.getItem('role');
 
-        if(localStorage.getItem('stok') == null) {this.loadData();}
+        if(localStorage.getItem('historystok') == null) {this.loadData();}
 
         if (this.role != 'Operational Manager' && this.role != 'Cashier' && this.role != 'Waiter')
             this.redirectDashboard();
@@ -373,9 +369,8 @@ export default{
             this.loadData();
         });
 
-        EventBus.$on('pesanan', () => {
-            this.loadData();
-        });
+        EventBus.$on('pesanan', () => {this.loadData();});
+        EventBus.$on('stok', () => {this.loadData();});
     },
 
     methods: {
@@ -385,14 +380,14 @@ export default{
             });
         },
 
-        redirectHistory() {
+        redirectStock() {
             this.$router.push({
-                path: '/manage/history-stock',
+                path: '/manage/stock',
             });
         },
 
         loadData() {
-            var url = this.$api + '/stok';
+            var url = this.$api + '/historystok';
             this.loading = true;
 
             this.$http.get(url, {
@@ -402,7 +397,6 @@ export default{
             }).then(response => {
                 this.stok = response.data.data;
                 localStorage.setItem('stok', JSON.stringify(response.data.data));
-                this.emitStok();
                 this.loading = false;
             }).catch(() => {
                 this.loading = false;
@@ -655,10 +649,6 @@ export default{
                 this.progressBar = false;
             });
         },
-
-        emitStok() {
-            EventBus.$emit('stok', null);
-        }
     }
 }
 </script>

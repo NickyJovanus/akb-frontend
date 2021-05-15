@@ -218,7 +218,6 @@ export default{
             this.$router.push({
                 path: '/dashboard',
             });
-            this.collapsed = true;
         },
         
         loadData() {

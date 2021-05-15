@@ -102,6 +102,13 @@ const router = new VueRouter({
                     meta: {title: 'Manage Stock - Atma Korean BBQ'},
                     component: importComponent('Dashboard/Stock'),
                 },
+                //History
+                {
+                    path: "/manage/history-stock",
+                    name: "HistoryStock",
+                    meta: {title: 'History Stock - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/HistoryStock'),
+                },
             ]
         },
         {
