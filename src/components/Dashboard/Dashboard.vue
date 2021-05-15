@@ -103,7 +103,7 @@
                         <span class="headline">Scan this QR Code with the Mobile App!</span>
                     </v-card-title>
                     <v-card-text class="text-center">
-                        <vue-qr :text="qrdata" :size="400"></vue-qr>
+                        <vue-qr :text="qrdata" :size="200"></vue-qr>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -134,7 +134,7 @@ export default{
             dashboardmenu: [],
             dialogQR: false,
             src: 'https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+white.png',
-            qrdata: 'Customer Accepted, Welcome to Atma Korean BBQ!',
+            qrdata: 'https://atmakoreanbbq.web.app/barcode',
         }
     },
 
