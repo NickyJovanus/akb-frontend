@@ -103,11 +103,20 @@
                         <span class="headline">Scan this QR Code with the Mobile App!</span>
                     </v-card-title>
                     <v-card-text class="text-center">
-                        <vue-qr :text="qrdata" :size="200"></vue-qr>
+                        <div id="qrcode">
+                            <vue-qr :text="qrdata" :size="200"></vue-qr>
+                        </div>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="white darken-1" text @click="dialogQR = false;">
+                        <v-btn color="white darken-1" text @click="PrintQR">
+                            Print
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                    </v-card-actions>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="red darken-1" text @click="dialogQR = false;">
                             Close
                         </v-btn>
                     </v-card-actions>
@@ -209,7 +218,60 @@ export default{
                                                 break;
                     
             }
-        }
+        },
+
+        PrintQR() {
+            const qrdiv = document.getElementById('qrcode').innerHTML;
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const date = new Date();
+            const month = monthNames[date.getMonth()];
+            var currentHours = date.getHours();
+            currentHours = ("0" + currentHours).slice(-2);
+            var currentMinutes = date.getMinutes();
+            currentMinutes = ("0" + currentMinutes).slice(-2);
+            var currentSeconds = date.getSeconds();
+            currentSeconds = ("0" + currentSeconds).slice(-2);
+            var ampm = ""
+            if(date.getHours() >= 12)
+                ampm = "PM";
+            else
+                ampm = "AM";
+            var mywindow = window.open('', 'PRINT', 'height=800,width=600');
+
+            mywindow.document.write(`
+            <html>
+            <head><title> Print QR Code - Atma Korean BBQ</title></head>
+            
+            <body>
+                <div style="width: 100%; text-align: center; font-family: sans-serif;">
+                    <img src="` + require("@/assets/images/AKB-logo 1080.png")  + `" style="width: 250; height: 250;"/>
+                    <br>
+                    <br>
+                    <div style="width: 100%; text-align: -webkit-center;">
+                        <div style="border: 10px black solid; border-radius: 10px; width: 200px;">
+                            ${qrdiv}
+                        </div>
+                    </div>
+                    <br>
+                    <h3>Printed `+ month +` `+ date.getDate() +`, `+ date.getFullYear() +` `+ currentHours +`:`+ currentMinutes +`:`+ currentSeconds +` `+ ampm +`</h3>
+                    <p>Printed By `+ localStorage.getItem('name') +`</p>
+                    <br><br>
+                    <p>------------------------------------------------------------</p>
+                    <h2> FUN PLACE TO GRILL </h2>
+                    <p>------------------------------------------------------------</p>
+                </div>
+            </body>
+            </html>
+            `);
+
+            mywindow.document.close();
+            mywindow.focus();
+
+            mywindow.print();
+            // mywindow.close();
+
+            return true;
+        },
     }
 }
 </script>
