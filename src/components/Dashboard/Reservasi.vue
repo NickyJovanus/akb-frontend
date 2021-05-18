@@ -544,6 +544,20 @@ export default{
             EventBus.$emit('reservasi', 'extra data');
         }
     },
+
+    created() {
+        if (localStorage.getItem('reloaded')) {
+            this.loadData();
+            localStorage.removeItem('reloaded');
+        } else {
+            this.loadData();
+            localStorage.setItem('reloaded', false);
+        }
+    },
+
+    destroyed() {
+        this.loadData();
+    }
 }
 
 </script>

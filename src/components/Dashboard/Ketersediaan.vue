@@ -66,6 +66,7 @@ export default{
             rows:               0,
         }
     },
+
     mounted() {
         this.meja = JSON.parse(localStorage.getItem('meja'));
         this.role = localStorage.getItem('role');
@@ -79,6 +80,7 @@ export default{
             this.meja = JSON.parse(localStorage.getItem('meja'));
         });
     },
+
     methods: {
         redirectDashboard() {
             this.$router.push({
@@ -136,6 +138,10 @@ export default{
             return 1;
         },
     },
+
+    destroyed() {
+        this.loadData();
+    }
 }
 
 </script>

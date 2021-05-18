@@ -989,6 +989,10 @@ export default{
             this.loadData();
             localStorage.setItem('reloaded', false);
         }
+    },
+
+    destroyed() {
+        this.loadData();
     }
 }
 </script>

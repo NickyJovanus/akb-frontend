@@ -394,6 +394,21 @@ export default{
         emitMenu() {
             EventBus.$emit('bahan', '');
         }
+    },
+
+    created() {
+        if (localStorage.getItem('reloaded')) {
+            this.loadData();
+            localStorage.removeItem('reloaded');
+        } else {
+            this.loadData();
+            localStorage.setItem('reloaded', false);
+        }
+    },
+
+    destroyed() {
+        this.loadData();
+        console.log("bahan component destroyed");
     }
 }
 </script>
