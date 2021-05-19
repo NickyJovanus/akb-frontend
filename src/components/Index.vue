@@ -140,6 +140,12 @@
                            Invite your friends and family at our restaurant to truly have <span>the best experience</span>.<br>
                         <br>건배! <span class="fa fa-beer" aria-hidden="true"></span></p>
                     </div>
+                    <a href="/AtmaKoreanBBQ.apk" download>
+                        <div class="button-group">
+                            <div class="text">Download Android App</div>
+                            <div class="icon-cv"><a><span class="fa fa-arrow-circle-down" aria-hidden="true"></span></a></div>
+                        </div>
+                    </a>
                 </div>
                 <!-- end row about -->
             </div>
