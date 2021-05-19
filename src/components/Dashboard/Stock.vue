@@ -32,6 +32,7 @@
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
+                        <v-icon class="white--text mr-4" @click="loadData">mdi-reload</v-icon>
                         <v-btn dark v-if="role == 'Operational Manager' || role == 'Owner'" @click="dialog = true">
                             Add
                         </v-btn>
@@ -558,6 +559,7 @@ export default{
                 this.color         = "green";
                 this.snackbar      =    true;
                 this.progressBar   =   false;
+                this.emitStok();
                 this.deleteData();
             }).catch(err => {
                 this.error_message = '';
@@ -639,15 +641,13 @@ export default{
                 headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
             }).then(response => {
                 this.error_message= response.data.message;
-                this.color="green"
-                this.snackbar=true;
+                this.color = "green"
+                this.snackbar = true;
                 this.loadData();
+                this.emitStok();
                 this.progressBar = false;
-                if(this.isConfirm) {
-                    this.dialogDelete = false;
-                    this.dialogRedir  = true;
-                } else
-                    this.cancel();
+                this.dialogDelete = false;
+                this.cancel();
             }).catch(err => {
                 this.error_message= err.response.data.message;
                 this.color="red"
@@ -657,7 +657,7 @@ export default{
         },
 
         emitStok() {
-            EventBus.$emit('stok', null);
+            EventBus.$emit('stok', 'data');
         }
     },
 
