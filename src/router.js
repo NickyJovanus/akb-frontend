@@ -109,6 +109,13 @@ const router = new VueRouter({
                     meta: {title: 'History Stock - Atma Korean BBQ'},
                     component: importComponent('Dashboard/HistoryStock'),
                 },
+                //Transaksi
+                {
+                    path: "/manage/transaksi",
+                    name: "Transaksi",
+                    meta: {title: 'Manage Transaksi - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Transaksi'),
+                },
             ]
         },
         {

@@ -146,6 +146,7 @@ export default{
                 {url: this.$api + '/menu', store: 'menu'}, 
                 {url: this.$api + '/stok', store: 'stok'}, 
                 {url: this.$api + '/historystok', store: 'historystok'}, 
+                {url: this.$api + '/transaksi', store: 'transaksi'}, 
             ];
 
             this.$http.get(urlmeja, {
