@@ -767,8 +767,8 @@ export default{
                             </table>
                             <br>
                             <div style="text-align: right; margin-right: 100px; font-size: 14px;">
-                                Total Qty: 10<br>
-                                Total Item: 1
+                                Total Qty: `+ item.total_item +`<br>
+                                Total Item: `+ item.total_menu +`
                                 <h5>Printed `+ month +` `+ date.getDate() +`, `+ date.getFullYear() +` `+ currentHours +`:`+ currentMinutes +`:`+ currentSeconds +` `+ ampm +`</h5>
                                 <p>Cashier: `+ item.nama_karyawan +`</p>
                             </div>

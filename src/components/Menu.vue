@@ -126,7 +126,9 @@
             <div class="container">
                 <div class="row">
                     <h2>CONTACT</h2>
-                    <p>You can contact us at: 180709851@students.uajy.ac.id (Nicky Jovanus)</p>
+                    <p>You can contact us at: 180709851@students.uajy.ac.id (Nicky Jovanus)<br>
+                    Telp. (0274) 487711<br>
+                    https://atmakoreanbbq.web.app/</p><br>
                     <div class="social">
                         <a href="https://www.youtube.com/channel/UCocn4CLqmjfQ88-IjVYwRxA/featured" target="_blank" alt="Youtube profile"><span class="fa fa-youtube" aria-hidden="true"></span></a>
                         <a href="https://www.facebook.com/nicky.jovanus/" target="_blank" alt="Facebook profile"><span class="fa fa-facebook" aria-hidden="true"></span></a>
