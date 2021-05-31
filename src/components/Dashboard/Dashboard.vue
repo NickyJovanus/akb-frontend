@@ -268,7 +268,6 @@ export default{
             mywindow.focus();
 
             mywindow.print();
-            // mywindow.close();
 
             return true;
         },

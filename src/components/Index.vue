@@ -486,6 +486,7 @@ export default{
             var url  = this.$api + '/menu/top';
             var url2 = this.$api + '/customercount';
             var url3 = this.$api + '/servedDishes';
+            var url4 = this.$api + '/menu';
 
             this.loading = this.unloaded;
 
@@ -494,10 +495,14 @@ export default{
                 this.menus = response.data.data;
                 localStorage.setItem('topmenu', JSON.stringify(response.data.data));
                 this.loading = false;
-            }).catch(() => {
-                this.error_message = 'The server '+ this.$public +' is currently offline. Please try again later.'
-                this.color="red"
-                this.snackbar= true;
+            }).catch((error) => {
+                if(error.response.data.message == "Empty") {
+                    this.$http.get(url4, {
+                    }).then(response => {
+                        this.menus = response.data.data.slice(0,3);
+                        localStorage.setItem('topmenu', JSON.stringify(response.data.data.slice(0,3)));
+                    });
+                }
                 this.loading = false;
             });
 
@@ -506,6 +511,9 @@ export default{
                 this.customers = response.data.data;
                 localStorage.setItem('customercount', JSON.stringify(response.data.data));
             }).catch(()=> {
+                this.error_message = 'The server '+ this.$public +' is currently offline. Please try again later.'
+                this.color="red"
+                this.snackbar= true;
                 this.loading = false;
             });
             
