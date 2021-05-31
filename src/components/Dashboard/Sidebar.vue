@@ -137,16 +137,16 @@ export default{
 
             var urlmeja = this.$api + '/meja';
             var urls = [
-                {url: this.$api + '/karyawan', store: 'karyawan'}, 
-                {url: this.$api + '/pesanan', store: 'pesanan'}, 
-                {url: this.$api + '/detailpesanan', store: 'detailpesanan'}, 
-                {url: this.$api + '/customer', store: 'customer'}, 
-                {url: this.$api + '/reservasi', store: 'reservasi'}, 
-                {url: this.$api + '/bahan', store: 'bahan'}, 
-                {url: this.$api + '/menu', store: 'menu'}, 
-                {url: this.$api + '/stok', store: 'stok'}, 
-                {url: this.$api + '/historystok', store: 'historystok'}, 
-                {url: this.$api + '/transaksi', store: 'transaksi'}, 
+                {url: this.$api + '/karyawan',          store: 'karyawan'       }, 
+                {url: this.$api + '/pesanan',           store: 'pesanan'        }, 
+                {url: this.$api + '/detailpesanan',     store: 'detailpesanan'  }, 
+                {url: this.$api + '/customer',          store: 'customer'       }, 
+                {url: this.$api + '/reservasi',         store: 'reservasi'      }, 
+                {url: this.$api + '/bahan',             store: 'bahan'          }, 
+                {url: this.$api + '/menu',              store: 'menu'           }, 
+                {url: this.$api + '/stok',              store: 'stok'           }, 
+                {url: this.$api + '/historystok',       store: 'historystok'    }, 
+                {url: this.$api + '/transaksi',         store: 'transaksi'      }, 
             ];
 
             this.$http.get(urlmeja, {

@@ -139,11 +139,11 @@ export default{
 
     data() {
         return {
-            role: '',
-            dashboardmenu: [],
-            dialogQR: false,
-            src: 'https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+white.png',
-            qrdata: 'https://atmakoreanbbq.web.app/barcode',
+            role:           '',
+            dashboardmenu:  [],
+            dialogQR:       false,
+            src:            'https://atmakoreanbucket.s3-ap-southeast-1.amazonaws.com/AKB-logo+white.png',
+            qrdata:         'https://atmakoreanbbq.web.app/barcode',
         }
     },
 

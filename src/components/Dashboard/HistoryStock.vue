@@ -47,6 +47,9 @@
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
+                            <template v-slot:[`item.harga_stok`]="{ item }">
+                                    Rp. {{item.harga_stok.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}.00
+                            </template>
                         </v-data-table>
                 </v-card>
                 <br><br>
@@ -96,6 +99,7 @@ export default{
             headers: [
                 { text: "ID", align: "start",       value: "id_history_stok" },
                 { text: "Nama Bahan",               value: "nama_bahan"      },
+                { text: "Harga Stok",               value: "harga_stok"    },
                 { text: "Stok Masuk",               value: "stok_masuk"      },
                 { text: "Stok Tersisa",             value: "stok_tersisa"    },
                 { text: "Stok Terbuang",            value: "stok_terbuang"   },

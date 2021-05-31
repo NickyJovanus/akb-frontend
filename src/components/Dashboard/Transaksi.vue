@@ -667,7 +667,7 @@ export default{
                                 <tbody>
                                     <tr>
                                         <td style="border-bottom: black 3px dashed;">
-                                            <img src="http://www.atmakoreanbbq.xyz/img/akb.7b3e7de3.png" style="width: 200; height: 200;"/>
+                                            <img src="` + require("@/assets/images/AKB-logo 1080.png")  + `" style="width: 200; height: 200;"/>
                                             <br><br>
                                         </td>
                                         <td style="text-align: center; border-bottom: black 3px dashed;">

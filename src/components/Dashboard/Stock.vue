@@ -50,6 +50,9 @@
                             :loading="loading"
                             :search="search">
                             <v-progress-linear v-show="loading" slot="progress" color="red" indeterminate></v-progress-linear>
+                            <template v-slot:[`item.harga_stok`]="{ item }">
+                                    Rp. {{item.harga_stok.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}.00
+                            </template>
                             <template v-slot:[`item.actions`]="{ item }">
                                 <v-icon class="green--text mr-1 text--lighten-2" @click="confirmHandler(item)">mdi-checkbox-marked-circle-outline</v-icon>
                                 <v-icon class="yellow--text ml-1 mr-1 text--lighten-2" @click="editHandler(item)">mdi-pencil-circle-outline</v-icon>
@@ -118,6 +121,15 @@
                                     {{ data.item.nama_bahan }}
                                 </template>
                             </v-select>
+
+                            <v-text-field
+                                label="Harga Stok"
+                                v-model="form.harga_stok"
+                                type="number"
+                                prefix="Rp. "
+                                outlined
+                                clearable
+                            ></v-text-field>
 
                             <v-text-field
                                 label="Stok Tersisa"
@@ -304,6 +316,7 @@ export default{
             headers: [
                 { text: "ID", align: "start",       value: "id_stok"       },
                 { text: "Nama Bahan",               value: "nama_bahan"    },
+                { text: "Harga Stok",               value: "harga_stok"    },
                 { text: "Stok Masuk",               value: "stok_masuk"    },
                 { text: "Stok Tersisa",             value: "stok_tersisa"  },
                 { text: "Stok Terbuang",            value: "stok_terbuang" },
@@ -322,6 +335,7 @@ export default{
             dialogRedir:   false,
             form: {
                 id_bahan:      '',
+                harga_stok:    '',
                 stok_masuk:    '',
                 stok_tersisa:  '',
                 stok_terbuang: '',
@@ -331,6 +345,7 @@ export default{
             },
             confirmForm: {
                 id_bahan:      '',
+                harga_stok:    '',
                 stok_masuk:    '',
                 stok_tersisa:  '',
                 stok_terbuang: '',
@@ -414,6 +429,7 @@ export default{
             this.inputType          = 'Edit';
             this.editId             = item.id_stok;
             this.form.id_bahan      = item.id_bahan;
+            this.form.harga_stok    = item.harga_stok;
             this.form.stok_masuk    = item.stok_masuk;
             this.form.stok_tersisa  = item.stok_tersisa;
             this.form.stok_terbuang = item.stok_terbuang;
@@ -433,6 +449,7 @@ export default{
             this.isConfirm                 = true;
             this.deleteId                  = item.id_stok;
             this.confirmForm.id_bahan      = item.id_bahan;
+            this.confirmStok.harga_stok    = item.harga_stok;
             this.confirmForm.stok_masuk    = item.stok_masuk;
             this.confirmForm.stok_tersisa  = item.stok_tersisa;
             this.confirmForm.stok_terbuang = item.stok_terbuang;
@@ -465,6 +482,7 @@ export default{
 
         resetForm() {
             this.form.id_bahan             = '';
+            this.form.harga_stok           = '';
             this.form.stok_masuk           = '';
             this.form.stok_tersisa         = '';
             this.form.stok_terbuang        = '';
@@ -473,6 +491,7 @@ export default{
             this.form.id_karyawan          = '';
 
             this.confirmForm.id_bahan      = '';
+            this.confirmForm.harga_stok    = '';
             this.confirmForm.stok_masuk    = '';
             this.confirmForm.stok_tersisa  = '';
             this.confirmForm.stok_terbuang = '';
@@ -485,6 +504,7 @@ export default{
             this.progressBar = true;
             let addData = {
                 id_bahan:       this.form.id_bahan     ,
+                harga_stok:     this.form.harga_stok   ,
                 stok_masuk:     this.form.stok_masuk   ,
                 stok_tersisa:   this.form.stok_tersisa ,
                 stok_terbuang:  '0'                    ,
@@ -519,6 +539,8 @@ export default{
                 else {
                     if(err.response.data.message.id_bahan)
                         this.error_message= err.response.data.message.id_bahan + "";
+                    if(err.response.data.message.harga_stok)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.harga_stok;
                     if(err.response.data.message.stok_masuk)
                         this.error_message= this.error_message + '\n' + err.response.data.message.stok_masuk;
                     if(err.response.data.message.stok_tersisa)
@@ -542,6 +564,7 @@ export default{
             this.progressBar = true;
             let confData = {
                 id_bahan:       this.confirmForm.id_bahan     ,
+                harga_stok:     this.confirmForm.harga_stok   ,
                 stok_masuk:     this.confirmForm.stok_masuk   ,
                 stok_tersisa:   this.confirmForm.stok_tersisa ,
                 stok_terbuang:  this.confirmForm.stok_terbuang,
@@ -574,6 +597,8 @@ export default{
                 else {
                     if(err.response.data.message.id_bahan)
                         this.error_message= err.response.data.message.id_bahan + "";
+                    if(err.response.data.message.harga_stok)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.harga_stok;
                     if(err.response.data.message.stok_masuk)
                         this.error_message= this.error_message + '\n' + err.response.data.message.stok_masuk;
                     if(err.response.data.message.stok_tersisa)
@@ -598,6 +623,7 @@ export default{
             this.progressBar = true;
             let updateData = {
                 id_bahan:       this.form.id_bahan     ,
+                harga_stok:     this.form.harga_stok   ,
                 stok_masuk:     this.form.stok_masuk   ,
                 stok_tersisa:   this.form.stok_tersisa ,
                 stok_terbuang:  this.form.stok_terbuang,
@@ -619,17 +645,35 @@ export default{
                 this.loadData();
             }).catch(err => {
                 this.error_message = '';
-                if(!err.response.data.message.no_stok && !err.response.data.message.status_stok)
+                if(!err.response.data.message.id_bahan 
+                && !err.response.data.message.stok_masuk
+                && !err.response.data.message.stok_tersisa
+                && !err.response.data.message.stok_terbuang
+                && !err.response.data.message.unit_stok
+                && !err.response.data.message.tanggal_stok
+                && !err.response.data.message.id_karyawan)
                     this.error_message= err.response.data.message;
                 else {
-                    if(err.response.data.message.no_stok)
-                        this.error_message= err.response.data.message.no_stok + "";
-                    if(err.response.data.message.status_stok)
-                        this.error_message= this.error_message + '\n' + err.response.data.message.status_stok;
+                    if(err.response.data.message.id_bahan)
+                        this.error_message= err.response.data.message.id_bahan + "";
+                    if(err.response.data.message.harga_stok)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.harga_stok;
+                    if(err.response.data.message.stok_masuk)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.stok_masuk;
+                    if(err.response.data.message.stok_tersisa)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.stok_tersisa;
+                    if(err.response.data.message.stok_terbuang)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.stok_terbuang;
+                    if(err.response.data.message.unit_stok)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.unit_stok;
+                    if(err.response.data.message.tanggal_stok)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.tanggal_stok;
+                    if(err.response.data.message.id_karyawan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.id_karyawan;
                 }
-                this.color = "red"
-                this.snackbar = true;
-                this.progressBar = false;
+                this.color          = "red";
+                this.snackbar       =  true;
+                this.progressBar    = false;
             });
         },
 
