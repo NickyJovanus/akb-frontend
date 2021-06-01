@@ -123,6 +123,13 @@ const router = new VueRouter({
                     meta: {title: 'Laporan Pengeluaran - Atma Korean BBQ'},
                     component: importComponent('Dashboard/Pengeluaran'),
                 },
+                //Pendapatan
+                {
+                    path: "/laporan/income",
+                    name: "Pendapatan",
+                    meta: {title: 'Laporan Pendapatan - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Pendapatan'),
+                },
             ]
         },
         {

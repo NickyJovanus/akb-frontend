@@ -170,6 +170,8 @@ export default{
             let qrcode       = { title: "Print QR Code",        path: "",                      image: require("@/assets/images/dashboard/qrcode.jpg")       };
             let pengeluaran  = { title: "Laporan Pengeluaran",  path: "/laporan/expenses",     image: require("@/assets/images/dashboard/pengeluaran.jpg")  };
             let pendapatan   = { title: "Laporan Pendapatan",   path: "/laporan/income",       image: require("@/assets/images/dashboard/pendapatan.jpg")   };
+            let laporanstok  = { title: "Laporan Stok",         path: "/laporan/stock",        image: require("@/assets/images/dashboard/laporanstok.jpg")  };
+            let penjualan    = { title: "Laporan Penjualan",    path: "/laporan/penjualan",    image: require("@/assets/images/dashboard/penjualan.jpg")    };
             let ketersediaan = { title: "Ketersediaan Meja",    path: "/showMeja",             image: require("@/assets/images/dashboard/ketersediaan.jpg") };
 
             switch(role) {
@@ -187,11 +189,15 @@ export default{
                                                 dashmenu.push(qrcode);
                                                 dashmenu.push(pengeluaran);
                                                 dashmenu.push(pendapatan);
+                                                dashmenu.push(laporanstok);
+                                                dashmenu.push(penjualan);
                                                 break;
 
                 case "Owner":                   dashmenu.push(karyawan);
                                                 dashmenu.push(pengeluaran);
                                                 dashmenu.push(pendapatan);
+                                                dashmenu.push(laporanstok);
+                                                dashmenu.push(penjualan);
                                                 break;
 
                 case "Chef":                    dashmenu.push(pesanan);
@@ -245,8 +251,7 @@ export default{
             <body>
                 <div style="width: 100%; text-align: center; font-family: sans-serif;">
                     <img src="` + require("@/assets/images/AKB-logo 1080.png")  + `" style="width: 250; height: 250;"/>
-                    <br>
-                    <br>
+                    <br><br>
                     <div style="width: 100%; text-align: -webkit-center;">
                         <div style="border: 10px black solid; border-radius: 10px; width: 200px;">
                             ${qrdiv}

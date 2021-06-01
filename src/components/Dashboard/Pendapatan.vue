@@ -13,7 +13,7 @@
             </div>
             <br><br>
             <div style="text-align: center; width: 100%;">
-                <h2>Laporan Pengeluaran {{ group }}</h2>
+                <h2>Laporan Pendapatan {{ group }}</h2>
             </div>
             <div class="mt-5 table-section justify-center">
                 
@@ -119,7 +119,7 @@
 <script>
 
 export default{
-    name: "Pengeluaran",
+    name: "Pendapatan",
     data() {
         return {
             role:             '',
@@ -156,12 +156,12 @@ export default{
             var url = "";
             var data;
             if(this.group == "Bulanan") {
-                url = this.$api + '/laporan/pengeluaran/bulanan'
+                url = this.$api + '/laporan/pendapatan/bulanan'
                 data = {
                     tahun: this.form.tahun,
                 }
             } else {
-                url = this.$api + '/laporan/pengeluaran/tahunan'
+                url = this.$api + '/laporan/pendapatan/tahunan'
                 data = {
                     tahun_from: this.form.tahun_from,
                     tahun_to:   this.form.tahun_to,
@@ -243,7 +243,7 @@ export default{
                             </table>
                             
                             <div>
-                                <h2>LAPORAN PENGELUARAN `); 
+                                <h2>LAPORAN PENDAPATAN `); 
                     if(this.group == "Bulanan")
                         mywindow.document.write(`BULANAN`) 
                     else mywindow.document.write(`TAHUNAN`);
@@ -273,7 +273,7 @@ export default{
                                         <th><h4 style="margin-left: 25px;">Makanan</h4></th>
                                         <th><h4 style="margin-left: 25px;">Side Dish</h4></th>
                                         <th><h4 style="margin-left: 25px;">Minuman</h4></th>
-                                        <th><h4 style="margin-left: 25px;">Total Pengeluaran</h4></th>
+                                        <th><h4 style="margin-left: 25px;">Total Pendapatan</h4></th>
                                     </tr>
                                     <style>.tablehead th {border-bottom: double 3px black;}</style>
                                 </thead>
@@ -294,8 +294,8 @@ export default{
                             if(data[indexBulan].Minuman == null)
                                 data[indexBulan].Minuman = 0;
                             
-                            if(data[indexBulan].Total_pengeluaran == null)
-                                data[indexBulan].Total_pengeluaran = 0;
+                            if(data[indexBulan].Total_pendapatan == null)
+                                data[indexBulan].Total_pendapatan = 0;
 
                             mywindow.document.write(`
                                 <tr class="itemrow">
@@ -304,7 +304,7 @@ export default{
                                     <td><p style="text-align: right;">`+ data[indexBulan].Makanan.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
                                     <td><p style="text-align: right;">`+ data[indexBulan].Side_dish.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
                                     <td><p style="text-align: right;">`+ data[indexBulan].Minuman.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
-                                    <td><p style="text-align: right;">`+ data[indexBulan].Total_pengeluaran.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
+                                    <td><p style="text-align: right;">`+ data[indexBulan].Total_pendapatan.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
                                 </tr>`);
 
                             foundBulan = true;
@@ -338,8 +338,8 @@ export default{
                             if(data[index].Minuman == null)
                                 data[index].Minuman = 0;
                             
-                            if(data[index].Total_pengeluaran == null)
-                                data[index].Total_pengeluaran = 0;
+                            if(data[index].Total_pendapatan == null)
+                                data[index].Total_pendapatan = 0;
                             mywindow.document.write(`
                                 <tr class="itemrow">
                                     <td><p>`+ indexyear +`</p></td>
@@ -347,7 +347,7 @@ export default{
                                     <td><p style="text-align: right;">`+ data[index].Makanan.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
                                     <td><p style="text-align: right;">`+ data[index].Side_dish.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
                                     <td><p style="text-align: right;">`+ data[index].Minuman.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
-                                    <td><p style="text-align: right;">`+ data[index].Total_pengeluaran.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
+                                    <td><p style="text-align: right;">`+ data[index].Total_pendapatan.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") +`</p></td>
                                 </tr>`);
                             found = true;
                         }

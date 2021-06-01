@@ -657,7 +657,7 @@ export default{
 
             mywindow.document.write(`
             <html>
-                <head><title> Cetak Struk Transaksi - Atma Korean BBQ</title></head>
+                <head><title> Cetak Struk Transaksi #AKB-`+currentDate+``+currentMonth+``+currentYear+`-`+count+` - Atma Korean BBQ</title></head>
                 
                 <body>
                     <div style="width: 100%; text-align: -webkit-center; font-family: sans-serif;">
@@ -684,18 +684,18 @@ export default{
                                     </tr>
                                 </tbody>
                             </table>
-                            <table style="margin-left: 75px; margin-right: 75px";>
+                            <table style="margin-left: 50px; margin-right: 50px";>
                                 <tbody>
                                     <tr>
                                         <td><h4>Receipt # </h4></td>
-                                        <td><p style="margin-left: 20px;">AKB-`+currentDate+``+currentMonth+``+currentYear+`-`+count+`</p></td>
-                                        <td><h4 style="margin-left: 80px;">Date </h4></td>
+                                        <td><p style="margin-left: 20px; margin-right: 20px;">AKB-`+currentDate+``+currentMonth+``+currentYear+`-`+count+`</p></td>
+                                        <td><h4 style="margin-left: 50px;">Date </h4></td>
                                         <td><p style="margin-left: 20px;">`+date.getDate()+`/`+ (date.getMonth()+1) +`/`+date.getFullYear()+`</p></td>
                                     </tr>
                                     <tr class="wtr">
                                         <td><h4>Waiter </h4></td>
                                         <td><p style="margin-left: 20px;">`+ item.nama_waiter +`</p></td>
-                                        <td><h4 style="margin-left: 80px;">Time </h4></td>
+                                        <td><h4 style="margin-left: 50px;">Time </h4></td>
                                         <td><p style="margin-left: 20px;">`+currentHours+`:`+currentMinutes+`</p></td>
                                     </tr>
                                     <style>.wtr td {border-bottom: black 3px dashed;}</style>
@@ -703,7 +703,7 @@ export default{
                                     <tr>
                                         <td><h4>Table # </h4></td>
                                         <td><p style="margin-left: 20px;">`+ item.no_meja +`</p></td>
-                                        <td><h4 style="margin-left: 80px;">Customer </h4></td>
+                                        <td><h4 style="margin-left: 50px;">Customer </h4></td>
                                         <td><p style="margin-left: 20px;">`+ item.nama_customer +`</p></td>
                                     </tr>
                                 </tbody>
