@@ -40,6 +40,7 @@
                                     label="Tahun"
                                     v-model="form.tahun"
                                     type="number"
+                                    :disabled="progressBar"
                                     outlined
                                     clearable
                                 ></v-text-field>
@@ -48,6 +49,7 @@
                                     label="Tahun From"
                                     v-model="form.tahun_from"
                                     type="number"
+                                    :disabled="progressBar"
                                     outlined
                                     clearable
                                 ></v-text-field>
@@ -62,6 +64,7 @@
                                     label="Tahun To"
                                     v-model="form.tahun_to"
                                     type="number"
+                                    :disabled="progressBar"
                                     outlined
                                     clearable
                                 ></v-text-field>
@@ -71,7 +74,8 @@
 
                     <v-card-actions>
                         <VSpacer/>
-                        <v-btn @click="submit">Submit</v-btn>
+                        <v-btn @click="submit"
+                                :disabled="progressBar">Submit</v-btn>
                         <VSpacer/>
                     </v-card-actions>
 

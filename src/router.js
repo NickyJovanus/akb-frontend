@@ -137,6 +137,13 @@ const router = new VueRouter({
                     meta: {title: 'Laporan Stok - Atma Korean BBQ'},
                     component: importComponent('Dashboard/LaporanStok'),
                 },
+                //Laporan Penjualan
+                {
+                    path: "/laporan/penjualan",
+                    name: "Laporan Penjualan",
+                    meta: {title: 'Laporan Penjualan - Atma Korean BBQ'},
+                    component: importComponent('Dashboard/Penjualan'),
+                },
             ]
         },
         {

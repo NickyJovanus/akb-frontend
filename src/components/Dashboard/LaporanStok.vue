@@ -188,6 +188,7 @@
                             <v-col>
                                 <v-checkbox
                                     v-model="isAll"
+                                    :disabled="progressBar"
                                     label="All Menu">
                                 </v-checkbox>
                             </v-col>
@@ -200,7 +201,8 @@
 
                     <v-card-actions>
                         <VSpacer/>
-                        <v-btn @click="submit">Submit</v-btn>
+                        <v-btn @click="submit"
+                                :disabled="progressBar">Submit</v-btn>
                         <VSpacer/>
                     </v-card-actions>
 
