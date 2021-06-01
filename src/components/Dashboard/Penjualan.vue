@@ -250,7 +250,7 @@ export default{
 
             mywindow.document.write(`
             <html>
-                <head><title> Laporan Stok Bahan - Atma Korean BBQ</title></head>
+                <head><title> Laporan Penjualan Item Menu- Atma Korean BBQ</title></head>
                 
                 <body>
                     <div style="width: 100%; text-align: -webkit-center; font-family: sans-serif;">
@@ -279,7 +279,7 @@ export default{
                             </table>
                             
                             <div>
-                                <h2>LAPORAN STOK BAHAN</h2>
+                                <h2>LAPORAN PENJUALAN ITEM MENU</h2>
                             </div>
                             <div>
 
