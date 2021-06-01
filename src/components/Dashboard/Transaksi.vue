@@ -634,7 +634,7 @@ export default{
                 ampm = "PM";
             else
                 ampm = "AM";
-            var mywindow = window.open('', 'PRINT', 'height=1000,width=800');
+            var mywindow = window.open('', 'PRINT', 'height=1000,width=750');
 
             var count = localStorage.getItem("count")==null?1:localStorage.getItem("count");
             if(localStorage.getItem("dateincrement") != currentDate) {
@@ -766,7 +766,7 @@ export default{
                                 </tbody>
                             </table>
                             <br>
-                            <div style="text-align: right; margin-right: 100px; font-size: 14px;">
+                            <div style="text-align: right; margin-right: 50px; font-size: 14px;">
                                 Total Qty: `+ item.total_item +`<br>
                                 Total Item: `+ item.total_menu +`
                                 <h5>Printed `+ month +` `+ date.getDate() +`, `+ date.getFullYear() +` `+ currentHours +`:`+ currentMinutes +`:`+ currentSeconds +` `+ ampm +`</h5>
@@ -780,6 +780,7 @@ export default{
                         </div>
                     </div>
                 </body>
+                <style>table {border-collapse: collapse;}</style>
             </html>
             `);
 

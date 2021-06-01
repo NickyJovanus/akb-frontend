@@ -214,7 +214,7 @@ export default{
 
             mywindow.document.write(`
             <html>
-                <head><title> Laporan Pengeluaran - Atma Korean BBQ</title></head>
+                <head><title> Laporan Pendapatan - Atma Korean BBQ</title></head>
                 
                 <body>
                     <div style="width: 100%; text-align: -webkit-center; font-family: sans-serif;">
@@ -382,6 +382,7 @@ export default{
                         </div>
                     </div>
                 </body>
+                <style>table {border-collapse: collapse;}</style>
             </html>
             `);
 

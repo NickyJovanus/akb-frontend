@@ -382,6 +382,7 @@ export default{
                         </div>
                     </div>
                 </body>
+                <style>table {border-collapse: collapse;}</style>
             </html>
             `);
 
