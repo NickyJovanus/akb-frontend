@@ -179,12 +179,16 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message = "";
-                if(err.response.data.message.tahun)
-                    this.error_message= err.response.data.message.tahun + "";
-                if(err.response.data.message.tahun_to)
-                    this.error_message= err.response.data.message.tahun_to + "";
-                if(err.response.data.message.tahun_from)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.tahun_from;
+                try {
+                    if(err.response.data.message.tahun)
+                        this.error_message= err.response.data.message.tahun + "";
+                    if(err.response.data.message.tahun_to)
+                        this.error_message= err.response.data.message.tahun_to + "";
+                    if(err.response.data.message.tahun_from)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.tahun_from;
+                } catch {
+                    this.error_message= "Connection error. Please try again.";
+                }
                 this.color       = "red";
                 this.snackbar    =  true;
                 this.progressBar = false;

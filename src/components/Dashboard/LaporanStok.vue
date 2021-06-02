@@ -356,16 +356,20 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message = "";
-                if(err.response.data.message.tahun)
-                    this.error_message= err.response.data.message.tahun + "";
-                if(err.response.data.message.bulan)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.bulan;
-                if(err.response.data.message.id_menu)
-                    this.error_message= this.error_message + '\n' + "The Nama Menu field is required.";
-                if(err.response.data.message.date_from)
-                    this.error_message= err.response.data.message.date_from + "";
-                if(err.response.data.message.date_to)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.date_to;
+                try {
+                    if(err.response.data.message.tahun)
+                        this.error_message= err.response.data.message.tahun + "";
+                    if(err.response.data.message.bulan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.bulan;
+                    if(err.response.data.message.id_menu)
+                        this.error_message= this.error_message + '\n' + "The Nama Menu field is required.";
+                    if(err.response.data.message.date_from)
+                        this.error_message= err.response.data.message.date_from + "";
+                    if(err.response.data.message.date_to)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.date_to;
+                } catch {
+                    this.error_message= "Connection error. Please try again.";
+                }
                 this.color       = "red";
                 this.snackbar    =  true;
                 this.progressBar = false;

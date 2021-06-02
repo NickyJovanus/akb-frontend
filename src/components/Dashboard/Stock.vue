@@ -458,7 +458,6 @@ export default{
             this.confirmForm.id_karyawan   = item.id_karyawan;
             this.dialogConfirm = true;
         },
-
         
         fillStok(id_bahan) {
             let index=0;

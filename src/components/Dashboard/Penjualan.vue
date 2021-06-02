@@ -211,10 +211,14 @@ export default{
                 this.progressBar = false;
             }).catch(err => {
                 this.error_message = "";
-                if(err.response.data.message.tahun)
-                    this.error_message= err.response.data.message.tahun + "";
-                if(err.response.data.message.bulan)
-                    this.error_message= this.error_message + '\n' + err.response.data.message.bulan;
+                try{
+                    if(err.response.data.message.tahun)
+                        this.error_message= err.response.data.message.tahun + "";
+                    if(err.response.data.message.bulan)
+                        this.error_message= this.error_message + '\n' + err.response.data.message.bulan;
+                } catch {
+                    this.error_message= "Connection error. Please try again.";
+                }
                 this.color       = "red";
                 this.snackbar    =  true;
                 this.progressBar = false;

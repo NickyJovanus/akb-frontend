@@ -327,6 +327,7 @@ export default{
             transaksi:       [],
             pesanan:         [],
             customer:        [],
+            karyawan:        [],
             detail:          [],
             menu:            [],
             inputType:    'Add',
@@ -413,6 +414,13 @@ export default{
                 }
             }).then(response => {
                 this.transaksi   = response.data.data;
+
+                this.showKartu = [];
+                var index = 0
+                for(; index < this.transaksi.length; index++) {
+                    this.showKartu.push({id_transaksi: this.transaksi[index].id_transaksi, show: false});
+                }
+
                 localStorage.setItem('transaksi', JSON.stringify(response.data.data));
                 this.loading = false;
             }).catch(()=> {
@@ -495,6 +503,7 @@ export default{
             }).then(response => {
                 this.error_message =      '';
                 this.error_message = response.data.message;
+                this.showKartu.push({id_transaksi: response.data.data.id_transaksi, show: false});
                 this.color         = "green";
                 this.snackbar      =    true;
                 this.progressBar   =   false;
@@ -636,12 +645,13 @@ export default{
                 ampm = "AM";
             var mywindow = window.open('', 'PRINT', 'height=1000,width=750');
 
-            var count = localStorage.getItem("count")==null?1:localStorage.getItem("count");
+            var count = localStorage.getItem("count") == null ? 1 : localStorage.getItem("count");
             if(localStorage.getItem("dateincrement") != currentDate) {
                 localStorage.setItem("dateincrement", currentDate);
-                localStorage.setItem("count", 1);
+                localStorage.setItem("count", 0);
+                count = localStorage.getItem("count") + 1;
             } else {
-                count=Number(count)+1;
+                count = Number(count)+1;
                 localStorage.setItem("count", count);
             }
             count = ("0" + count).slice(-2);
