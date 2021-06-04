@@ -138,7 +138,7 @@ export default{
 
         if(localStorage.getItem('historystok') == null) {this.loadData();}
 
-        if (this.role != 'Operational Manager' && this.role != 'Cashier' && this.role != 'Waiter')
+        if (this.role != 'Operational Manager' && this.role != 'Chef')
             this.redirectDashboard();
 
         EventBus.$on('bahan', () => {

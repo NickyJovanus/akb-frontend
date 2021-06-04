@@ -376,7 +376,7 @@ export default{
 
         if(localStorage.getItem('stok') == null) {this.loadData();}
 
-        if (this.role != 'Operational Manager' && this.role != 'Cashier' && this.role != 'Waiter')
+        if (this.role != 'Operational Manager' && this.role != 'Chef')
             this.redirectDashboard();
 
         EventBus.$on('bahan', () => {
@@ -449,7 +449,7 @@ export default{
             this.isConfirm                 = true;
             this.deleteId                  = item.id_stok;
             this.confirmForm.id_bahan      = item.id_bahan;
-            this.confirmStok.harga_stok    = item.harga_stok;
+            this.confirmForm.harga_stok    = item.harga_stok;
             this.confirmForm.stok_masuk    = item.stok_masuk;
             this.confirmForm.stok_tersisa  = item.stok_tersisa;
             this.confirmForm.stok_terbuang = item.stok_terbuang;
