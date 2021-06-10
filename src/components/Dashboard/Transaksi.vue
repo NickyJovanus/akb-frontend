@@ -648,10 +648,10 @@ export default{
             var count = localStorage.getItem("count") == null ? 1 : localStorage.getItem("count");
             if(localStorage.getItem("dateincrement") != currentDate) {
                 localStorage.setItem("dateincrement", currentDate);
-                localStorage.setItem("count", 0);
-                count = localStorage.getItem("count") + 1;
+                count =  1;
+                localStorage.setItem("count", count);
             } else {
-                count = Number(count)+1;
+                count = Number(count) + 1;
                 localStorage.setItem("count", count);
             }
             count = ("0" + count).slice(-2);
