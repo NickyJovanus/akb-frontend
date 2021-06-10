@@ -409,12 +409,12 @@ export default{
 
         if(localStorage.getItem('pesanan') == null) {this.loadData();}
 
-        EventBus.$on('load', data => {
+        EventBus.$on('load', () => {
             this.meja = JSON.parse(localStorage.getItem('meja'));
             this.loadData();
         });
 
-        EventBus.$on('reservasi', data => {
+        EventBus.$on('reservasi', () => {
             this.reservasi = JSON.parse(localStorage.getItem('reservasi'));
         });
 
@@ -431,14 +431,12 @@ export default{
         loadData() {
             this.loading = true;
 
-            var url = this.$api + '/pesanan';
-            this.$http.get(url, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
+            this.$http.get(this.$api + '/pesanan', {
+                headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
             }).then(response => {
                 this.pesanan = response.data.data;
                 localStorage.setItem('pesanan', JSON.stringify(response.data.data));
+                this.headers[0].align = "start";
                 this.emitPesanan();
                 this.loading = false;
             }).catch(()=> {
@@ -446,9 +444,7 @@ export default{
             });
 
             this.$http.get(this.$api + '/detailpesanan', {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
+                headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
             }).then(response => {
                 this.detail_pesanan = response.data.data;
                 localStorage.setItem('detailpesanan', JSON.stringify(response.data.data));
@@ -517,6 +513,7 @@ export default{
         add() {
             if (this.$refs.form.validate()) {
                 var idPesanan = null;
+                var isCancel = false;
                 this.progressBar = true;
                 let addData = {
                     tanggal_pesanan: this.form.tanggal_pesanan,
@@ -528,9 +525,7 @@ export default{
                 var url2  = this.$api + '/detailpesanan'
                 
                 this.$http.post(url, addData, {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    }
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token')}
                 }).then(response => {
 
                     idPesanan = response.data.data.id_pesanan;
@@ -547,20 +542,42 @@ export default{
                             }
 
                             this.$http.post(url2, detailData, {
-                                headers: {
-                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                }
+                                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
                             }).then(() => {
-                                this.error_message =      '';
-                                this.error_message = 'Add Pesanan Success';
-                                this.color         = "green";
-                                this.snackbar      =    true;
-                                this.progressBar   =   false;
-                                this.cancel();
-                                this.loadData();
+
+                                if(!isCancel) {
+                                    this.error_message =      '';
+
+                                    if(this.detailtext.length > 1) {
+
+                                        if(i === this.detailtext.length) {
+
+                                            this.error_message = 'Add Pesanan Success';
+                                            this.color         = "green";
+                                            this.snackbar      =    true;
+                                            this.progressBar   =   false;
+                                            this.cancel();
+                                            this.loadData();
+
+                                        }
+                                            
+                                    } else if(this.detailtext.length < 2) {
+
+                                        this.error_message = 'Add Pesanan Success';
+                                        this.color         = "green";
+                                        this.snackbar      =    true;
+                                        this.progressBar   =   false;
+                                        this.cancel();
+                                        this.loadData();
+
+                                    }
+
+                                }
+
                             }).catch(err => {
                                 
                                 this.error_message = '';
+                                isCancel = true;
 
                                 if(!err.response.data.message.id_menu 
                                 && !err.response.data.message.jumlah_item
@@ -579,9 +596,7 @@ export default{
                                 
                                 var url3 = this.$api + '/pesanan/cancel/' + idPesanan;
                                 this.$http.delete(url3, {
-                                    headers: {
-                                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                    }
+                                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
                                 }).then(() => {
 
                                     this.progressBar   = false;
@@ -599,8 +614,9 @@ export default{
                                 this.color       = "red";
                                 this.snackbar    =  true;
                                 this.progressBar = false;
-
                             });
+
+                            if(isCancel) break;
                     }
                 } else {
 
@@ -631,6 +647,7 @@ export default{
                     this.color       = "red";
                     this.snackbar    =  true;
                     this.progressBar = false;
+
                 });
                 
             }
